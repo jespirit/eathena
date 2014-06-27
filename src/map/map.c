@@ -2982,6 +2982,43 @@ int map_readallmaps (void)
 	return 0;
 }
 
+/*======================================
+ * Converts the ea job id to an index for use with SQI bonuses [ragnarok_champ]
+ *--------------------------------------*/
+int map_mapidtoidx(int mapid, int sex)
+{
+	int idx = -1;
+
+	switch (mapid&MAPID_UPPERMASK)
+	{
+	//2_1 classes
+		case MAPID_SUPER_NOVICE:	idx = 0; break;
+		case MAPID_KNIGHT:			idx = 1; break;
+		case MAPID_WIZARD:			idx = 2; break;
+		case MAPID_HUNTER:			idx = 3; break;
+		case MAPID_PRIEST:			idx = 4; break;
+		case MAPID_BLACKSMITH:		idx = 5; break;
+		case MAPID_ASSASSIN:		idx = 6; break;
+		case MAPID_STAR_GLADIATOR:	idx = 7; break;
+	//2_2 classes
+		case MAPID_CRUSADER:		idx = 8; break;
+		case MAPID_SAGE:			idx = 9; break;
+		case MAPID_BARDDANCER:		idx = sex?10:11; break;	// male then female
+		case MAPID_MONK:			idx = 12; break;
+		case MAPID_ALCHEMIST:		idx = 13; break;
+		case MAPID_ROGUE:			idx = 14; break;
+		case MAPID_SOUL_LINKER:		idx = 15; break;
+	//1_1 classes (apparently)
+		case MAPID_TAEKWON:			idx = 16; break;
+		case MAPID_GUNSLINGER:		idx = 17; break;
+		case MAPID_NINJA:			idx = 18; break;
+		default:
+			break;
+	}
+
+	return idx;
+}
+
 ////////////////////////////////////////////////////////////////////////
 static int map_ip_set = 0;
 static int char_ip_set = 0;

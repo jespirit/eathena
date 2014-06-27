@@ -60,6 +60,8 @@ struct fame_list smith_fame_list[MAX_FAME_LIST];
 struct fame_list chemist_fame_list[MAX_FAME_LIST];
 struct fame_list taekwon_fame_list[MAX_FAME_LIST];
 
+struct sqi_bonus sqi_bonus_table[19][MAX_SQI_BONUS];
+
 static const unsigned short equip_pos[EQI_MAX]={EQP_ACC_L,EQP_ACC_R,EQP_SHOES,EQP_GARMENT,EQP_HEAD_LOW,EQP_HEAD_MID,EQP_HEAD_TOP,EQP_ARMOR,EQP_HAND_L,EQP_HAND_R,EQP_AMMO};
 
 #define MOTD_LINE_SIZE 128
@@ -8078,6 +8080,7 @@ int pc_readdb(void)
 	int lines;
 	FILE *fp;
 	char line[24000],*p;
+	char path[256];
 
 	// •K—v??’l?‚Ý?‚Ý
 	memset(exp_table,0,sizeof(exp_table));
@@ -8252,10 +8255,10 @@ int pc_readdb(void)
 	// Read SQI Bonuses
 	i=0, j=0;
 	lines = 0;
-	sprintf(line, "%s/sqi_bonus.txt", db_path);
-	fp=fopen(line,"r");
+	sprintf(path, "%s/sqi_bonus.txt", db_path);
+	fp=fopen(path,"r");
 	if (fp == NULL) {
-		ShowWarning("Can't read '"CL_WHITE"%s"CL_RESET"'... Generating DB.\n",line);
+		ShowWarning("Can't read '"CL_WHITE"%s"CL_RESET"'... Generating DB.\n",path);
 	} else {
 		while(fgets(line, sizeof(line), fp))
 		{

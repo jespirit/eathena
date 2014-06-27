@@ -15417,6 +15417,51 @@ BUILDIN_FUNC(showdigit)
 	return 0;
 }
 
+/// sqifunc	[ragnarok_champ]
+/// SQI_Func() executes any SQI Bonuses scripts the player may have activated
+BUILDIN_FUNC(sqifunc)
+{
+	int i;
+	int n,idx;
+	struct script_code* script;
+	TBL_PC* sd;
+
+	script = NULL;
+
+	sd = script_rid2sd(st);
+	if( sd == NULL )
+		return 0; // no player attached
+
+	//mapid = pc_jobid2mapid(sd->class_);
+
+	idx = map_mapidtoidx(sd->class_, sd->status.sex);
+
+	if (idx == -1) {
+		ShowError("sqifunc: Invalid index for char id %d class %s cannot have SQI bonuses", sd->status.char_id, job_name(sd->class_));
+		return -1;
+	}
+
+	for (i=0; i<MAX_SQI_ACTIVE_BONUS; i++) {
+
+		if (script)
+		{
+			script_free_code(script);
+			script = NULL;
+		}
+
+		n = sd->status.sqibonus_index[i];
+		if (n < 1 || n > MAX_SQI_BONUS) {
+			ShowError("sqifunc: sqibonus_index[%d] is invalid must be in range 1-9 for char id %d, skipping", i, sd->status.char_id);
+			continue;
+		}
+
+		// parse the sqi bonus scripts
+		// execute the script
+		run_script(sqi_bonus_table[idx][n-1].script,0,sd->bl.id,0);
+	}
+	
+	return 0;
+}
 
 // declarations that were supposed to be exported from npc_chat.c
 #ifdef PCRE_SUPPORT
@@ -15834,5 +15879,8 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(checkquest, "i?"),
 	BUILDIN_DEF(changequest, "ii"),
 	BUILDIN_DEF(showevent, "ii"),
+
+	//SQI Bonus	[ragnarok_champ]
+	BUILDIN_DEF2(sqifunc, "SQI_Func", ""),
 	{NULL,NULL,NULL},
 };

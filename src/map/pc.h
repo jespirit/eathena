@@ -432,17 +432,6 @@ struct map_session_data {
 //Total number of classes (for data storage)
 #define CLASS_COUNT (JOB_MAX - JOB_NOVICE_HIGH + JOB_MAX_BASIC)
 
-#define MAX_SQI_BONUS 9
-#define MAX_SQI_ACTIVE_BONUS 4
-
-// SQI Bonuses
-struct sqi_bonus {
-	struct script_code* script;
-	char description[512];
-};
-
-extern struct sqi_bonus sqi_bonus_table[19][MAX_SQI_BONUS];
-
 enum weapon_type {
 	W_FIST,	//Bare hands
 	W_DAGGER,	//1

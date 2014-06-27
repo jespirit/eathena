@@ -164,6 +164,10 @@
 #define MAX_MERCSKILL 40
 #define MAX_MERCENARY_CLASS 44
 
+//SQI Bonus
+#define MAX_SQI_BONUS 9
+#define MAX_SQI_ACTIVE_BONUS 4
+
 enum item_types {
 	IT_HEALING = 0,
 	IT_UNKNOWN, //1
@@ -315,6 +319,13 @@ struct hotkey {
 };
 #endif
 
+// SQI Bonuses
+struct sqi_bonus {
+	struct script_code* script;
+	char description[512];
+};
+extern struct sqi_bonus sqi_bonus_table[19][MAX_SQI_BONUS];
+
 struct mmo_charstatus {
 	int char_id;
 	int account_id;
@@ -365,6 +376,9 @@ struct mmo_charstatus {
 #endif
 	bool show_equip;
 	short rename;
+
+	// SQI Bonus [ragnarok_champ]
+	short sqibonus_index[MAX_SQI_ACTIVE_BONUS];	// max 4 sqi bonuses
 
 	time_t delete_date;
 };
