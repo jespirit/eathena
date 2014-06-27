@@ -8075,6 +8075,7 @@ static bool pc_readdb_skilltree(char* fields[], int columns, int current)
 int pc_readdb(void)
 {
 	int i,j,k;
+	int lines;
 	FILE *fp;
 	char line[24000],*p;
 
@@ -8247,6 +8248,53 @@ int pc_readdb(void)
 	for (; i <= MAX_LEVEL; i++)
 		statp[i] = statp[i-1] + pc_gets_status_point(i-1);
 	battle_config.use_statpoint_table = k; //restore setting
+
+	// Read SQI Bonuses
+	i=0, j=0;
+	lines = 0;
+	sprintf(line, "%s/sqi_bonus.txt", db_path);
+	fp=fopen(line,"r");
+	if (fp == NULL) {
+		ShowWarning("Can't read '"CL_WHITE"%s"CL_RESET"'... Generating DB.\n",line);
+	} else {
+		while(fgets(line, sizeof(line), fp))
+		{
+			char* str[2];
+
+			lines++;
+			if(line[0]=='/' && line[1]=='/')
+				continue;
+			p = line;
+			while( ISSPACE(*p) )
+				++p;
+			if( *p == '\0' )
+				continue;// empty line
+			
+			// script
+			str[0] = p;
+			p = strstr(p, "},");
+			if (p == NULL) {
+				ShowError("pc_readdb: Invalid format (SQI Script) on line %d of \"%s\", skipping)", lines, path);
+				continue;
+			}
+			p++;
+			*p++ = '\0';
+
+			// description
+			str[1] = p;
+
+			sqi_bonus_table[i][j].script = parse_script(str[0], "sqi_bonus.txt", lines, 0);
+			strcpy(sqi_bonus_table[i][j].description, str[1]);
+
+			j++;
+			if (j>=9) {
+				j=0;
+				i++;
+			}
+		}
+		fclose(fp);
+		ShowStatus("Done reading '"CL_WHITE"%s"CL_RESET"'.\n","sqi_bonus.txt");
+	}
 
 	return 0;
 }
