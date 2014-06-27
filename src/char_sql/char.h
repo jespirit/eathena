@@ -61,6 +61,7 @@ extern char pet_db[256];
 extern char mail_db[256];
 extern char auction_db[256];
 extern char quest_db[256];
+extern char sqibonus_db[256];
 
 extern int db_use_sqldbs; // added for sql item_db read for char server [Valaris]
 

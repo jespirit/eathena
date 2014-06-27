@@ -59,6 +59,7 @@ char auction_db[256] = "auction"; // Auctions System
 char friend_db[256] = "friends";
 char hotkey_db[256] = "hotkey";
 char quest_db[256] = "quest";
+char sqibonus_db[256] = "sqibonus";
 
 // show loading/saving messages
 #ifdef TXT_SQL_CONVERT
@@ -691,6 +692,30 @@ int mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			strcat(save_status, " hotkeys");
 	}
 #endif
+
+	// Save SQI bonuses
+	if (
+		(p->sqibonus_index[0] != cp->sqibonus_index[0]) || (p->sqibonus_index[1] != cp->sqibonus_index[1]) ||
+		(p->sqibonus_index[2] != cp->sqibonus_index[2]) || (p->sqibonus_index[3] != cp->sqibonus_index[3])
+	)
+	{
+		StringBuf_Clear(&buf);
+		StringBuf_Printf(&buf, "UPDATE `%s` SET ", sqibonus_db);
+		for(i = 0; i < ARRAYLENGTH(p->sqibonus_index); i++){
+			if (i != 0)
+				StringBuf_AppendStr(&buf, ",");
+			StringBuf_Printf(&buf, "`bonus%d`='%d'", i, p->sqibonus_index[i]);
+		}
+		StringBuf_Printf(&buf, " WHERE `char_id` = '%d'", p->char_id);
+
+		if( SQL_ERROR == Sql_QueryStr(sql_handle, StringBuf_Value(&buf)) )
+		{
+			Sql_ShowDebug(sql_handle);
+			errors++;
+		} else
+			strcat(save_status, " sqibonus");
+	}
+
 	StringBuf_Destroy(&buf);
 	if (save_status[0]!='\0' && save_log)
 		ShowInfo("Saved char %d - %s:%s.\n", char_id, p->name, save_status);
@@ -962,6 +987,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	struct hotkey tmp_hotkey;
 	int hotkey_num;
 #endif
+	char tmp_sqibonus[4];
 
 	memset(p, 0, sizeof(struct mmo_charstatus));
 	
@@ -1195,6 +1221,24 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	mercenary_owner_fromsql(char_id, p);
 	strcat(t_msg, " mercenary");
 
+	// Read SQI bonuses
+	//`sqibonus` (`id`,`char_id`, `bonus0`, `bonus1`, `bonus2`, `bonus3`)
+	StringBuf_Clear(&buf);
+	StringBuf_AppendStr(&buf, "SELECT `id`");
+	for( j = 0; j < MAX_SQI_ACTIVE_BONUS; ++j )
+		StringBuf_Printf(&buf, ", `bonus%d`", j);
+	StringBuf_Printf(&buf, " FROM `%s` WHERE `char_id`=? LIMIT %d", sqibonus_db, 1);
+
+	if( SQL_ERROR == SqlStmt_PrepareStr(stmt, StringBuf_Value(&buf))
+	||	SQL_ERROR == SqlStmt_BindParam(stmt, 0, SQLDT_INT, &char_id, 0)
+	||	SQL_ERROR == SqlStmt_Execute(stmt))
+		SqlStmt_ShowDebug(stmt);
+	for( i = 0; i < MAX_SQI_ACTIVE_BONUS; ++i )
+		if( SQL_ERROR == SqlStmt_BindColumn(stmt, i, SQLDT_CHAR, &tmp_sqibonus[i], 0, NULL, NULL) )
+			SqlStmt_ShowDebug(stmt);
+
+	memcpy(&p->sqibonus_index[i], &tmp_sqibonus, sizeof(tmp_sqibonus));
+	strcat(t_msg, " sqi");
 
 	if (save_log) ShowInfo("Loaded char (%d - %s): %s\n", char_id, p->name, t_msg);	//ok. all data load successfuly!
 	SqlStmt_Free(stmt);

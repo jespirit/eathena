@@ -378,7 +378,7 @@ struct mmo_charstatus {
 	short rename;
 
 	// SQI Bonus [ragnarok_champ]
-	short sqibonus_index[MAX_SQI_ACTIVE_BONUS];	// max 4 sqi bonuses
+	char sqibonus_index[MAX_SQI_ACTIVE_BONUS];	// max 4 sqi bonuses
 
 	time_t delete_date;
 };

@@ -528,6 +528,7 @@ int mmo_char_tostr(char *str, struct mmo_charstatus *p, struct global_reg *reg, 
 		"\t%d,%d,%d\t%d,%d,%d,%d,%d,%d" //Up to robe
 		"\t%d,%d,%d\t%d,%d,%d" //last point + save point
 		",%d,%d,%d,%d,%d,%lu\t",	//Family info + delete date
+		"\t%d,%d,%d,%d,%d\t",	//Sqi Bonuses + sqi bonus count
 		p->char_id, p->account_id, p->slot, p->name, //
 		p->class_, p->base_level, p->job_level,
 		p->base_exp, p->job_exp, p->zeny,
@@ -541,7 +542,8 @@ int mmo_char_tostr(char *str, struct mmo_charstatus *p, struct global_reg *reg, 
 		p->last_point.map, p->last_point.x, p->last_point.y, //
 		p->save_point.map, p->save_point.x, p->save_point.y,
 		p->partner_id,p->father,p->mother,p->child,p->fame, //
-		(unsigned long)p->delete_date);  // FIXME: platform-dependent size
+		(unsigned long)p->delete_date,  // FIXME: platform-dependent size
+		p->sqibonus_index[0], p->sqibonus_index[1], p->sqibonus_index[2], p->sqibonus_index[3]);
 	for(i = 0; i < MAX_MEMOPOINTS; i++)
 		if (p->memo_point[i].map) {
 			str_p += sprintf(str_p, "%d,%d,%d ", p->memo_point[i].map, p->memo_point[i].x, p->memo_point[i].y);
@@ -599,6 +601,29 @@ int mmo_char_fromstr(char *str, struct mmo_charstatus *p, struct global_reg *reg
 	// initilialise character
 	memset(p, '\0', sizeof(struct mmo_charstatus));
 	
+// Char structure (SQI bonuses)	[jespirit]
+	if (sscanf(str, "%d\t%d,%d\t%127[^\t]\t%d,%d,%d\t%u,%u,%d\t%d,%d,%d,%d\t%d,%d,%d,%d,%d,%d\t%d,%d"
+		"\t%d,%d,%d\t%d,%d,%d,%d\t%d,%d,%d\t%d,%d,%d,%d,%d,%d"
+		"\t%d,%d,%d\t%d,%d,%d,%d,%d,%d,%d,%d,%lu\t%d,%d,%d,%d,%d%n",
+		&tmp_int[0], &tmp_int[1], &tmp_int[2], tmp_str[0],
+		&tmp_int[3], &tmp_int[4], &tmp_int[5],
+		&tmp_uint[0], &tmp_uint[1], &tmp_int[8],
+		&tmp_int[9], &tmp_int[10], &tmp_int[11], &tmp_int[12],
+		&tmp_int[13], &tmp_int[14], &tmp_int[15], &tmp_int[16], &tmp_int[17], &tmp_int[18],
+		&tmp_int[19], &tmp_int[20],
+		&tmp_int[21], &tmp_int[22], &tmp_int[23], //
+		&tmp_int[24], &tmp_int[25], &tmp_int[26], &tmp_int[44],
+		&tmp_int[27], &tmp_int[28], &tmp_int[29],
+		&tmp_int[30], &tmp_int[31], &tmp_int[32], &tmp_int[33], &tmp_int[34], &tmp_int[47],
+		&tmp_int[45], &tmp_int[35], &tmp_int[36],
+		&tmp_int[46], &tmp_int[37], &tmp_int[38], &tmp_int[39],
+		&tmp_int[40], &tmp_int[41], &tmp_int[42], &tmp_int[43], &tmp_ulong[0],
+		&tmp_int[48], &tmp_int[49], &tmp_int[50], &tmp_int[51], &tmp_int[52], &next) != 55)
+	{
+	tmp_int[48] = 0;	// sqi bonus
+	tmp_int[49] = 0;	// sqi bonus
+	tmp_int[50] = 0;	// sqi bonus
+	tmp_int[51] = 0;	// sqi bonus
 // Char structure of version 14797 (robe)
 	if (sscanf(str, "%d\t%d,%d\t%127[^\t]\t%d,%d,%d\t%u,%u,%d\t%d,%d,%d,%d\t%d,%d,%d,%d,%d,%d\t%d,%d"
 		"\t%d,%d,%d\t%d,%d,%d,%d\t%d,%d,%d\t%d,%d,%d,%d,%d,%d"
@@ -763,6 +788,7 @@ int mmo_char_fromstr(char *str, struct mmo_charstatus *p, struct global_reg *reg
 	}	// Char structure of version 1500 (homun + mapindex maps)
 	}	// Char structure of version 14700 (delete date)
 	}	// Char structure of version 14797 (robe)
+	}   // Char structure (SQI bonuses)
 
 	safestrncpy(p->name, tmp_str[0], NAME_LENGTH); //Overflow protection [Skotlex]
 	p->char_id = tmp_int[0];
@@ -814,6 +840,11 @@ int mmo_char_fromstr(char *str, struct mmo_charstatus *p, struct global_reg *reg
 	p->save_point.map = tmp_int[46];
 	p->delete_date = tmp_ulong[0];
 	p->robe = tmp_int[47];
+	// SQI bonuses
+	p->sqibonus_index[0] = tmp_int[48];
+	p->sqibonus_index[1] = tmp_int[49];
+	p->sqibonus_index[2] = tmp_int[50];
+	p->sqibonus_index[3] = tmp_int[51];
 
 #ifndef TXT_SQL_CONVERT
 	// Some checks
