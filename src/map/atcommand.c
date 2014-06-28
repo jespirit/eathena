@@ -8847,6 +8847,139 @@ ACMD_FUNC(font)
 	return 0;
 }
 
+#define ABS(x) ((x)<0?-(x):(x))
+
+/*==========================================
+ *
+ *------------------------------------------*/
+ACMD_FUNC(sqibonus)
+{
+	struct mmo_charstatus* status;
+	int i, j, k, n;
+	int idx, bonus;
+	int add, remove;
+	int err, count;
+	StringBuf buf;
+	nullpo_retr(-1, sd);
+
+	status = &sd->status;
+
+	StringBuf_Init(&buf);
+
+	if (!message || !*message || sscanf(message, "%d", &bonus) < 1 || (ABS(bonus) < 1 || ABS(bonus) > 9)) {
+		clif_displaymessage(fd, "Please enter the bonuses you want to add/remove"
+			"(usage: @sqibonus 1 or @sqibonus -4)");
+
+		//mapid = pc_jobid2mapid(sd->class_);
+		idx = map_mapidtoidx(sd->class_, sd->status.sex);
+
+		if (idx == -1) {
+			clif_displaymessage(fd, StringBuf_Value(&buf));
+			clif_displaymessage(fd, "Invalid, this character cannot equip an SQI and does not have SQI bonuses.");
+			return -1;
+		}
+		// Display the bonuses for the current character.
+		for (i=0; i<MAX_SQI_BONUS; i++) {
+			StringBuf_Printf(&buf, "[%d]: %s", i+1, sqi_bonus_table[idx][i].description);
+			if (i+1 == status->sqibonus_index[0] || i+1 == status->sqibonus_index[1] ||
+				i+1 == status->sqibonus_index[2] || i+1 == status->sqibonus_index[3]) {
+				StringBuf_AppendStr(&buf, "\t[ACTIVE]");
+			}
+			clif_displaymessage(fd, StringBuf_Value(&buf));
+		}
+
+		return -1;
+	} else {
+		// Run some checks on the sqi bonuses
+		err = 0;
+		count = 0;
+
+		for (i=0; i<MAX_SQI_ACTIVE_BONUS; i++) {
+			n = sd->status.sqibonus_index[i];
+			if (n < 1 || n > MAX_SQI_BONUS) {
+				ShowError("sqibonus: sqibonus_index[%d] is invalid must be in range 1-9 (or 0) of char id %d, skipping", i, sd->status.char_id);
+				err = 1;
+				break;
+			}
+		}
+
+		// If there are any errors reset the bonuses
+		if (err) {
+			for (i=0; i<MAX_SQI_ACTIVE_BONUS; i++) {
+				sd->status.sqibonus_index[i] = 0;
+			}
+
+			ShowStatus("sqibonus: SQI bonuses have been cleared for char id %d", sd->status.char_id);
+			return -1;
+		}
+
+		if (bonus > 0) {
+			// Add a bonus
+			add = 1;
+			for (i=0; i<MAX_SQI_ACTIVE_BONUS; i++) {
+				if (status->sqibonus_index[i] == 0)
+					break;
+			}
+
+			if (i == MAX_SQI_ACTIVE_BONUS) {  // Player already has 4 active bonuses.
+				StringBuf_Printf(&buf, "Sorry, you can't add another bonus. Please remove one first.", bonus);
+				clif_displaymessage(fd, StringBuf_Value(&buf));
+				return -1;
+			}
+
+			for (i=0; i<MAX_SQI_ACTIVE_BONUS; i++) {
+				if (bonus == status->sqibonus_index[i]) {  // Does player already have the bonus?
+					add = 0;
+					break;
+				}
+			}
+
+			if (add) {
+				sd->status.sqibonus_index[i] = bonus;
+				StringBuf_Printf(&buf, "Great. You have now added the %d bonus to your SQI.", bonus);
+				clif_displaymessage(fd, StringBuf_Value(&buf));
+			}
+			else {
+				clif_displaymessage(fd, "You already have this bonus. Please choose another bonus.");
+			}
+		} else {
+			// Remove a bonus
+			bonus = -bonus;	// make positive
+
+			remove = 0;
+			for (i=0; i<MAX_SQI_ACTIVE_BONUS; i++) {
+				if (bonus == status->sqibonus_index[i]) {
+					remove = 1;
+					break;
+				}
+			}
+
+			if (remove) {
+				status->sqibonus_index[i] = 0;
+				StringBuf_Printf(&buf, "Great. You have removed the %d bonus from your SQI.", bonus);
+				clif_displaymessage(fd, StringBuf_Value(&buf));
+			}
+			else
+				clif_displaymessage(fd, "You cannot remove the bonus which you don't have.");
+		}
+
+		if (add || remove) {
+			// Unequip the SQI
+			for (i=0; i<EQI_MAX; i++) {
+				if ((j = sd->equip_index[i]) < 0)
+					continue;
+				k = sd->inventory_data[j]->nameid;
+				if (k >= 19005 && k <= 19023) {  // Need another solution for checking SQI
+					pc_unequipitem(sd, j, 3);
+					break;
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
 
 /*==========================================
  * atcommand_info[] structure definition
@@ -9150,6 +9283,7 @@ AtCommandInfo atcommand_info[] = {
 	{ "delitem",           60,60,     atcommand_delitem },
 	{ "charcommands",       1,1,      atcommand_commands },
 	{ "font",               1,1,      atcommand_font },
+	{ "sqibonus",			1,1,	  atcommand_sqibonus },
 };
 
 
