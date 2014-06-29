@@ -8880,15 +8880,16 @@ ACMD_FUNC(sqibonus)
 		}
 		// Display the bonuses for the current character.
 		for (i=0; i<MAX_SQI_BONUS; i++) {
+			StringBuf_Clear(&buf);
 			StringBuf_Printf(&buf, "[%d]: %s", i+1, sqi_bonus_table[idx][i].description);
-			if (i+1 == status->sqibonus_index[0] || i+1 == status->sqibonus_index[1] ||
-				i+1 == status->sqibonus_index[2] || i+1 == status->sqibonus_index[3]) {
-				StringBuf_AppendStr(&buf, "\t[ACTIVE]");
+			for (j=0; j<MAX_SQI_ACTIVE_BONUS; j++) {
+				if (status->sqibonus_index[j] == i+1)
+					StringBuf_AppendStr(&buf, "\t[ACTIVE]");
 			}
 			clif_displaymessage(fd, StringBuf_Value(&buf));
 		}
 
-		return -1;
+		return 0;
 	} else {
 		// Run some checks on the sqi bonuses
 		err = 0;
@@ -8896,8 +8897,8 @@ ACMD_FUNC(sqibonus)
 
 		for (i=0; i<MAX_SQI_ACTIVE_BONUS; i++) {
 			n = sd->status.sqibonus_index[i];
-			if (n < 1 || n > MAX_SQI_BONUS) {
-				ShowError("sqibonus: sqibonus_index[%d] is invalid must be in range 1-9 (or 0) of char id %d, skipping", i, sd->status.char_id);
+			if (n < 0 || n > MAX_SQI_BONUS) {
+				ShowError("sqibonus: sqibonus_index[%d] is invalid must be in range 1-9 (or 0) of char id %d, skipping\n", i, sd->status.char_id);
 				err = 1;
 				break;
 			}
@@ -8909,7 +8910,7 @@ ACMD_FUNC(sqibonus)
 				sd->status.sqibonus_index[i] = 0;
 			}
 
-			ShowStatus("sqibonus: SQI bonuses have been cleared for char id %d", sd->status.char_id);
+			ShowStatus("sqibonus: SQI bonuses have been cleared for char id %d\n", sd->status.char_id);
 			return -1;
 		}
 
@@ -8927,6 +8928,7 @@ ACMD_FUNC(sqibonus)
 				return -1;
 			}
 
+			j=i;  // save open slot
 			for (i=0; i<MAX_SQI_ACTIVE_BONUS; i++) {
 				if (bonus == status->sqibonus_index[i]) {  // Does player already have the bonus?
 					add = 0;
@@ -8935,7 +8937,7 @@ ACMD_FUNC(sqibonus)
 			}
 
 			if (add) {
-				sd->status.sqibonus_index[i] = bonus;
+				sd->status.sqibonus_index[j] = bonus;
 				StringBuf_Printf(&buf, "Great. You have now added the %d bonus to your SQI.", bonus);
 				clif_displaymessage(fd, StringBuf_Value(&buf));
 			}
