@@ -9032,6 +9032,11 @@ int skill_delayfix (struct block_list *bl, int skill_id, int skill_lv)
 	case CH_CHAINCRUSH:
 		time -= 4*status_get_agi(bl) - 2*status_get_dex(bl);
 		break;
+	// Body Relocation delay only applies in PvP/GvG/Battleground [ragnarok_champ]
+	case MO_BODYRELOCATION:
+		if (!(map[sd->bl.m].flag.pvp || map_flag_gvg(sd->bl.m) || map[sd->bl.m].flag.battleground))
+			time = 0;
+		break;
 	case HP_BASILICA:
 		if( sc && !sc->data[SC_BASILICA] )
 			time = 0; // There is no Delay on Basilica creation, only on cancel
