@@ -15450,10 +15450,13 @@ BUILDIN_FUNC(sqifunc)
 		}
 
 		n = sd->status.sqibonus_index[i];
-		if (n < 1 || n > MAX_SQI_BONUS) {
+		if (n < 0 || n > MAX_SQI_BONUS) {
 			ShowError("sqifunc: sqibonus_index[%d] is invalid must be in range 1-9 for char id %d, skipping", i, sd->status.char_id);
 			continue;
 		}
+
+		if (n == 0)  // No bonus
+			continue;
 
 		// parse the sqi bonus scripts
 		// execute the script

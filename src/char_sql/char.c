@@ -1437,6 +1437,10 @@ int make_new_char_sql(struct char_session_data* sd, char* name_, int str, int ag
 			Sql_ShowDebug(sql_handle);
 	}
 
+	// Set default values for SQI bonuses
+	if( SQL_ERROR == Sql_Query(sql_handle, "INSERT INTO `%s` (`char_id`,`bonus0`, `bonus1`, `bonus2`, `bonus3`) VALUES ('%d', '%d', '%d', '%d', '%d')", sqibonus_db, char_id, 0, 0, 0, 0) )
+		Sql_ShowDebug(sql_handle);
+
 	ShowInfo("Created char: account: %d, char: %d, slot: %d, name: %s\n", sd->account_id, char_id, slot, name);
 	return char_id;
 }
