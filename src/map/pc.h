@@ -199,6 +199,7 @@ struct map_session_data {
 	unsigned char blockskill[MAX_SKILL];
 	int cloneskill_id;
 	int menuskill_id, menuskill_val;
+	int spiritskill_id;  // [jespirit]
 
 	int invincible_timer;
 	unsigned int canlog_tick;
@@ -251,7 +252,7 @@ struct map_session_data {
 	struct { //skillatk raises bonus dmg% of skills, skillheal increases heal%, skillblown increases bonus blewcount for some skills.
 		unsigned short id;
 		short val;
-	} skillatk[MAX_PC_BONUS], skillheal[5], skillheal2[5], skillblown[MAX_PC_BONUS], skillcast[MAX_PC_BONUS];
+	} skillatk[MAX_PC_BONUS], skillheal[5], skillheal2[5], skillblown[MAX_PC_BONUS], skillcast[MAX_PC_BONUS], skilldelay[MAX_PC_BONUS];
 	struct {
 		short value;
 		int rate;
@@ -269,6 +270,14 @@ struct map_session_data {
 		short flag, rate;
 		unsigned char ele;
 	} subele2[MAX_PC_BONUS];
+	struct {
+		int skillid;
+		unsigned char lv;
+	} spiritskills[16];  // bAddSkillOnSpirit
+	struct {
+		int skillid;
+		int rate;
+	} add_zeny[MAX_PC_BONUS];  // bAddZenyRate
 	// zeroed structures end here
 	// manually zeroed structures start here.
 	struct s_autobonus autobonus[MAX_PC_BONUS], autobonus2[MAX_PC_BONUS], autobonus3[MAX_PC_BONUS]; //Auto script on attack, when attacked, on skill usage
