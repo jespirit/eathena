@@ -5369,6 +5369,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 			clif_specialeffect(bl, 0x152, AREA);
 			//SC_SPIRIT invokes status_calc_pc for us.
 		}
+		dstsd->spiritskill_id = sd->bl.id;  // Track source of soul link [jespirit]
 		clif_skill_nodamage(src,bl,skillid,skilllv,
 			sc_start4(bl,SC_SPIRIT,100,skilllv,skillid,0,0,skill_get_time(skillid,skilllv)));
 		sc_start(src,SC_SMA,100,skilllv,skill_get_time(SL_SMA,skilllv));
@@ -8866,6 +8867,14 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, short 
 		}
 	}
 
+	// bAddZenyRate
+	ARR_FIND( 0, sizeof(sd->add_zeny), i, sd->add_zeny[i].skillid == j );
+	if( i == sizeof(sd->add_zeny) )
+		i = -1;
+
+	if (i >= 0)
+		req.zeny += req.zeny*sd->add_zeny[i].rate / 100;
+
 	// Check for cost reductions due to skills & SCs
 	switch(skill) {
 		case MC_MAMMONITE:
@@ -9005,6 +9014,7 @@ int skill_castfix_sc (struct block_list *bl, int time)
  *------------------------------------------*/
 int skill_delayfix (struct block_list *bl, int skill_id, int skill_lv)
 {
+	int i;
 	int delaynodex = skill_get_delaynodex(skill_id, skill_lv);
 	int time = skill_get_delay(skill_id, skill_lv);
 	struct map_session_data *sd;
@@ -9082,8 +9092,14 @@ int skill_delayfix (struct block_list *bl, int skill_id, int skill_lv)
 		}
 	}
 
+	// This is where you add skill-specific delay reductions [ragnarok_champ]
+	// Question is, do they stack with equips and cards?
+	ARR_FIND(0, ARRAYLENGTH(sd->skilldelay), i, sd->skilldelay[i].id == skill_id);
+	if (i == ARRAYLENGTH(sd->skilldelay))
+		i = -1;
+
 	if( !(delaynodex&4) && sd && sd->delayrate != 100 )
-		time = time * sd->delayrate / 100;
+		time = time * (sd->delayrate + (i>=0?sd->skilldelay[i].val:0)) / 100;  // Delay rate will stack for now
 
 	if (battle_config.delay_rate != 100)
 		time = time * battle_config.delay_rate / 100;

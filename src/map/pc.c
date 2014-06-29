@@ -1220,6 +1220,33 @@ static int pc_calc_skillpoint(struct map_session_data* sd)
 	return skill_point;
 }
 
+int pc_mapid2linkidx(int mapid, int sex)
+{
+	switch (mapid&MAPID_UPPERMASK)
+	{
+	//2_1 classes
+		case MAPID_SUPER_NOVICE:	return 0;
+		case MAPID_KNIGHT:			return 1;
+		case MAPID_WIZARD:			return 2;
+		case MAPID_HUNTER:			return 3;
+		case MAPID_PRIEST:			return 4;
+		case MAPID_BLACKSMITH:		return 5;
+		case MAPID_ASSASSIN:		return 6;
+		case MAPID_STAR_GLADIATOR:	return 7;
+	//2_2 classes
+		case MAPID_CRUSADER:		return 8;
+		case MAPID_SAGE:			return 9;
+		case MAPID_BARDDANCER:		return (sex?10:11);
+		case MAPID_MONK:			return 12;
+		case MAPID_ALCHEMIST:		return 13;
+		case MAPID_ROGUE:			return 14;
+		case MAPID_SOUL_LINKER:		return 15;
+
+		default:
+			break;
+	}
+	return -1;
+}
 
 /*==========================================
  * ?‚¦‚ç‚ê‚éƒXƒLƒ‹‚ÌŒvŽZ
@@ -1228,6 +1255,8 @@ int pc_calc_skilltree(struct map_session_data *sd)
 {
 	int i,id=0,flag;
 	int c=0;
+	int idx;
+	struct map_session_data* srcsd;
 
 	nullpo_ret(sd);
 	i = pc_calc_skilltree_normalize_job(sd);
@@ -1272,6 +1301,18 @@ int pc_calc_skilltree(struct map_session_data *sd)
 				sd->status.skill[i-8].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
 			}
 		}
+	}
+
+	// bAddSkillOnSpirit
+	if (sd->sc.count && sd->sc.data[SC_SPIRIT] && sd->spiritskill_id
+		&& (srcsd = map_id2sd(sd->spiritskill_id))  // source
+		&& ((idx=pc_mapid2linkidx(sd->class_, sd->status.sex)) != -1)  // can be linked?
+		&& srcsd->spiritskills[idx].skillid > 0)
+	{
+		i = srcsd->spiritskills[idx].skillid;
+		sd->status.skill[i].id = i;
+		sd->status.skill[i].lv = srcsd->spiritskills[idx].lv;
+		sd->status.skill[i].flag = SKILL_FLAG_TEMPORARY;
 	}
 
 	if( battle_config.gm_allskill > 0 && pc_isGM(sd) >= battle_config.gm_allskill )
@@ -2823,6 +2864,24 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 		}
 		break;
 
+	// Skill-specific delay rates
+	case SP_SKILL_DELAYRATE:
+		if(sd->state.lr_flag == 2)
+			break;
+		ARR_FIND(0, ARRAYLENGTH(sd->skilldelay), i, sd->skilldelay[i].id == 0 || sd->skilldelay[i].id == type2);
+		if (i == ARRAYLENGTH(sd->skilldelay))
+		{
+			ShowDebug("run_script: bonus2 bSkillDelayrate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skilldelay), type2, val);
+			break;
+		}
+		if (sd->skilldelay[i].id == type2)
+			sd->skilldelay[i].val += val;
+		else {
+			sd->skilldelay[i].id = type2;
+			sd->skilldelay[i].val = val;
+		}
+		break;
+
 	case SP_HP_LOSS_RATE:
 		if(sd->state.lr_flag != 2) {
 			sd->hp_loss.value = type2;
@@ -2920,6 +2979,25 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 	case SP_IGNORE_DEF_RATE:
 		if(sd->state.lr_flag != 2)
 			sd->ignore_def[type2] += val;
+		break;
+	case SP_ADD_ZENY_RATE:  // zeny usage reduction/boost
+		if(sd->state.lr_flag != 2) {
+			if (type2 < 1 || type2 > MAX_SKILL) {
+				ShowWarning("pc_bonus2: skill id is out of range: %d", type2);
+				break;
+			}
+			ARR_FIND( 0, ARRAYLENGTH(sd->add_zeny), i, sd->add_zeny[i].skillid == type2 || sd->add_zeny[i].skillid == 0);
+			if ( i == ARRAYLENGTH(sd->add_zeny) ) {
+				ShowDebug("run_script: bonus2 bAddZenyRate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->add_zeny), type2, val);
+				break;
+			}
+			if (sd->add_zeny[i].skillid == type2)
+				sd->add_zeny[i].rate += val;
+			else {
+				sd->add_zeny[i].skillid = type2;
+				sd->add_zeny[i].rate = val;
+			}
+		}
 		break;
 
 	default:
@@ -3048,6 +3126,25 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 		if (sd->state.lr_flag != 2)
 			pc_bonus_subele(sd, (unsigned char)type2, type3, val);
 		break;
+
+	case SP_ADD_SKILL_ON_SPIRIT:
+	{
+		int idx;
+		if (type3 < 0 || type3 > JOB_MAX) {
+			ShowWarning("pc_bonus3 (SP_ADD_SKILL_ON_SPIRIT): job id %d is out of range.\n", type3);
+			break;
+		}
+		else if ((idx=pc_mapid2linkidx(pc_jobid2mapid(type3), type3==JOB_CLOWN?1:0)) == -1) {
+			ShowWarning("pc_bonus3 (SP_ADD_SKILL_ON_SPIRIT): Cannot add skill for job %d.\n", type3);
+			break;
+		}
+		// TODO: validate skill level
+		if (sd->state.lr_flag != 2) {
+			sd->spiritskills[idx].skillid = type2;
+			sd->spiritskills[idx].lv = val;
+		}
+		break;
+	}
 
 	default:
 		ShowWarning("pc_bonus3: unknown type %d %d %d %d!\n",type,type2,type3,val);
