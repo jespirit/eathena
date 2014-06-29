@@ -14,6 +14,7 @@
 // 512  - restricted in zone 5
 // 1024 - restricted in zone 6
 // 2048 - restricted in zone 7
+// 4096 - restricted in zone 8
 
 //Examples:
 //1201,1 you can't use KNIFE(ID 1201) on normal maps
@@ -58,3 +59,22 @@
 
 //Zone 7 - Towns
 14529,2048 //Greed Scroll
+
+//Zone 8 - Vanilla PvP/WoE
+//Equipment
+//Cards
+//Item Consumables
+545,4096 //Condensed Red Potion
+546,4096 //Condensed Orange Potion
+547,4096 //Condensed White Potion
+517,4096 //Meat
+533,4096 //Grape Juice
+551,4096 //Sushi
+544,4096 //Raw Fish
+538,4096 //Well-baked Cookie
+528,4096 //Monster's Feed
+519,4096 //Milk
+514,4096 //Grape
+504,4096 //White Potion
+501,4096 //Red Potion
+518,4096 //Honey
