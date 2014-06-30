@@ -8850,7 +8850,7 @@ ACMD_FUNC(font)
 #define ABS(x) ((x)<0?-(x):(x))
 
 /*==========================================
- *
+ * Add/Remove SQI bonuses
  *------------------------------------------*/
 ACMD_FUNC(sqibonus)
 {
@@ -8982,6 +8982,320 @@ ACMD_FUNC(sqibonus)
 	return 0;
 }
 
+/*==========================================
+ * Plagiarise shortcut - restricted to rogue/stalkers
+ *------------------------------------------*/
+ACMD_FUNC(copyskill)
+{
+	int skillid;
+	int skilllv;
+	int lv;
+	int type;
+	nullpo_retr(-1,sd);
+
+	if (!message || !*message || sscanf(message, "%d %d", &skillid, &skilllv) != 2) {
+		clif_displaymessage(fd, "Please, enter a skill id and skill level (usage: @copyskill <skill id> <skill level>).");
+		return -1;
+	}
+
+	if ((sd->class_&MAPID_UPPERMASK) != MAPID_ROGUE) {
+		clif_displaymessage(fd, "Sorry, only rogues/stalkers can copy skills.");
+		return -1;
+	}
+
+	if (!can_copy(sd, skillid, (struct block_list*)sd)) {
+		clif_displaymessage(fd, "Skill cannot be copied.");
+		return -1;
+	}
+
+	// TODO: Bounds check for skill level
+	lv = skilllv;
+	// delete previous cloned skill
+	if (sd->cloneskill_id && sd->status.skill[sd->cloneskill_id].flag == SKILL_FLAG_PLAGIARIZED){
+		sd->status.skill[sd->cloneskill_id].id = 0;
+		sd->status.skill[sd->cloneskill_id].lv = 0;
+		sd->status.skill[sd->cloneskill_id].flag = 0;
+		clif_deleteskill(sd, sd->cloneskill_id);
+	}
+
+	if ((type = pc_checkskill(sd, RG_PLAGIARISM)) < lv)
+		lv = type;
+
+	sd->cloneskill_id = skillid;
+	pc_setglobalreg(sd, "CLONE_SKILL", skillid);
+	pc_setglobalreg(sd, "CLONE_SKILL_LV", lv);
+
+	sd->status.skill[skillid].id = skillid;
+	sd->status.skill[skillid].lv = lv;
+	sd->status.skill[skillid].flag = SKILL_FLAG_PLAGIARIZED;
+	clif_addskill(sd, skillid);
+
+	clif_displaymessage(fd, "You've successfully copied the skill.");
+
+	return 0;
+}
+
+/*==========================================
+ * Rent falcon, peco peco, or cart
+ *------------------------------------------*/
+ACMD_FUNC(rent)
+{
+	int type = 1;
+	char msg[1024];
+	nullpo_retr(-1,sd);
+
+	if (pc_baseclass(sd) == MAPID_MERCHANT || pc_basejob(sd) == MAPID_SUPER_NOVICE) {
+		if (message && *message && sscanf(message, "%d", &type) == 1 && (type < 0 || type > 5)) {
+			clif_displaymessage(fd, "Please enter a cart number between 0 and 5.");
+			return -1;
+		}
+		if (pc_iscarton(sd) == 0 && pc_checkskill(sd, MC_PUSHCART)>0) {
+			pc_setcart(sd, type);
+		} else {
+			sprintf(msg, "Sorry %s, Please make sure you are the required job and have the required skill.", sd->status.name);
+			clif_displaymessage(fd, msg);
+			return -1;
+		}
+	}
+	else if (pc_baseclass(sd) == MAPID_ARCHER) {
+		// Wrong, check fails if player is a baby/high archer, use pc_basejob instead
+		if (pc_basejob(sd) != MAPID_ARCHER && pc_baseclass(sd) == MAPID_ARCHER && pc_isfalcon(sd) == 0 && pc_checkskill(sd, HT_FALCON)>0) {
+			pc_setfalcon(sd, 1);
+		} else {
+			sprintf(msg, "Sorry %s, Please make sure you are the required job and have the required skill.", sd->status.name);
+			clif_displaymessage(fd, msg);
+			return -1;
+		}
+	}
+	else if (pc_baseclass(sd) == MAPID_SWORDMAN) {
+		if (pc_basejob(sd) != MAPID_SWORDMAN && pc_baseclass(sd) == MAPID_SWORDMAN && pc_isriding(sd) == 0  && pc_checkskill(sd, KN_RIDING)>0) {
+			if (sd->disguise)
+			{
+				clif_displaymessage(fd, msg_txt(212)); // Cannot mount a Peco Peco while in disguise.
+				return -1;
+			}
+
+			pc_setriding(sd, 1);
+		} else {
+			sprintf(msg, "Sorry %s, Please make sure you are the required job and have the required skill.", sd->status.name);
+			clif_displaymessage(fd, msg);
+			return -1;
+		}
+	}
+	else {
+		clif_displaymessage(fd, "Sorry, you are not of the right class to rent a peco/falcon/cart.");
+		return -1;
+	}
+
+	clif_displaymessage(fd, "Great, thank you for using the service.");
+
+	return 0;
+}
+
+ACMD_FUNC(fcp)
+{
+	int skilllv;
+	int skillid = CR_FULLPROTECTION;
+	struct block_list* src;
+	struct block_list* bl;
+	struct status_change* sc;
+	int i, skilltime;
+	nullpo_retr(-1,sd);
+
+	src = (struct block_list*)sd;
+	bl = src;
+	sc = status_get_sc(src);
+
+	if (!message || !*message || sscanf(message, "%d", &skilllv) < 1) {
+		clif_displaymessage(fd, "Please enter the skill level (usage: @fcp <skill lv>)");
+		return -1;
+	}
+
+	if (skilllv <= 0) {
+		clif_displaymessage(fd, "Skill level cannot be less/equal to 0.");
+		return -1;
+	}
+
+	skilltime = skill_get_time(skillid,skilllv);
+	if (!sc) {
+		clif_skill_nodamage(src,bl,skillid,skilllv,0);	// source = target
+		return 0;
+	}
+	// remove any strip status
+	for (i=0; i<4; i++) {
+		status_change_end(bl, (sc_type)(SC_STRIPWEAPON + i), INVALID_TIMER);
+		sc_start(bl,(sc_type)(SC_CP_WEAPON + i),100,skilllv,skilltime);
+	}
+	clif_skill_nodamage(src,bl,skillid,skilllv,1);
+
+	return 0;
+}
+
+/*==========================================
+ *
+ *------------------------------------------*/
+ACMD_FUNC(hurt)
+{
+	int hp = 0, sp = 0; // [Valaris] thanks to fov
+	struct status_data* sstatus;
+	nullpo_retr(-1, sd);
+
+	sstatus = &sd->battle_status;
+	hp = sstatus->hp;
+	sp = sstatus->sp;
+
+	if (hp > 1) {
+		hp--;
+		status_damage(NULL, &sd->bl, hp, 0, 0, 0);
+		clif_damage(&sd->bl,&sd->bl, gettick(), 0, 0, -hp, 0, 4, 0);
+	}
+
+	if (sp > 1) {
+		sp--;
+		status_damage(NULL, &sd->bl, 0, sp, 0, 0);
+	}
+
+	clif_displaymessage(fd, msg_txt(156)); // HP or/and SP modified.
+	return 0;
+}
+
+/*==========================================
+ * Clears all the buffs from the player  [jespirit]
+ *------------------------------------------*/
+ACMD_FUNC(clearall)
+{
+	struct block_list* bl;
+	bl = (struct block_list*)sd;
+
+	if( potion_flag==1 && potion_target )
+	{//##TODO how does this work [FlavioJS]
+		bl = map_id2bl(potion_target);
+	}
+
+	if( !bl ) return 0;
+
+	status_change_clear(bl, 2);// clear status effects (but not all)
+
+	clif_displaymessage(fd, "You have removed all status buffs.");
+
+	return 0;
+}
+
+/*==========================================
+ * red: str, crit, vit
+ * blue: int, mdef, def
+ * yellow: dex, hit, flee
+ * green: agi, aspd, luk
+ *------------------------------------------*/
+ACMD_FUNC(getarmor)
+{
+	struct item item_tmp;
+	struct item_data *item_data;
+	char item_name[100];
+	int item_id, number = 1;
+	int identify = 0, refine = 0, attr = 0;
+	int c1 = 0, c2 = 0, c3 = 0, c4 = 0;
+	int flag;
+	int loop, get_count, i, j;
+	int* p;
+	char stat_name[5];
+	StringBuf buf;
+	struct {
+		int id;
+		char name[5];
+		int val[3];
+	} stats[12] = {
+		{4700,"str",{1,2,3}},{4945,"crit",{2,3,4}},{4740,"vit",{1,2,3}},
+		{4710,"int",{1,2,3}},{4903,"mdef",{2,3,4}},{4900,"def",{2,3,4}},
+		{4720,"dex",{1,2,3}},{4906,"hit",{4,8,12}},{4912,"flee",{2,4,6}},
+		{4730,"agi",{1,2,3}},{4909,"aspd",{1,2,3}},{4750,"luk",{1,2,3}}
+	};
+
+	nullpo_retr(-1, sd);
+
+	StringBuf_Init(&buf);
+
+	memset(item_name, '\0', sizeof(item_name));
+
+	if (!message || !*message || (
+		sscanf(message, "\"%99[^\"]\" %4s %d", item_name, stat_name, &c4) < 3 &&
+		sscanf(message, "%99s %4s %d", item_name, stat_name, &c4) < 3
+	)) {
+		clif_displaymessage(fd, "Please, enter all informations (usage: @getarmor <item name or ID> <Stat> <Plus>).");
+		return -1;
+	}
+
+	for (i=0; i<12; i++) {
+		if (!strcmpi(stat_name, stats[i].name)) {
+			break;
+		}
+	}
+
+	if (i==12) {
+		StringBuf_Printf(&buf, "Invalid stat: %s", stat_name);
+		clif_displaymessage(fd, StringBuf_Value(&buf));
+		return -1;
+	}
+
+	/*	validate stat bonus level
+
+		str,agi,vit,int,dex,luk=1,2,3
+		hit=4,8,12
+		crit=2,3,4
+		aspd=1,2,3
+		mdef,def=2,3,4
+		flee=2,4,6
+	*/
+
+	for (j=0; j<3; j++) {
+		if (c4 == stats[i].val[j])
+			break;
+	}
+
+	if (j == 3) {
+		p = stats[i].val;
+		StringBuf_Printf(&buf, "Invalid stat increase: %d (acceptable values: %d,%d,%d)", c4, p[0], p[1], p[2]);
+		clif_displaymessage(fd, StringBuf_Value(&buf));
+		return -1;
+	}
+
+	c4 = stats[i].id+j;  // Enchant Id
+
+	item_id = 0;
+	if ((item_data = itemdb_searchname(item_name)) != NULL ||
+	    (item_data = itemdb_exists(atoi(item_name))) != NULL)
+		item_id = item_data->nameid;
+
+	if (item_id > 500 && item_data->equip&EQP_ARMOR) {  // Only armors
+		loop = 1;
+		get_count = number;
+		identify = 1;
+		refine = attr = 0;
+
+		for (i = 0; i < loop; i++) {
+			memset(&item_tmp, 0, sizeof(item_tmp));
+			item_tmp.nameid = item_id;
+			item_tmp.identify = identify;
+			item_tmp.refine = refine;
+			item_tmp.attribute = attr;
+			item_tmp.card[0] = c1;
+			item_tmp.card[1] = c2;
+			item_tmp.card[2] = c3;
+			item_tmp.card[3] = c4;
+			if ((flag = pc_additem(sd, &item_tmp, get_count)))
+				clif_additem(sd, 0, 0, flag);
+		}
+
+		log_pick(&sd->bl, LOG_TYPE_COMMAND, item_tmp.nameid, number, &item_tmp);
+
+		clif_displaymessage(fd, msg_txt(18)); // Item created.
+	} else {
+		clif_displaymessage(fd, msg_txt(19)); // Invalid item ID or name.
+		return -1;
+	}
+
+	return 0;
+}
 
 /*==========================================
  * atcommand_info[] structure definition
@@ -9285,7 +9599,13 @@ AtCommandInfo atcommand_info[] = {
 	{ "delitem",           60,60,     atcommand_delitem },
 	{ "charcommands",       1,1,      atcommand_commands },
 	{ "font",               1,1,      atcommand_font },
-	{ "sqibonus",			1,1,	  atcommand_sqibonus },
+	{ "sqibonus",           1,1,      atcommand_sqibonus },
+	{ "copyskill",          1,1,      atcommand_copyskill },
+	{ "rent",               1,1,      atcommand_rent },
+	{ "fcp",                1,1,      atcommand_fcp },
+	{ "hurt",               1,1,      atcommand_hurt },
+	{ "clearall",           1,1,      atcommand_clearall },
+	{ "getarmor",           1,1,      atcommand_getarmor },
 };
 
 
