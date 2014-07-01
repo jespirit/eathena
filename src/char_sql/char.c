@@ -1233,12 +1233,16 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	||	SQL_ERROR == SqlStmt_BindParam(stmt, 0, SQLDT_INT, &char_id, 0)
 	||	SQL_ERROR == SqlStmt_Execute(stmt))
 		SqlStmt_ShowDebug(stmt);
-	for( i = 0; i < MAX_SQI_ACTIVE_BONUS; ++i )
-		if( SQL_ERROR == SqlStmt_BindColumn(stmt, i, SQLDT_CHAR, &tmp_sqibonus[i], 0, NULL, NULL) )
+	for( i = 0; i < MAX_SQI_ACTIVE_BONUS; i++ )
+		if( SQL_ERROR == SqlStmt_BindColumn(stmt, 1+i, SQLDT_CHAR, &tmp_sqibonus[i], 0, NULL, NULL) )
 			SqlStmt_ShowDebug(stmt);
 
-	memcpy(&p->sqibonus_index[i], &tmp_sqibonus, sizeof(tmp_sqibonus));
-	strcat(t_msg, " sqi");
+	if( SQL_SUCCESS == SqlStmt_NextRow(stmt) )
+	{
+		memcpy(&p->sqibonus_index[0], &tmp_sqibonus[0], sizeof(tmp_sqibonus));
+	}
+
+	strcat(t_msg, " sqibonus");
 
 	if (save_log) ShowInfo("Loaded char (%d - %s): %s\n", char_id, p->name, t_msg);	//ok. all data load successfuly!
 	SqlStmt_Free(stmt);
