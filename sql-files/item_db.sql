@@ -4570,6 +4570,7 @@ REPLACE INTO `item_db` VALUES (7996,'Spring_Stanza19','Spring Stanza19',3,2,NULL
 REPLACE INTO `item_db` VALUES (7997,'Spring_Stanza20','Spring Stanza20',3,2,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (7998,'Spring_Stanza21','Spring Stanza21',3,2,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (7999,'Spring_Stanza22','Spring Stanza22',3,2,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+
 # Custom Headgears
 # ===================================================================
 REPLACE INTO `item_db` VALUES (8006,'Valkyrie_Kaho','Valkyrie Helm Kaho',5,20,NULL,100,NULL,5,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,225,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
@@ -4577,6 +4578,17 @@ REPLACE INTO `item_db` VALUES (8048,'Valkyrie_Helm','Valkyrie Helm',5,100000,NUL
 REPLACE INTO `item_db` VALUES (8049,'Sleipnir','Sleipnir',5,20,NULL,3500,NULL,5,NULL,1,0xFFFFFFFE,7,2,64,NULL,85,0,0,'bonus bMdef,10; bonus bMaxHPrate,20; bonus bMaxSPrate,20; bonus bSPrecovRate,15; bonus bSpeedRate,25;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8229,'Old_Valkyrie_Kaho','Old Valkyrie Helm Kaho',5,20,NULL,100,NULL,5,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,901,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8305,'Old_Valkyrie_Helm','Old Valkyrie Helm',5,100000,NULL,1000,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,0,1,901,'bonus bMdef,20; bonus bAgi,20; bonus bVit,20; bonus bLuk,20; bonus2 bSubRace,RC_DemiHuman,10;',NULL,NULL);
+
+# Status Quivers
+# ===================================================================
+REPLACE INTO `item_db` VALUES (8935,'Cursed_Arrow_Container','Cursed Arrow Quiver',2,2,NULL,250,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 1761,500;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (8936,'Flash_Arrow_Container','Flash Arrow Quiver',2,2,NULL,250,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 1760,500;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (8937,'Frozen_Arrow_Container','Frozen Arrow Quiver',2,2,NULL,250,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 1759,500;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (8938,'Mute_Arrow_Container','Mute Arrow Quiver',2,2,NULL,250,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 1769,500;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (8939,'Poison_Arrow_Container','Poison Arrow Quiver',2,2,NULL,250,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 1763,500;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (8940,'Sharp_Arrow_Container','Sharp Arrow Quiver',2,2,NULL,250,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 1764,500;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (8941,'Sleep_Arrow_Container','Sleep Arrow Quiver',2,2,NULL,250,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 1768,500;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (8942,'Stun_Arrow_Container','Stun Arrow Quiver',2,2,NULL,250,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 1758,500;',NULL,NULL);
 
 #  Pet Eggs
 # ===================================================================
@@ -6838,3 +6850,7 @@ REPLACE INTO `item_db` VALUES (18503,'Small_Horn_Of_Devil','Small Horn Of Devil'
 # 19506,T_Valkyrie_Feather_Band
 # 19507,Clear_Sun
 # 19508,T_Gemmed_Sallet
+
+# Extra
+REPLACE INTO `item_db` VALUES (20157,'Elven_Arrow_Container','Elven Arrow Quiver',2,2,NULL,250,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 1773,500;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (20158,'Hunting_Arrow_Container','Hunting Arrow Quiver',2,2,NULL,250,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 1774,500;',NULL,NULL);
