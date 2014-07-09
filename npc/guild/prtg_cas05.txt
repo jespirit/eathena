@@ -17,7 +17,7 @@
 
 // Guild Flag (Town)
 //============================================================
-prontera,165,194,5	script	Gondul#p5-1::Gondul	722,{
+prontera,144,203,5	script	Gondul#p5-1::Gondul	722,{
 	end;
 
 OnRecvCastlePt05:
