@@ -1,0 +1,1 @@
+prontera,163,190,5	shop	Barricade Shop	86,999:0,1011:0,984:0,1019:0
