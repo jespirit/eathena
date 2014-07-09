@@ -41,7 +41,7 @@
 	mes "I can teleport you to any Town or Dungeon!";
 	mes "Where do you want to go?";
 	next;
-	switch(select("To a Town:To a Dungeon")) {
+	switch(select("Cities:Dungeons:PvP Rooms:WoE Castles:Battlegrounds")) {
 		case 1:
 			mes "[Warp Agent]";
 			mes "Please select which town you would like to be teleported to.";
@@ -178,6 +178,107 @@
 					warp "tur_dun01",149,238;
 			}
 			break;
+		case 3:
+			mes "[Warp Agent]";
+			mes "Please select which PvP map you would like to be teleported to.";
+			next;
+			switch(select("Public:Arena:Forest:Steel House:Yuno Arena")) {
+				case 1:
+					warp "guild_vs3",0,0;
+					break;
+				case 2:
+					warp "guild_vs1",0,0;
+					break;
+				case 3:
+					warp "guild_vs5",0,0;
+					break;
+				case 4:
+					warp "guild_vs4",0,0;
+					break;
+				case 5:
+					warp "guild_vs2",0,0;
+					break;
+			}
+			break;
+		case 4:
+			mes "[Warp Agent]";
+			mes "Please select either Vanilla or Unrestricted.";
+			next;
+			switch(select("Vanilla:Unrestricted")) {
+				case 1:
+					mes "[Warp Agent]";
+					mes "Do you want First Edition or Second?";
+					next;
+					switch(select("First Edition:Second Edition")) {
+						case 1:
+							mes "[Warp Agent]";
+							mes "Please select a castle:";
+							switch(select("Bamboo Grove Hill:Bergel (Non-Trans):Skoegul (Non-Trans)")) {
+								case 1:
+									warp "pay_gld",204,266;
+									break;
+								case 2:
+									warp "gef_fild13",193,278;
+									break;
+								case 3:
+									warp "prt_gld",111,240;
+									break;
+							}
+							break;
+						case 2:
+							mes "[Warp Agent]";
+							mes "Please select a castle:";
+							switch(select("Cyr")) {
+								case 1:
+									warp "aru_gld",83,47;
+									break;
+							}
+							break;
+					}
+					break;
+				case 2:
+					mes "[Warp Agent]";
+					mes "Do you want First Edition or Second?";
+					next;
+					switch(select("First Edition:Second Edition")) {
+						case 1:
+							mes "[Warp Agent]";
+							mes "Please select a castle:";
+							switch(select("Gondul")) {
+								case 1:
+									warp "prt_gld",208,240;
+									break;
+							}
+							break;
+						case 2:
+							mes "[Warp Agent]";
+							mes "Please select a castle:";
+							switch(select("Andlangr")) {
+								case 1:
+									warp "sch_gld",288,252;
+									break;
+							}
+							break;
+					}
+					break;
+			}
+			break;
+		case 5:
+			mes "[Warp Agent]";
+			mes "Please select a Battlegrounds map";
+			next;
+			switch(select("Kreiger Von Midgard:Flavian:Tierra Valley")) {
+				case 1:
+					warp "bat_c01",0,0;
+					break;
+				case 2:
+					warp "bat_b01",0,0;
+					break;
+				case 3:
+					warp "bat_a01",0,0;
+					break;
+			}
+			break;
 	}
 	end;
 }
@@ -196,7 +297,7 @@ einbroch,243,189,2	duplicate(warpra)	Warp Agent#08	859
 einbech,135,249,4	duplicate(warpra)	Warp Agent#09	859
 geffen,115,66,4	duplicate(warpra)	Warp Agent#10	859
 gonryun,151,130,4	duplicate(warpra)	Warp Agent#11	859
-izlude,133,117,4	duplicate(warpra)	Warp Agent#12	859
+izlude,134,133,4	duplicate(warpra)	Warp Agent#12	859
 hugel,88,151,5	duplicate(warpra)	Warp Agent#13	859
 lighthalzen,155,79,6	duplicate(warpra)	Warp Agent#14	859
 louyang,210,106,4	duplicate(warpra)	Warp Agent#15	859
