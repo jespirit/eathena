@@ -44,3 +44,4 @@
 31,arug_cas03,Horn,Agit_Ar03,1			// kRO : Horn
 32,arug_cas04,Gefn,Agit_Ar04,1			// kRO : Gefn
 33,arug_cas05,Bandis,Agit_Ar05,1			// kRO : Bandis
+34,pvp_n_4-5,Emperium Room,,1			// Emperium Room
