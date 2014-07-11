@@ -227,6 +227,7 @@ static DBMap* autobonus_db=NULL; // char* script -> char* bytecode
 struct Script_Config script_config = {
 	1, // warn_func_mismatch_argtypes
 	1, 65535, 2048, //warn_func_mismatch_paramnum/check_cmdcount/check_gotocount
+	1, // warn_buyer_seller_profit
 	0, INT_MAX, // input_min_value/input_max_value
 	"OnPCDieEvent", //die_event_name
 	"OnPCKillEvent", //kill_pc_event_name
@@ -3602,6 +3603,9 @@ int script_config_read(char *cfgName)
 		}
 		else if(strcmpi(w1,"warn_func_mismatch_argtypes")==0) {
 			script_config.warn_func_mismatch_argtypes = config_switch(w2);
+		}
+		else if(strcmpi(w1,"warn_buyer_seller_profit")==0) {
+			script_config.warn_buyer_seller_profit = config_switch(w2);
 		}
 		else if(strcmpi(w1,"import")==0){
 			script_config_read(w2);
