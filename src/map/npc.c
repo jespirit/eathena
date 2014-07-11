@@ -1890,7 +1890,7 @@ static const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const 
 static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath)
 {
 	//TODO: could be rewritten to NOT need this temp array [ultramage] 
-	#define MAX_SHOPITEM 100
+	#define MAX_SHOPITEM 500
 	struct npc_item_list items[MAX_SHOPITEM];
 	char *p;
 	int x, y, dir, m, i;
@@ -1944,7 +1944,8 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 			else value = 0; // Cashshop doesn't have a "buy price" in the item_db
 		}
 
-		if( type == SHOP && value*0.75 < id->value_sell*1.24 )
+		if( script_config.warn_buyer_seller_profit &&
+			type == SHOP && value*0.75 < id->value_sell*1.24 )
 		{// Exploit possible: you can buy and sell back with profit
 			ShowWarning("npc_parse_shop: Item %s [%d] discounted buying price (%d->%d) is less than overcharged selling price (%d->%d) at file '%s', line '%d'.\n",
 				id->name, nameid, value, (int)(value*0.75), id->value_sell, (int)(id->value_sell*1.24), filepath, strline(buffer,start-buffer));
@@ -3154,7 +3155,7 @@ void npc_parsesrcfile(const char* filepath)
 	for( p = skip_space(buffer); p && *p ; p = skip_space(p) )
 	{
 		int pos[9];
-		char w1[2048], w2[2048], w3[2048], w4[2048];
+		char w1[2048], w2[2048], w3[2048], w4[4096];
 		int i, count;
 		lines++;
 
