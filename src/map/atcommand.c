@@ -5708,15 +5708,18 @@ ACMD_FUNC(useskill)
 	struct block_list *bl;
 	int skillnum;
 	int skilllv;
-	char target[100];
+	char target[100] = "";
 	nullpo_retr(-1, sd);
 
-	if(!message || !*message || sscanf(message, "%d %d %23[^\n]", &skillnum, &skilllv, target) != 3) {
-		clif_displaymessage(fd, "Usage: @useskill <skillnum> <skillv> <target>");
+	if(!message || !*message || sscanf(message, "%d %d %23[^\n]", &skillnum, &skilllv, target) < 2) {
+		clif_displaymessage(fd, "Usage: @useskill <skillnum> <skillv> {,<target>}");
 		return -1;
 	}
 
-	if ( (pl_sd = map_nick2sd(target)) == NULL )
+	if (!*target)
+		pl_sd = sd;  // no target specified, use skill on self
+
+	if ( !pl_sd && (pl_sd = map_nick2sd(target)) == NULL )
 	{
 		clif_displaymessage(fd, msg_txt(3)); // Character not found.
 		return -1;
@@ -9599,13 +9602,13 @@ AtCommandInfo atcommand_info[] = {
 	{ "delitem",           60,60,     atcommand_delitem },
 	{ "charcommands",       1,1,      atcommand_commands },
 	{ "font",               1,1,      atcommand_font },
-	{ "sqibonus",           1,1,      atcommand_sqibonus },
-	{ "copyskill",          1,1,      atcommand_copyskill },
-	{ "rent",               1,1,      atcommand_rent },
-	{ "fcp",                1,1,      atcommand_fcp },
+	{ "sqibonus",           40,40,      atcommand_sqibonus },
+	{ "copyskill",          40,40,      atcommand_copyskill },
+	{ "rent",               20,20,      atcommand_rent },
+	{ "fcp",                40,40,      atcommand_fcp },
 	{ "hurt",               1,1,      atcommand_hurt },
-	{ "clearall",           1,1,      atcommand_clearall },
-	{ "getarmor",           1,1,      atcommand_getarmor },
+	{ "clearall",           60,60,      atcommand_clearall },
+	{ "getarmor",           60,60,      atcommand_getarmor },
 };
 
 

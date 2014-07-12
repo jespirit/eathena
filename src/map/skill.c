@@ -5369,7 +5369,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 			clif_specialeffect(bl, 0x152, AREA);
 			//SC_SPIRIT invokes status_calc_pc for us.
 		}
-		dstsd->spiritskill_id = sd->bl.id;  // Track source of soul link [jespirit]
+		dstsd->spiritskill_info.sid = sd->bl.id;  // Track source of soul link [jespirit]
 		clif_skill_nodamage(src,bl,skillid,skilllv,
 			sc_start4(bl,SC_SPIRIT,100,skilllv,skillid,0,0,skill_get_time(skillid,skilllv)));
 		sc_start(src,SC_SMA,100,skilllv,skill_get_time(SL_SMA,skilllv));

@@ -1304,14 +1304,14 @@ int pc_calc_skilltree(struct map_session_data *sd)
 	}
 
 	// bAddSkillOnSpirit
-	if (sd->sc.count && sd->sc.data[SC_SPIRIT] && sd->spiritskill_id
-		&& (srcsd = map_id2sd(sd->spiritskill_id))  // source
+	if (sd->sc.count && sd->sc.data[SC_SPIRIT] && sd->spiritskill_info.sid
+		&& (srcsd = map_id2sd(sd->spiritskill_info.sid))  // source
 		&& ((idx=pc_mapid2linkidx(sd->class_, sd->status.sex)) != -1)  // can be linked?
 		&& srcsd->spiritskills[idx].skillid > 0)
 	{
 		i = srcsd->spiritskills[idx].skillid;
-		sd->status.skill[i].id = i;
-		sd->status.skill[i].lv = srcsd->spiritskills[idx].lv;
+		sd->status.skill[i].id = sd->spiritskill_info.skillid = i;
+		sd->status.skill[i].lv = sd->spiritskill_info.lv = srcsd->spiritskills[idx].lv;
 		sd->status.skill[i].flag = SKILL_FLAG_TEMPORARY;
 	}
 
@@ -5751,7 +5751,8 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 
 		if( inf2&INF2_QUEST_SKILL && !battle_config.quest_skill_learn )
 		{ //Only handle quest skills in a special way when you can't learn them manually
-			if( battle_config.quest_skill_reset && !(flag&2) )
+			// Remove quests skills granted through bAddSkillOnSpirit bonus
+			if( (battle_config.quest_skill_reset || i == sd->spiritskill_info.skillid) && !(flag&2))
 			{	//Wipe them
 				sd->status.skill[i].lv = 0;
 				sd->status.skill[i].flag = 0;

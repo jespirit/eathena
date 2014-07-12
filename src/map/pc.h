@@ -199,7 +199,6 @@ struct map_session_data {
 	unsigned char blockskill[MAX_SKILL];
 	int cloneskill_id;
 	int menuskill_id, menuskill_val;
-	int spiritskill_id;  // [jespirit]
 
 	int invincible_timer;
 	unsigned int canlog_tick;
@@ -274,6 +273,11 @@ struct map_session_data {
 		int skillid;
 		unsigned char lv;
 	} spiritskills[16];  // bAddSkillOnSpirit
+	struct {
+		int sid;  // source
+		int skillid;
+		unsigned char lv;
+	} spiritskill_info;
 	struct {
 		int skillid;
 		int rate;

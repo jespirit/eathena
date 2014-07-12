@@ -1824,6 +1824,7 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 		+ sizeof(sd->itemhealrate)
 		+ sizeof(sd->subele2)
 		+ sizeof(sd->spiritskills)
+		+ sizeof(sd->spiritskill_info)
 		+ sizeof(sd->add_zeny)
 	);
 	
