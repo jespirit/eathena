@@ -8863,11 +8863,17 @@ ACMD_FUNC(sqibonus)
 	int add, remove;
 	int err, count;
 	StringBuf buf;
+	int sqis[] = {
+		2150, 1745, 1990, 1190, 1320,  // Aegis, Artemis, Belmont, Blade of Angels, Djinn
+		1913, 1549, 2480, 1651, 13320,  // EG, Evang, Eversong, Ghostdancer, Hira Shurikat
+		1530, 1430, 5600, 1746, 1650,  // Mjolnir, Nibelungen, Scouter, Sherwood, SoM
+		1840, 1590, 1290  // Suiken, Tome, TF
+	};
 	nullpo_retr(-1, sd);
 
 	status = &sd->status;
-
 	StringBuf_Init(&buf);
+	bonus = 0;
 
 	if (!message || !*message || sscanf(message, "%d", &bonus) < 1 || (ABS(bonus) < 1 || ABS(bonus) > 9)) {
 		clif_displaymessage(fd, "Please enter the bonuses you want to add/remove"
@@ -8881,15 +8887,18 @@ ACMD_FUNC(sqibonus)
 			clif_displaymessage(fd, "Invalid, this character cannot equip an SQI and does not have SQI bonuses.");
 			return -1;
 		}
-		// Display the bonuses for the current character.
-		for (i=0; i<MAX_SQI_BONUS; i++) {
-			StringBuf_Clear(&buf);
-			StringBuf_Printf(&buf, "[%d]: %s", i+1, sqi_bonus_table[idx][i].description);
-			for (j=0; j<MAX_SQI_ACTIVE_BONUS; j++) {
-				if (status->sqibonus_index[j] == i+1)
-					StringBuf_AppendStr(&buf, "\t[ACTIVE]");
+
+		if (!bonus) {
+			// Display the bonuses for the current character.
+			for (i=0; i<MAX_SQI_BONUS; i++) {
+				StringBuf_Clear(&buf);
+				StringBuf_Printf(&buf, "[%d]: %s", i+1, sqi_bonus_table[idx][i].description);
+				for (j=0; j<MAX_SQI_ACTIVE_BONUS; j++) {
+					if (status->sqibonus_index[j] == i+1)
+						StringBuf_AppendStr(&buf, "\t[ACTIVE]");
+				}
+				clif_displaymessage(fd, StringBuf_Value(&buf));
 			}
-			clif_displaymessage(fd, StringBuf_Value(&buf));
 		}
 
 		return 0;
@@ -8974,7 +8983,8 @@ ACMD_FUNC(sqibonus)
 				if ((j = sd->equip_index[i]) < 0)
 					continue;
 				k = sd->inventory_data[j]->nameid;
-				if (k >= 19005 && k <= 19023) {  // Need another solution for checking SQI
+				ARR_FIND( 0, ARRAYLENGTH(sqis), i, sqis[i] == k );
+				if (i < ARRAYLENGTH(sqis)) {
 					pc_unequipitem(sd, j, 3);
 					break;
 				}

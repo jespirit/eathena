@@ -6609,7 +6609,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 		pc_setglobalreg(sd, "CLONE_SKILL", 0);
 		pc_setglobalreg(sd, "CLONE_SKILL_LV", 0);
 	}
-	if ((b_class&&MAPID_UPPERMASK) != (sd->class_&MAPID_UPPERMASK))
+	if ((b_class&MAPID_UPPERMASK) != (sd->class_&MAPID_UPPERMASK))
 	{ //Things to remove when changing class tree.
 		const int class_ = pc_class2idx(sd->status.class_);
 		short id;
@@ -6619,6 +6619,9 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 			if (sc > SC_COMMON_MAX && sd->sc.data[sc])
 				status_change_end(&sd->bl, sc, INVALID_TIMER);
 		}
+		// Remove SQI bonuses
+		for (i=0; i<MAX_SQI_ACTIVE_BONUS; i++)
+			sd->status.sqibonus_index[i] = 0;
 	}
 	
 	sd->status.class_ = job;
