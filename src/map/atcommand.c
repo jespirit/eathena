@@ -9606,7 +9606,7 @@ AtCommandInfo atcommand_info[] = {
 	{ "copyskill",          40,40,      atcommand_copyskill },
 	{ "rent",               20,20,      atcommand_rent },
 	{ "fcp",                40,40,      atcommand_fcp },
-	{ "hurt",               1,1,      atcommand_hurt },
+	{ "hurt",               60,60,      atcommand_hurt },
 	{ "clearall",           60,60,      atcommand_clearall },
 	{ "getarmor",           60,60,      atcommand_getarmor },
 };

@@ -6412,6 +6412,13 @@ int status_change_clear(struct block_list* bl, int type)
 		case SC_READYCOUNTER:
 		case SC_READYTURN:
 		case SC_DODGE:
+		// Added Food that does not disappear after death
+		case SC_STRFOOD:
+		case SC_AGIFOOD:
+		case SC_VITFOOD:
+		case SC_INTFOOD:
+		case SC_DEXFOOD:
+		case SC_LUKFOOD:
 		case SC_JAILED:
 		case SC_EXPBOOST:
 		case SC_ITEMBOOST:
