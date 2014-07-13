@@ -572,7 +572,7 @@ REPLACE INTO `item_db` VALUES (1187,'Krieger_Twohand_Sword1','Glorious Claymore'
 REPLACE INTO `item_db` VALUES (1188,'Veteran_Sword','Veteran Sword',4,10000,NULL,2000,180,NULL,1,1,0x00004082,7,2,34,4,80,1,3,'if(getskilllv(\"SM_BASH\")==10) { bonus2 bSkillAtk,\"SM_BASH\",50; } if(getskilllv(\"KN_BOWLINGBASH\")==10) { bonus2 bSkillAtk,\"KN_BOWLINGBASH\",50; } bonus bStr,1; bonus bDex,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (1189,'Krasnaya','Krasnaya',4,20,NULL,3800,200,NULL,2,3,0x00004082,2,2,34,2,50,1,3,'if(readparam(bStr)>=95) { bonus bAtk,20; }',NULL,NULL);
 # REPLACE INTO `item_db` VALUES (1190,'Claymore_C','Claymore',4,0,NULL,0,220,NULL,1,0,0x00004080,7,2,34,3,1,0,3,'bonus2 bAddSize,0,40; bonus2 bAddSize,1,40; bonus2 bAddSize,2,40;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (1190,'Blade_of_Angels','Blade of Angels',4,0,NULL,1500,150,NULL,1,3,0x00000001,7,2,2,4,1,1,1,'bonus bStr,10; bonus bHit,40; bonus bVit,10; bonus bMaxSP,250; bonus bMaxHPrate,20;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (1190,'Blade_of_Angels','Blade of Angels',4,0,NULL,1500,150,NULL,1,3,0x00000001,7,2,2,4,1,1,1,'bonus bStr,10; bonus bHit,40; bonus bVit,10; bonus bMaxSP,250; bonus bMaxHPrate,20; SQI_Func();',NULL,NULL);
 REPLACE INTO `item_db` VALUES (1191,'Alca_Bringer','Alca Bringer',4,20,NULL,3400,280,NULL,2,0,0x00004082,7,2,34,3,100,1,3,'bonus bAspd,(getrefine()/2);',NULL,NULL);
 REPLACE INTO `item_db` VALUES (1192,'P_Slayer1','Eden Slayer I',4,0,NULL,0,162,NULL,1,0,0x00004082,7,2,34,2,26,0,3,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (1193,'P_Slayer2','Eden Slayer II',4,0,NULL,0,185,NULL,1,0,0x00004082,7,2,34,2,40,0,3,NULL,NULL,NULL);
@@ -4580,7 +4580,7 @@ REPLACE INTO `item_db` VALUES (7999,'Spring_Stanza22','Spring Stanza22',3,2,NULL
 # ===================================================================
 REPLACE INTO `item_db` VALUES (8006,'Valkyrie_Kaho','Valkyrie Helm Kaho',5,20,NULL,100,NULL,5,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,225,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8048,'Valkyrie_Helm','Valkyrie Helm',5,100000,NULL,1000,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,0,1,225,'bonus bMdef,20; bonus bAgi,20; bonus bVit,20; bonus bLuk,20; bonus2 bSubRace,RC_DemiHuman,10;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (8049,'Sleipnir','Sleipnir',5,20,NULL,3500,NULL,5,NULL,1,0xFFFFFFFE,7,2,64,NULL,85,0,0,'bonus bMdef,10; bonus bMaxHPrate,20; bonus bMaxSPrate,20; bonus bSPrecovRate,15; bonus bSpeedRate,25;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (8049,'Sleipnir','Sleipnir',5,20,NULL,3500,NULL,5,NULL,1,0xFFFFFFFF,7,2,64,NULL,85,1,0,'bonus bMdef,10; bonus bMaxHPrate,20; bonus bMaxSPrate,20; bonus bSPrecovRate,15; bonus bSpeedRate,25;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8229,'Old_Valkyrie_Kaho','Old Valkyrie Helm Kaho',5,20,NULL,100,NULL,5,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,901,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8305,'Old_Valkyrie_Helm','Old Valkyrie Helm',5,100000,NULL,1000,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,0,1,901,'bonus bMdef,20; bonus bAgi,20; bonus bVit,20; bonus bLuk,20; bonus2 bSubRace,RC_DemiHuman,10;',NULL,NULL);
 
@@ -4901,7 +4901,7 @@ REPLACE INTO `item_db` VALUES (12099,'Luk_Dish09','Blood Flavored Soda',0,80000,
 REPLACE INTO `item_db` VALUES (12100,'Luk_Dish10','Cooked Nine Tail\'s Tails',0,100000,NULL,500,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_start SC_LUKFOOD, 1200000, 10; percentheal 14,8;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (12101,'Citron','Citron',0,20,NULL,300,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (12102,'Meat_Skewer','Grilled Skewer',0,20,NULL,300,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db` VALUES (12103,'Bloody_Dead_Branch','Bloody Branch',2,10000,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'monster \"this\",-1,-1,\"--ja--\",-3,1,\"\";',NULL,NULL);
+REPLACE INTO `item_db` VALUES (12103,'Bloody_Dead_Branch','Bloody Branch',2,10000,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'/*monster \"this\",-1,-1,\"--ja--\",-3,1,\"\";*/',NULL,NULL);
 REPLACE INTO `item_db` VALUES (12104,'Random_Quiver','Random Quiver',2,10000,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem groupranditem(IG_Quiver),1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (12105,'Set_Of_Taiming_Item','Taming Gift Set',2,10000,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem groupranditem(IG_Taming),1; getitem groupranditem(IG_Taming),1; getitem groupranditem(IG_Taming),1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (12106,'Accessory_Box','Jewelry Box',2,10000,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem groupranditem(IG_Accesory),1;',NULL,NULL);
