@@ -3188,13 +3188,13 @@ REPLACE INTO `item_db` VALUES (5781,'Persika','Persika',5,20,NULL,100,NULL,0,NUL
 # REPLACE INTO `item_db` VALUES (5785,'Green_Bunny_Hairband','Green Bunny Hairband',5,20,NULL,200,NULL,0,NULL,1,0xFFFFFFFF,7,2,256,NULL,1,1,664,'bonus bStr,2; bonus bInt,1; bonus bDex,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (5786,'Ancient_Elven_Ear','Ancient Elven Ear',5,10,NULL,200,NULL,1,NULL,0,0xFFFFFFFF,7,2,512,NULL,1,0,665,'bonus bLuk,1;',NULL,NULL);
 # REPLACE INTO `item_db` VALUES (5787,'Tha_Maero_Mask','Tha Maero Mask',5,20,NULL,100,NULL,0,NULL,0,0xFFFFFFFF,7,2,513,NULL,30,0,666,'bonus bMdef,2;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (5788,'3D_Glasses','3D Glasses',5,20,NULL,100,NULL,1,NULL,0,0xFFFFFFFF,7,2,512,NULL,1,0,661,NULL,NULL,NULL);
+# REPLACE INTO `item_db` VALUES (5788,'3D_Glasses','3D Glasses',5,20,NULL,100,NULL,1,NULL,0,0xFFFFFFFF,7,2,512,NULL,1,0,661,NULL,NULL,NULL);
 # REPLACE INTO `item_db` VALUES (5789,'Thanatos_Mal_Mask','Thanatos Mal Mask',5,20,NULL,100,NULL,3,NULL,0,0xFFFFFFFF,7,2,513,NULL,30,0,667,'bonus bVit,1;',NULL,NULL);
 # REPLACE INTO `item_db` VALUES (5790,'Holy_Mom_Love','TM',5,20,NULL,500,NULL,0,NULL,1,0xFFFFFFFF,7,2,768,NULL,45,1,610,NULL,NULL,NULL);
 # REPLACE INTO `item_db` VALUES (5791,'Tenkaippin_Ramen','Tenkaippin Ramen',5,20,NULL,500,NULL,1,NULL,0,0xFFFFFFFF,7,2,256,NULL,30,0,668,'bonus bInt,-1; bonus bDex,4;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (5792,'Fish_Pin','Fish Pin',5,20,NULL,100,NULL,3,NULL,0,0xFFFFFFFF,7,2,256,NULL,1,1,669,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (5793,'Ribbon_Of_Life','Ribbon Of Life',5,20,NULL,0,NULL,2,NULL,0,0xFFFFFFFF,7,2,512,NULL,1,0,575,'bonus bInt,1; bonus bMdef,2;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (5794,'3D_Glasses_','3D Glasses',5,20,NULL,0,NULL,1,NULL,0,0xFFFFFFFF,7,2,512,NULL,1,0,661,NULL,NULL,NULL);
+REPLACE INTO `item_db` VALUES (5794,'3D_Glasses','3D Glasses',5,20,NULL,0,NULL,1,NULL,0,0xFFFFFFFF,7,2,512,NULL,1,0,661,'if(BaseClass==Job_Swordman||BaseClass==Job_Merchant||BaseClass==Job_Archer||BaseClass==Job_Gunslinger) { bonus2 bAddRace,RC_NonBoss,1; bonus2 bAddRace,RC_Boss,1; } else if(BaseClass==Job_Mage||BaseClass==Job_Acolyte||BaseClass==Job_Ninja||BaseClass==Job_Soul_Linker) { bonus bMatkRate,1; } else if(BaseClass==Job_Thief) { bonus bFlee,5; } else if(BaseClass==Job_Novice||BaseClass==Job_SuperNovice||BaseClass==Job_Taekwon||BaseClass==Job_Star_Gladiator||BaseClass==Job_Star_Gladiator2) { bonus bMaxHP,1; bonus bMaxSP,1; }',NULL,NULL);
 # REPLACE INTO `item_db` VALUES (5795,'Red_Dress_Hat','Red Dress Hat',5,20,NULL,0,NULL,0,NULL,0,0xFFFFFFFF,7,2,256,NULL,1,1,670,'bonus bMdef,7;',NULL,NULL);
 # REPLACE INTO `item_db` VALUES (5796,'Cheer_Scarf','Cheer Scarf',5,0,NULL,0,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,369,NULL,NULL,NULL);
 # REPLACE INTO `item_db` VALUES (5797,'Cheer_Scarf2','Cheer Scarf2',5,0,NULL,0,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,369,NULL,NULL,NULL);
@@ -4585,7 +4585,7 @@ REPLACE INTO `item_db` VALUES(8010,'Blinker','Blinker',5,20,NULL,100,NULL,1,NULL
 REPLACE INTO `item_db` VALUES(8048,'Valkyrie_Helm','Valkyrie Helm',5,100000,NULL,1000,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,0,1,225,'bonus bMdef,20; bonus bAgi,20; bonus bVit,20; bonus bLuk,20; bonus2 bSubRace,RC_DemiHuman,10;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8049,'Sleipnir','Sleipnir',5,20,NULL,3500,NULL,5,NULL,1,0xFFFFFFFF,7,2,64,NULL,85,1,0,'bonus bMdef,10; bonus bMaxHPrate,20; bonus bMaxSPrate,20; bonus bSPrecovRate,15; bonus bSpeedRate,25;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8061,'Contact_Lenses','Contact Lenses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,23,NULL,NULL,NULL);
-REPLACE INTO `item_db` VALUES(8170,'Dark_Blinder_','Dark Blinder',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,288,'bonus bAgi,1;',NULL,NULL);
+REPLACE INTO `item_db` VALUES(8170,'Dark_Blinder_','Dark Blinder',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,187,'bonus bAgi,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8172,'Elven_Ears_','Elven Ears',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,73,'bonus bAgi,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8173,'Censor_Bar_','Censor Bar',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,229,'bonus bAgi,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8174,'Diver_Goggles_','Diver Goggles',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,10,'bonus bAgi,1;',NULL,NULL);
@@ -4595,10 +4595,11 @@ REPLACE INTO `item_db` VALUES(8178,'Cyclops_Eye_','Cyclops Eye',5,20,NULL,100,NU
 REPLACE INTO `item_db` VALUES(8179,'Machomans_Glasses_','Machomans Glasses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,92,'bonus bStr,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8180,'Geek_Glasses_','Geek Glasses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,27,'bonus bInt,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8181,'Angled_Glasses_','Angled Glasses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,63,'bonus bInt,1;',NULL,NULL);
+REPLACE INTO `item_db` VALUES(8182,'Red_Glasses_','Red Glasses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,316,'bonus bInt,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8186,'Blush_','Blush',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,125,'bonus bInt,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8187,'Blank_Eyes_','Blank Eyes',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,185,'bonus bStr,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8189,'Angel_Of_Ghost_','Angel Of Ghost',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,290,'bonus bStr,1;',NULL,NULL);
-REPLACE INTO `item_db` VALUES(8214,'Black_Glasses','Black Glasses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,404,'bonus bInt,1;',NULL,NULL);
+REPLACE INTO `item_db` VALUES(8214,'Black_Glasses_','Black Glasses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,404,'bonus bInt,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8215,'Ifrit\'s_Ear_','Ifrit\'s Ear',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,422,'bonus bStr,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8216,'Eyes_Of_Darkness_','Eyes Of Darkness',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,467,'bonus bAgi,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8217,'Hairband_Of_Reginleif_','Hairband Of Reginleif',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,468,'bonus bStr,1;',NULL,NULL);
@@ -4610,18 +4611,16 @@ REPLACE INTO `item_db` VALUES(8245,'Black_Elven_Ears_','Black Elven Ears',5,20,N
 REPLACE INTO `item_db` VALUES(8246,'3D_Glasses_','3D Glasses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,661,'bonus bInt,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8264,'Butterfly_Wing_Ears_','Butterfly Wing Ears',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,695,'bonus bAgi,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8268,'Bloody_Angel_Feathers_','Bloody Angel Feathers',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,680,'bonus bStr,1;',NULL,NULL);
-REPLACE INTO `item_db` VALUES(8269,'Devil_Whisper_','Devil Whisper',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,321,'bonus bInt,1;',NULL,NULL);
+REPLACE INTO `item_db` VALUES(8269,'Devil_Whisper_','Devil Whisper',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,712,'bonus bInt,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8305,'Old_Valkyrie_Helm','Old Valkyrie Helm',5,100000,NULL,1000,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,0,1,901,'bonus bMdef,20; bonus bAgi,20; bonus bVit,20; bonus bLuk,20; bonus2 bSubRace,RC_DemiHuman,10;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8310,'Blue_Heart_Eyepatch_','Blue Heart Eyepatch',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,697,'bonus bInt,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8329,'Injured_Eyepatch_','Injured Eyepatch',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,772,'bonus bInt,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8330,'Heart_Eye_Bandage','Heart Eye Bandage',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,779,'bonus bInt,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8331,'Black_Devil\'s_Mask_','Black Devil\'s Mask',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,760,'bonus bStr,1;',NULL,NULL);
-REPLACE INTO `item_db` VALUES(8347,'Dragonfly_Monocle_','Dragonfly Monocle',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,950,'bonus bAgi,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8350,'Hexagonal_Glasses_','Hexagonal Glasses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,822,'bonus bInt,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8403,'Anemos_Mask_','Anemos Mask',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,1206,'bonus bAgi,1;',NULL,NULL);
-REPLACE INTO `item_db` VALUES(8404,'Ifrit_Eyes_','Ifrit Eyes',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,422,'bonus bStr,1;',NULL,NULL);
+REPLACE INTO `item_db` VALUES(8404,'Ifrit_Eyes_','Ifrit Eyes',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,886,'bonus bStr,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES(8405,'Magical_Booster_','Magical Booster',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,873,'bonus bInt,1;',NULL,NULL);
-REPLACE INTO `item_db` VALUES(8454,'Imperial_Feather_','Imperial Feather',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,1235,'bonus bInt,1;',NULL,NULL);
 
 # Status Quivers
 # ===================================================================
