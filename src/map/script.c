@@ -4738,11 +4738,12 @@ BUILDIN_FUNC(itemheal)
 {
 	TBL_PC *sd;
 	int hp,sp;
+	int i;
 
 	hp=script_getnum(st,2);
 	sp=script_getnum(st,3);
 
-	if(potion_flag==1) {
+	if(potion_flag==1) {  // Potion Pitcher
 		potion_hp = hp;
 		potion_sp = sp;
 		return 0;
@@ -4750,6 +4751,11 @@ BUILDIN_FUNC(itemheal)
 	
 	sd = script_rid2sd(st);
 	if (!sd) return 0;
+
+	i = pc_checkequip(sd, EQP_HAND_L);
+	if (i >= 0 && sd->status.inventory[i].card[0] == 4128)
+		sp = 0;  // No SP use when wearing GTB
+
 	pc_itemheal(sd,sd->itemid,hp,sp);
 	return 0;
 }
@@ -4758,6 +4764,7 @@ BUILDIN_FUNC(itemheal)
  *------------------------------------------*/
 BUILDIN_FUNC(percentheal)
 {
+	int i;
 	int hp,sp;
 	TBL_PC* sd;
 
@@ -4773,6 +4780,10 @@ BUILDIN_FUNC(percentheal)
 	sd = script_rid2sd(st);
 	if( sd == NULL )
 		return 0;
+
+	i = pc_checkequip(sd, EQP_HAND_L);
+	if (i >= 0 && sd->status.inventory[i].card[0] == 4128)
+		sp = 0;  // No SP use when wearing GTB
 
 	pc_percentheal(sd,hp,sp);
 	return 0;
