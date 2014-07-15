@@ -81,7 +81,9 @@ Onstart:
 		donpcevent "#aru02_RL02::OnEnable";
 		donpcevent "#aru02_RL03::OnEnable";
 	}
-	monster "arug_cas02",89,256,"Emperium",1288,1,"Steward#aru02::OnStartArena";
+	if (spawn_emperium()) {
+		monster "arug_cas02",89,256,"Emperium",1288,1,"Steward#aru02::OnStartArena";
+	}
 	end;
 
 Onreset:
@@ -105,7 +107,9 @@ Onreset:
 
 Onchange:
 	setarray $agit_ar02[0],2,2,1,1,2,0;
-	monster "arug_cas02",89,256,"Emperium",1288,1,"Steward#aru02::OnStartArena";
+	if (spawn_emperium()) {
+		monster "arug_cas02",89,256,"Emperium",1288,1,"Steward#aru02::OnStartArena";
+	}
 	donpcevent "Control Device03#aru02::OnEnable";
 	donpcevent "1st Guardian Stone#aru02::OnEnable";
 	donpcevent "2nd Guardian Stone#aru02::OnEnable";
@@ -2003,7 +2007,7 @@ OnDisable:
 // Link Flags
 arug_cas02,98,270,0	script	LF-01#arug_cas02	111,{
 	set .@GID, GetCastleData("arug_cas02",1);
-	if (getcharid(2) == .@GID) {
+	if (skip_flagcheck() || getcharid(2) == .@GID) {
 		mes "^3355FFThis is the Stronghold";
 		mes "Teleport Service. Please";
 		mes "choose a destination";
@@ -2024,7 +2028,7 @@ arug_cas02,98,270,0	script	LF-01#arug_cas02	111,{
 
 arug_cas02,98,266,0	script	LF-02#arug_cas02	111,{
 	set .@GID, GetCastleData("arug_cas02",1);
-	if (getcharid(2) == .@GID) {
+	if (skip_flagcheck() || getcharid(2) == .@GID) {
 		mes "^3355FFThis is the Stronghold";
 		mes "Teleport Service. Please";
 		mes "choose a destination";
@@ -2045,7 +2049,7 @@ arug_cas02,98,266,0	script	LF-02#arug_cas02	111,{
 
 arug_cas02,98,262,0	script	LF-03#arug_cas02	111,{
 	set .@GID, GetCastleData("arug_cas02",1);
-	if (getcharid(2) == .@GID) {
+	if (skip_flagcheck() || getcharid(2) == .@GID) {
 		mes "^3355FFThis is the Stronghold";
 		mes "Teleport Service. Please";
 		mes "choose a destination";
@@ -2066,7 +2070,7 @@ arug_cas02,98,262,0	script	LF-03#arug_cas02	111,{
 
 arug_cas02,98,258,0	script	LF-04#arug_cas02	111,{
 	set .@GID, GetCastleData("arug_cas02",1);
-	if (getcharid(2) == .@GID) {
+	if (skip_flagcheck() || getcharid(2) == .@GID) {
 		mes "^3355FFThis is the Stronghold";
 		mes "Teleport Service. Please";
 		mes "choose a destination";
@@ -2087,7 +2091,7 @@ arug_cas02,98,258,0	script	LF-04#arug_cas02	111,{
 
 arug_cas02,98,253,0	script	LF-05#arug_cas02	111,{
 	set .@GID, GetCastleData("arug_cas02",1);
-	if (getcharid(2) == .@GID) {
+	if (skip_flagcheck() || getcharid(2) == .@GID) {
 		mes "^3355FFThis is the Stronghold";
 		mes "Teleport Service. Please";
 		mes "choose a destination";
@@ -2108,7 +2112,7 @@ arug_cas02,98,253,0	script	LF-05#arug_cas02	111,{
 
 arug_cas02,98,249,0	script	LF-06#arug_cas02	111,{
 	set .@GID, GetCastleData("arug_cas02",1);
-	if (getcharid(2) == .@GID) {
+	if (skip_flagcheck() || getcharid(2) == .@GID) {
 		mes "^3355FFThis is the Stronghold";
 		mes "Teleport Service. Please";
 		mes "choose a destination";
@@ -2129,7 +2133,7 @@ arug_cas02,98,249,0	script	LF-06#arug_cas02	111,{
 
 arug_cas02,98,245,0	script	LF-07#arug_cas02	111,{
 	set .@GID, GetCastleData("arug_cas02",1);
-	if (getcharid(2) == .@GID) {
+	if (skip_flagcheck() || getcharid(2) == .@GID) {
 		mes "^3355FFThis is the Stronghold";
 		mes "Teleport Service. Please";
 		mes "choose a destination";
@@ -2150,7 +2154,7 @@ arug_cas02,98,245,0	script	LF-07#arug_cas02	111,{
 
 arug_cas02,98,241,0	script	LF-08#arug_cas02	111,{
 	set .@GID, GetCastleData("arug_cas02",1);
-	if (getcharid(2) == .@GID) {
+	if (skip_flagcheck() || getcharid(2) == .@GID) {
 		mes "^3355FFThis is the Stronghold";
 		mes "Teleport Service. Would";
 		mes "you like to teleport to the";
@@ -2169,7 +2173,7 @@ arug_cas02,98,241,0	script	LF-08#arug_cas02	111,{
 
 arug_cas02,216,92,0	script	Cyr#LF_ar02_1::LF_ar02_1	111,{
 	set .@GID, GetCastleData("arug_cas02",1);
-	if (getcharid(2) == .@GID) {
+	if (skip_flagcheck() || getcharid(2) == .@GID) {
 		mes "^3355FFThis is the Stronghold";
 		mes "Teleport Service. Would";
 		mes "you like to teleport to";
@@ -2199,7 +2203,7 @@ arug_cas02,271,190,0	duplicate(LF_ar02_1)	Cyr#LF_ar02_12	111
 
 arug_cas02,129,178,4	script	Cyr#LF_ar02_13::LF_ar02_2	722,{
 	set .@GID, GetCastleData("arug_cas02",1);
-	if (getcharid(2) == .@GID) {
+	if (skip_flagcheck() || getcharid(2) == .@GID) {
 		mes "^3355FFThis is the Stronghold";
 		mes "Teleport Service. Would";
 		mes "you like to teleport to";
@@ -2849,7 +2853,7 @@ aru_gld,80,41,6	script	Cyr#flag_Ar02_1::Ar02_Flag	722,{
 		close;
 	}
 	else {
-		if (getcharid(2) == .@GID) {
+		if (skip_flagcheck() || getcharid(2) == .@GID) {
 			mes "[ Ringing Voice ]";
 			mes "Courageous one,";
 			mes "do you wish to return";
@@ -2858,7 +2862,7 @@ aru_gld,80,41,6	script	Cyr#flag_Ar02_1::Ar02_Flag	722,{
 			switch(select("Return to the Stronghold:Cancel")) {
 			case 1:
 				set .@GID, GetCastleData("arug_cas02",1);
-				if (getcharid(2) == .@GID) {
+				if (skip_flagcheck() || getcharid(2) == .@GID) {
 					warp "arug_cas02",43,256;
 					end;
 				}

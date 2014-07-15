@@ -15483,6 +15483,29 @@ BUILDIN_FUNC(sqifunc)
 	return 0;
 }
 
+/// Used in SE link flags to check whether the player can use the flags without restriction
+/// checkcastleflag
+BUILDIN_FUNC(skip_flagcheck)
+{
+	if (battle_config.gvg_castle_flag_check)
+		script_pushint(st, 0);
+	else
+		script_pushint(st, 1);
+
+	return 0;
+}
+
+/// Check whether to spawn Emperium in castles or not
+BUILDIN_FUNC(spawn_emperium)
+{
+	if (battle_config.gvg_castle_spawn_emperium)
+		script_pushint(st, 1);
+	else
+		script_pushint(st, 0);
+
+	return 0;
+}
+
 // declarations that were supposed to be exported from npc_chat.c
 #ifdef PCRE_SUPPORT
 BUILDIN_FUNC(defpattern);
@@ -15902,5 +15925,7 @@ struct script_function buildin_func[] = {
 
 	//SQI Bonus	[ragnarok_champ]
 	BUILDIN_DEF2(sqifunc, "SQI_Func", ""),
+	BUILDIN_DEF(skip_flagcheck, ""),
+	BUILDIN_DEF(spawn_emperium, ""),
 	{NULL,NULL,NULL},
 };

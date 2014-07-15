@@ -81,7 +81,9 @@ Onstart:
 		donpcevent "#aru05_RL02::OnEnable";
 		donpcevent "#aru05_RL03::OnEnable";
 	}
-	monster "arug_cas05",141,293,"Emperium",1288,1,"Steward#aru05::OnStartArena";
+	if (spawn_emperium()) {
+		monster "arug_cas05",141,293,"Emperium",1288,1,"Steward#aru05::OnStartArena";
+	}
 	end;
 
 Onreset:
@@ -105,7 +107,9 @@ Onreset:
 
 Onchange:
 	setarray $agit_ar05[0],2,2,1,1,2,0;
-	monster "arug_cas05",141,293,"Emperium",1288,1,"Steward#aru05::OnStartArena";
+	if (spawn_emperium()) {
+		monster "arug_cas05",141,293,"Emperium",1288,1,"Steward#aru05::OnStartArena";
+	}
 	donpcevent "Control Device03#aru05::OnEnable";
 	donpcevent "1st Guardian Stone#aru05::OnEnable";
 	donpcevent "2nd Guardian Stone#aru05::OnEnable";

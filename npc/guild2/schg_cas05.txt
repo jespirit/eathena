@@ -76,7 +76,9 @@ Onstart:
 		donpcevent "#sch05_RL02::OnEnable";
 		donpcevent "#sch05_RL03::OnEnable";
 	}
-	monster "schg_cas05",120,272,"Emperium",1288,1,"Steward#sch05::OnStartArena";
+	if (spawn_emperium()) {
+		monster "schg_cas05",120,272,"Emperium",1288,1,"Steward#sch05::OnStartArena";
+	}
 	end;
 
 Onreset:
@@ -100,7 +102,9 @@ Onreset:
 
 Onchange:
 	setarray $agit_sc05[0],2,2,1,1,2,0;
-	monster "schg_cas05",120,272,"Emperium",1288,1,"Steward#sch05::OnStartArena";
+	if (spawn_emperium()) {
+		monster "schg_cas05",120,272,"Emperium",1288,1,"Steward#sch05::OnStartArena";
+	}
 	donpcevent "Control Device03#sch05::OnEnable";
 	donpcevent "1st Guardian Stone#sch05::OnEnable";
 	donpcevent "2nd Guardian Stone#sch05::OnEnable";
