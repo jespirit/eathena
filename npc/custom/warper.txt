@@ -297,7 +297,7 @@ einbroch,243,189,2	duplicate(warpra)	Warp Agent#08	859
 einbech,135,249,4	duplicate(warpra)	Warp Agent#09	859
 geffen,115,66,4	duplicate(warpra)	Warp Agent#10	859
 gonryun,151,130,4	duplicate(warpra)	Warp Agent#11	859
-izlude,134,133,4	duplicate(warpra)	Warp Agent#12	859
+izlude,131,133,4	duplicate(warpra)	Warp Agent#12	859
 hugel,88,151,5	duplicate(warpra)	Warp Agent#13	859
 lighthalzen,155,79,6	duplicate(warpra)	Warp Agent#14	859
 louyang,210,106,4	duplicate(warpra)	Warp Agent#15	859
