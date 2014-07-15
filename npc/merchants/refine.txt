@@ -566,31 +566,39 @@ ein_in01,38,29,0	script	Paul Spanner	63,{
 // Weapon/Armor Refiners
 //=====================================================================================
 prt_in,63,60,4	script	Hollengrhen	85,{
-	callfunc "refinemain","Hollengrhen",0;
+	callfunc "refinemain","Hollengrhen",1;
 	end;
 }
 morocc_in,73,38,4	script	Aragham	99,{
-	callfunc "refinemain","Aragham",0;
+	callfunc "refinemain","Aragham",1;
 	end;
 }
 payon,144,173,4	script	Antonio	88,{
-	callfunc "refinemain","Antonio",0;
+	callfunc "refinemain","Antonio",1;
 	end;
 }
 alberta_in,28,58,4	script	Fredrik	85,{
-	callfunc "refinemain","Fredrik",0;
+	callfunc "refinemain","Fredrik",1;
 	end;
 }
 yuno_in01,164,26,6	script	Disturb	88,{
-	callfunc "refinemain","Disturb",0;
+	callfunc "refinemain","Disturb",1;
 	end;
 }
 ein_in01,24,87,6	script	Manthasman	826,{
-	callfunc "refinemain","Manthasman Pruhag",0;
+	callfunc "refinemain","Manthasman Pruhag",1;
 	end;
 }
 lhz_in02,282,20,7	script	Fulerr	869,{
-	callfunc "refinemain","Fulerr",0;
+	callfunc "refinemain","Fulerr",1;
+	end;
+}
+prontera,161,184,4	script	Ultimate Refiner#01	85,{
+	callfunc "refineultimate","Refiner",1;
+	end;
+}
+izlude,133,130,4	script	Ultimate Refiner#02	85,{
+	callfunc "refineultimate","Refiner",1;
 	end;
 }
 
@@ -897,7 +905,158 @@ function	script	refinemain	{
 	close;		
 }
 
+function	script	refineultimate	{
+	set .@features,getarg(1);
+	mes "[" + getarg(0) + "]";
+	mes "I'm the Armsmith.";
+	mes "I can refine all kinds of weapons, armor and equipment, so let me";
+	mes "know what you want me to refine.";
+	next;
 
+	//setarray .@equipidx[1], 1,2,3,4,5,6;  // Disallow accessories, low, and mid headgears
+	setarray .@position$[1], "Head","Body","Left hand","Right hand","Robe","Shoes";
+	set .@menu$,"";
+	for( set .@i,1; .@i <= 6; set .@i,.@i+1 )
+	{
+		if( getequipisequiped(.@i) )
+			set .@menu$, .@menu$ + .@position$[.@i] + "-" + "[" + getequipname(.@i) + "]";
+
+		set .@menu$, .@menu$ + ":";
+	}
+	set .@part,select(.@menu$);
+	//set .@part,.@equipidx[.@part]];
+	if(!getequipisequiped(.@part)) {
+		mes "[" + getarg(0) + "]";
+		mes "You're not wearing";
+		mes "anything there that";
+		mes "I can refine.";
+		emotion 6;
+		close;
+	}
+	//Check if the item is refinable...
+	if(!getequipisenableref(.@part)) {
+		mes "[" + getarg(0) + "]";
+		mes "I don't think I can";
+		mes "refine this item at all...";
+		close;
+	}
+	//Check if the item is identified... (Don't know why this is in here... but kept it anyway)
+	if(!getequipisidentify(.@part)) {
+		mes "[" + getarg(0) + "]";
+		mes "You can't refine this";
+		mes "if you haven't appraised";
+		mes "it first. Make sure your";
+		mes "stuff is identified before";
+		mes "I can refine it.";
+		close;
+	}
+	//Check to see if the items is already +10
+	if(getequiprefinerycnt(.@part) >= 10) {
+		mes "[" + getarg(0) + "]";
+		mes "I can't refine this";
+		mes "any more. This is as";
+		mes "refined as it gets!";
+		close;
+	}
+	// Only allowed to refine upper headgears (no headgear combinations).
+	if (.@part == 1 && getiteminfo(getequipid(.@part), 5) != 256) {
+		mes "[" + getarg(0) + "]";
+		mes "I can't refine this headgear.";
+		mes "You're only allowed to refine";
+		mes "upper headgears.";
+		close;
+	}
+	set .@refineitemid, getequipid(.@part); // save id of the item
+	set .@refinerycnt, getequiprefinerycnt(.@part); //save refinery count
+	switch(getequipweaponlv(.@part)){
+	case 0: 	//Refine Armor
+		set .@safe,4;
+		break;
+	case 1: 	//Refine Level 1 Weapon
+		set .@safe,7;
+		break;
+	case 2: 	//Refine Level 2 Weapon
+		set .@safe,6;
+		break;
+	case 3: 	//Refine Level 3 Weapon
+		set .@safe,5;
+		break;
+	case 4: 	//Refine Level 4 Weapon
+		set .@safe,4;
+		break;
+	case 5: 	//Refine other stuff?
+		set .@safe,4;
+		break;
+	}
+
+// New Refining Functions ========================
+	if(getequiprefinerycnt(.@part) < .@safe) {
+		mes "[" + getarg(0) + "]";
+		mes "I can refine this to the safe limit or a desired number of times... it's your choice...";
+		next;
+		set .@menu2,select("To the safe limit please.","I'll decide how many times.","I've changed my mind...");
+	} else set .@menu2,2;
+	switch(.@menu2){
+	case 1:
+		set .@refinecnt,.@safe - getequiprefinerycnt(.@part);
+		break;
+	case 2:
+		next;
+		mes "[" + getarg(0) + "]";
+		mes "So how many times would you like me to refine your item?";
+		next;
+		input .@refinecnt;
+		set .@refinecheck,.@refinecnt + getequiprefinerycnt(.@part);
+		if (.@refinecnt < 1 || .@refinecheck > 10) {
+			mes "[" + getarg(0) + "]";
+			mes "I can't refine this item that many times.";
+			close;
+		}
+		if(.@refinecheck > .@safe) {
+			set .@refinecheck,.@refinecheck - .@safe;
+			mes "[" + getarg(0) + "]";
+			mes "This will try to refine the equipment " + .@refinecheck + " times past the safe limit. Your equipment may be destroyed... is that ok?";
+			next;
+			if(select("Yes...","No...") == 2){
+				mes "[" + getarg(0) + "]";
+				mes "You said so..Hmm so be it...";
+				close;
+			}
+		}
+		break;
+	case 3:
+		next;
+		mes "[" + getarg(0) + "]";
+		mes "You said so..Hmm so be it...";
+		close;
+	}
+	mes "[" + getarg(0) + "]";
+	mes "Hey, it's a tough economy and I'm in a nice mood.";
+	mes "So... the refine is on the house.";
+	next;
+	while(.@refinecnt){
+		if (getequipisequiped(.@part) == 0) {
+			mes "[" + getarg(0) + "]";
+			mes "Look here... you don't have any Items on...";
+			close;
+		}
+		if (getequipid(.@part) != .@refineitemid || (.@menu2 == 1 && getequippercentrefinery(.@part) < 100)) {
+			mes "[" + getarg(0) + "]";
+			mes "Clan... No, but Did you imagine I could be so stupid !?!";
+			mes "You have changed it...";
+			mes "Go out before I stun you with my Hammer!!!";
+			close;
+		}
+		mes "Clang, clang!!!";
+		successrefitem .@part;
+		emotion 21;
+		set .@refinecnt,.@refinecnt - 1;
+		next;
+	}
+	mes "[" + getarg(0) + "]";
+	mes "All finished... Come again soon.";
+	close;
+}
 
 //==============================================================================
 // Material Salesmen
@@ -1123,6 +1282,11 @@ function	script	orimain	{
 //=====================================================================================
 // Equipment Repairmen
 //=====================================================================================
+prontera,163,184,4	script	Repairman#prt-2	86,{
+	callfunc "repairmain","Repairman";
+	end;
+}
+
 alberta_in,31,65,4	script	Repairman#alb	86,{
 	callfunc "repairmain","Repairman";
 	end;
