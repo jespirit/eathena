@@ -2694,6 +2694,9 @@ ACMD_FUNC(refine)
 		sprintf(atcmd_output, "%d: Mid Headgear", EQP_HEAD_MID);
 		clif_displaymessage(fd, atcmd_output);
 		return -1;
+	} else if ((position&(EQP_HEAD_MID|EQP_HEAD_LOW|EQP_ACC_L|EQP_ACC_R)) && pc_isGM(sd) < 99) {
+		clif_displaymessage(fd, "You are not authorized to refine Middle/Low Headgears or Accessories");
+		return -1;
 	}
 
 	refine = cap_value(refine, -MAX_REFINE, MAX_REFINE);
