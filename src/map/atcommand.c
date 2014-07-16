@@ -8858,7 +8858,7 @@ ACMD_FUNC(font)
 ACMD_FUNC(sqibonus)
 {
 	struct mmo_charstatus* status;
-	int i, j, k, n;
+	int i, j, k, n, id;
 	int idx, bonus;
 	int add, remove;
 	int err, count;
@@ -8874,6 +8874,7 @@ ACMD_FUNC(sqibonus)
 	status = &sd->status;
 	StringBuf_Init(&buf);
 	bonus = 0;
+	add = remove = 0;
 
 	if (!message || !*message || sscanf(message, "%d", &bonus) < 1 || (ABS(bonus) < 1 || ABS(bonus) > 9)) {
 		clif_displaymessage(fd, "Please enter the bonuses you want to add/remove"
@@ -8982,9 +8983,9 @@ ACMD_FUNC(sqibonus)
 			for (i=0; i<EQI_MAX; i++) {
 				if ((j = sd->equip_index[i]) < 0)
 					continue;
-				k = sd->inventory_data[j]->nameid;
-				ARR_FIND( 0, ARRAYLENGTH(sqis), i, sqis[i] == k );
-				if (i < ARRAYLENGTH(sqis)) {
+				id = sd->status.inventory[j].nameid;
+				ARR_FIND( 0, ARRAYLENGTH(sqis), k, sqis[k] == id );
+				if (k < ARRAYLENGTH(sqis)) {
 					pc_unequipitem(sd, j, 3);
 					break;
 				}
