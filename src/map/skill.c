@@ -2727,6 +2727,10 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, int 
 				}
 			}
 		}
+
+		// Create 15 seconds unique cooldown
+		if (sd)
+			skill_blockpc_start(sd, skillid, skill_get_time(skillid,skilllv));
 		break;
 
 	//Splash attack skills.
