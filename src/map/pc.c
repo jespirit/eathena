@@ -5762,7 +5762,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		if( sd->status.skill[i].flag == SKILL_FLAG_PERMANENT )
 			skill_point += lv;
 		else
-		if( sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0 )
+		if( sd->status.skill[i].flag > SKILL_FLAG_REPLACED_LV_0 )
 			skill_point += (sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0);
 
 		if( !(flag&2) )
@@ -5775,6 +5775,9 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 	if( flag&2 || !skill_point ) return skill_point;
 
 	sd->status.skill_point += skill_point;
+
+	if ( flag&4 )  // Note: skill_point is zero when no skills have been upped
+		sd->status.skill_point = 0;
 
 	if( flag&1 )
 	{
@@ -6594,7 +6597,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 		if (!(sd->class_&JOBL_2))
 			sd->change_level = sd->status.job_level;
 		else if (!sd->change_level)
-			sd->change_level = 40; //Assume 40?
+			sd->change_level = 50; //Assume 50?
 		pc_setglobalreg (sd, "jobchange_level", sd->change_level);
 	}
 
@@ -6644,6 +6647,18 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	if (sd->disguise)
 		pc_disguise(sd, 0);
 
+	//Remove peco/cart/falcon
+	i = sd->sc.option;
+	if(i&OPTION_RIDING && pc_checkskill(sd, KN_RIDING))
+		i&=~OPTION_RIDING;
+	if(i&OPTION_CART && pc_checkskill(sd, MC_PUSHCART))
+		i&=~OPTION_CART;
+	if(i&OPTION_FALCON && pc_checkskill(sd, HT_FALCON))
+		i&=~OPTION_FALCON;
+
+	if(i != sd->sc.option)
+		pc_setoption(sd, i);
+
 	status_set_viewdata(&sd->bl, job);
 	clif_changelook(&sd->bl,LOOK_BASE,sd->vd.class_); // move sprite update to prevent client crashes with incompatible equipment [Valaris]
 	if(sd->vd.cloth_color)
@@ -6652,18 +6667,6 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	//Update skill tree.
 	pc_calc_skilltree(sd);
 	clif_skillinfoblock(sd);
-
-	//Remove peco/cart/falcon
-	i = sd->sc.option;
-	if(i&OPTION_RIDING && !pc_checkskill(sd, KN_RIDING))
-		i&=~OPTION_RIDING;
-	if(i&OPTION_CART && !pc_checkskill(sd, MC_PUSHCART))
-		i&=~OPTION_CART;
-	if(i&OPTION_FALCON && !pc_checkskill(sd, HT_FALCON))
-		i&=~OPTION_FALCON;
-
-	if(i != sd->sc.option)
-		pc_setoption(sd, i);
 
 	if(merc_is_hom_active(sd->hd) && !pc_checkskill(sd, AM_CALLHOMUN))
 		merc_hom_vaporize(sd, 0);
