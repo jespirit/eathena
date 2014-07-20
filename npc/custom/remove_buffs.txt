@@ -1,0 +1,30 @@
+//===== eAthena Script =======================================
+//= Remove Buffs
+//===== By: ==================================================
+//= jespirit
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= eAthena SVN
+//===== Description: =========================================
+//= Remove all buffs
+//===== Additional Comments: =================================
+//= 1.0 First Version [jespirit]
+//============================================================
+-	script	Remove Buffs#01::rembuf	792,{
+	mes "[Remove Buffs]";
+	mes "I can remove all your buffs.";
+	mes " ";
+	mes "Would you like me to remove";
+	mes "all your buffs?";
+	next;
+	switch(select("Yes:No")) {
+		case 1:
+			sc_end SC_ALL;
+			break;
+	}
+	close;
+}
+
+prontera,147,181,5	duplicate(rembuf)	Remove Buffs#02	792
+izlude,133,123,5	duplicate(rembuf)	Remove Buffs#03	792

@@ -1,0 +1,99 @@
+//===== eAthena Script =======================================
+//= Soul Linker
+//===== By: ==================================================
+//= jespirit
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= eAthena SVN
+//===== Description: =========================================
+//= Link player with Spirit
+//===== Additional Comments: =================================
+//= 1.0 First Version [jespirit]
+//============================================================
+-	script	Soul Linker#01::spiritln	795,{
+	// Use appropriate Spirit link based on class
+	set .@eac, eaclass();
+	switch(.@eac&EAJ_UPPERMASK) {
+		// 2-1
+		case EAJ_SUPER_NOVICE:
+			specialeffect2 424; specialeffect2 503;
+			// sc_start4 status,tick,skillid,skilllv
+			sc_start4 SC_SPIRIT,350000,5,451,0,0;
+			break;
+		case EAJ_KNIGHT:
+			specialeffect2 424; specialeffect2 503;
+			sc_start4 SC_SPIRIT,350000,5,452,0,0;
+			break;
+		case EAJ_WIZARD:
+			specialeffect2 424; specialeffect2 503;
+			sc_start4 SC_SPIRIT,350000,5,454,0,0;
+			break;
+		case EAJ_HUNTER:
+			specialeffect2 424; specialeffect2 503;
+			sc_start4 SC_SPIRIT,350000,5,460,0,0;
+			break;
+		case EAJ_PRIEST:
+			specialeffect2 424; specialeffect2 503;
+			sc_start4 SC_SPIRIT,350000,5,454,0,0;
+			break;
+		case EAJ_BLACKSMITH:
+			specialeffect2 424; specialeffect2 503;
+			sc_start4 SC_SPIRIT,350000,5,458,0,0;
+			break;
+		case EAJ_ASSASSIN:
+			specialeffect2 424; specialeffect2 503;
+			sc_start4 SC_SPIRIT,350000,5,457,0,0;
+			break;
+		case EAJ_STAR_GLADIATOR:
+			specialeffect2 424; specialeffect2 503;
+			sc_start4 SC_SPIRIT,350000,5,448,0,0;
+			break;
+
+		// 2-2
+		case EAJ_CRUSADER:
+			specialeffect2 424; specialeffect2 503;
+			sc_start4 SC_SPIRIT,350000,5,450,0,0;
+			break;
+		case EAJ_SAGE:
+			specialeffect2 424; specialeffect2 503;
+			sc_start4 SC_SPIRIT,350000,5,444,0,0;
+			break;
+		case EAJ_BARDDANCER:
+			specialeffect2 424; specialeffect2 503;
+			sc_start4 SC_SPIRIT,350000,5,448,0,0;
+			break;
+		case EAJ_MONK:
+			specialeffect2 424; specialeffect2 503;
+			sc_start4 SC_SPIRIT,350000,5,455,0,0;
+			break;
+		case EAJ_ALCHEMIST:
+			specialeffect2 424; specialeffect2 503;
+			sc_start4 SC_SPIRIT,350000,5,445,0,0;
+			break;
+		case EAJ_ROGUE:
+			specialeffect2 424; specialeffect2 503;
+			sc_start4 SC_SPIRIT,350000,5,456,0,0;
+			break;
+		case EAJ_SOUL_LINKER:
+			specialeffect2 424; specialeffect2 503;
+			sc_start4 SC_SPIRIT,350000,5,461,0,0;
+			break;
+			
+		default:
+			// Rebirth Spirit
+			if (.@eac&EAJL_UPPER && BaseLevel < 70) {
+				specialeffect2 424; specialeffect2 503;
+				sc_start4 SC_SPIRIT,350000,5,494,0,0;
+				break;
+			} else {
+				mes "You cannot be linked!";
+				close;
+			}
+	}
+	
+	end;
+}
+
+prontera,147,184,5	duplicate(spiritln)	Soul Linker#02	795
+izlude,133,126,5	duplicate(spiritln)	Soul Linker#03	795
