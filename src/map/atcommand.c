@@ -1371,8 +1371,27 @@ ACMD_FUNC(jobchange)
 
 	if (pcdb_checkid(job))
 	{
-		if (pc_jobchange(sd, job, upper) == 0)
+		if (pc_jobchange(sd, job, upper) == 0) {
+			pc_resetskill(sd, 4);  // Reset skills and set skill points to 0.
+			// Re-calculate skill points
+			if (!(sd->class_&JOBL_2)) {
+				sd->status.skill_point = 0;
+			} else { //if (sd->class_&JOBL_2 == JOBL_2) {
+				sd->status.skill_point = 49;  // Assume Job change level = 50
+			}
+
+			if (sd->class_ != MAPID_NOVICE) {  // Not a Novice, then set Basic skill to level 9.
+				sd->status.skill[NV_BASIC].lv = 9;
+				sd->status.skill[NV_BASIC].flag = SKILL_FLAG_PERMANENT;
+			}
+
+			// Update client
+			pc_onstatuschanged(sd,SP_SKILLPOINT);
+			clif_skillinfoblock(sd);
+			status_calc_pc(sd,0);
+
 			clif_displaymessage(fd, msg_txt(12)); // Your job has been changed.
+		}
 		else {
 			clif_displaymessage(fd, msg_txt(155)); // You are unable to change your job.
 			return -1;

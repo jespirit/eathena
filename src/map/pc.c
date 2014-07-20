@@ -5762,7 +5762,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		if( sd->status.skill[i].flag == SKILL_FLAG_PERMANENT )
 			skill_point += lv;
 		else
-		if( sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0 )
+		if( sd->status.skill[i].flag > SKILL_FLAG_REPLACED_LV_0 )
 			skill_point += (sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0);
 
 		if( !(flag&2) )
@@ -5775,6 +5775,9 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 	if( flag&2 || !skill_point ) return skill_point;
 
 	sd->status.skill_point += skill_point;
+
+	if ( flag&4 )  // Note: skill_point is zero when no skills have been upped
+		sd->status.skill_point = 0;
 
 	if( flag&1 )
 	{
@@ -6655,11 +6658,11 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 
 	//Remove peco/cart/falcon
 	i = sd->sc.option;
-	if(i&OPTION_RIDING && !pc_checkskill(sd, KN_RIDING))
+	if(i&OPTION_RIDING && pc_checkskill(sd, KN_RIDING))
 		i&=~OPTION_RIDING;
-	if(i&OPTION_CART && !pc_checkskill(sd, MC_PUSHCART))
+	if(i&OPTION_CART && pc_checkskill(sd, MC_PUSHCART))
 		i&=~OPTION_CART;
-	if(i&OPTION_FALCON && !pc_checkskill(sd, HT_FALCON))
+	if(i&OPTION_FALCON && pc_checkskill(sd, HT_FALCON))
 		i&=~OPTION_FALCON;
 
 	if(i != sd->sc.option)
