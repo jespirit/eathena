@@ -597,7 +597,7 @@ prontera,161,184,4	script	Ultimate Refiner#01	85,{
 	callfunc "refineultimate","Refiner",1;
 	end;
 }
-izlude,133,130,4	script	Ultimate Refiner#02	85,{
+izlude,131,130,4	script	Ultimate Refiner#02	85,{
 	callfunc "refineultimate","Refiner",1;
 	end;
 }
@@ -1283,6 +1283,11 @@ function	script	orimain	{
 // Equipment Repairmen
 //=====================================================================================
 prontera,163,184,4	script	Repairman#prt-2	86,{
+	callfunc "repairmain","Repairman";
+	end;
+}
+
+izlude,133,130,4	script	Repairman#izl	86,{
 	callfunc "repairmain","Repairman";
 	end;
 }

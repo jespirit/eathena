@@ -116,6 +116,23 @@ M_Save:
 	callfunc "F_KafEnd",0,1,"in the city of Prontera";
 }
 
+// Center ===========================================
+prontera,163,192,6	script	Kafra Employee::kaf_prontera6	117,{
+	cutin "kafra_01",2;
+	callfunc "F_KafSetPront";
+	mes "[Kafra Employee]";
+	mes "Welcome to the";
+	mes "Kafra Corporation.";
+	mes "The Kafra services";
+	mes "are always on your side.";
+	mes "How may I assist you?";
+	callfunc "F_Kafra",5,0,0,40,800;
+
+M_Save:
+	savepoint "prontera",156,191;
+	callfunc "F_KafEnd",0,1,"in the city of Prontera";
+}
+
 
 // Function: Sets variables for Prontera Kafras ----------------------------
 function	script	F_KafSetPront	{
