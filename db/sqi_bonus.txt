@@ -4,7 +4,7 @@
 { bonus bNearAtkDef,20; bonus bLongAtkDef,20; }, "Melee and Ranged Resistance 20%"
 { skill "SA_AUTOSPELL",10; }, "Autospell Level 10"
 { bonus bMatkRate,50; }, "50% Matk"
-{ bonus bInt,15; }, "+15 INT"
+{ bonus bInt,15; }, "15 INT"
 { skill "PR_ASPERSIO",5; }, "Aspersio lvl 5"
 { bonus bMaxSP,1000; }, "1000 SP"
 { skill "LK_AURABLADE",5; }, "Aura Blade lvl 5"
@@ -128,7 +128,7 @@
 { bonus2 bResEff,Eff_Freeze,3000; bonus2 bResEff,Eff_Stone,3000; }, "30% Freeze and Stone Curse Resistance"
 { bonus bStr,5; }, "5 STR"
 { bonus bAspdRate,13;}, "13% ASPD"
-{ bonus2 bAddEff,Eff_Freeze,500; }, "%5 chance to Freeze the target when attacking"
+{ bonus2 bAddEff,Eff_Freeze,500; }, "5% chance to Freeze the target when attacking"
 // Alchemist
 { bonus bAtk,100; }, "100 ATK"
 { autobonus "{ bonus bShortWeaponDamageReturn,40; }",50,8000,BF_WEAPON|BF_NORMAL; }, "5% chance to Reflect 40% of Damage for 8 seconds when attacked"
@@ -138,7 +138,7 @@
 { bonus bMaxHPrate,15; }, "15% HP"
 { bonus bLuk,20; }, "20 LUK"
 { skill "MG_FIREBOLT",6; bonus4 bAutoSpell,"MG_FIREBOLT",6,50,1; bonus bMatkRate,10; }, "Enables use of Level 5 Fire Bolt, and 5% chance to auto cast Level 6 Fire Bolt when attacking, +10% MATK"
-{ bonus2 bAddEffWhenHit,Eff_Stone,500; }, "%5 Chance to use Stone Curse status on the enemy while recieving damage"
+{ bonus2 bAddEffWhenHit,Eff_Stone,500; }, "5% Chance to use Stone Curse status on the enemy while recieving damage"
 // Rogue
 { bonus bDex,5; }, "5 DEX"
 { bonus bDex,5; }, "5 DEX"
@@ -161,7 +161,7 @@
 { bonus4 bAutoSpell,"MG_FIREBOLT",6,50,1;}, "Autocast Frost Joke 5% when attacking"
 // Taekwon
 { bonus bMaxHPrate,10; }, "10% HP"
-{ bonus bHit,40; }, "40 Hit"
+{ bonus bHit,40; }, "40 HIT"
 { bonus bAspdRate,30; }, "30% ASPD"
 { bonus bAtk,130; }, "130 ATK"
 { bonus2 bSkillAtk,"TK_JUMPKICK",50; }, "50% more damage with Flying Side Kick"
