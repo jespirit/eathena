@@ -436,6 +436,27 @@ void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_accid, 
 	}
 }
 
+void log_debug(const char* message, int flag)
+{
+	//char timestring[255];
+	//time_t curtime;
+	static FILE* logfp;
+
+	if (flag&1)
+		if( ( logfp = fopen(log_config.log_debug, "a") ) == NULL )
+			return;
+	//time(&curtime);
+	//strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
+	if (logfp)
+		fprintf(logfp, "%s\n", message);
+	if (flag&2) {
+		if (logfp) {
+			fclose(logfp);
+			logfp = NULL;
+		}
+	}
+}
+
 
 void log_set_defaults(void)
 {
@@ -524,6 +545,8 @@ int log_config_read(const char* cfgName)
 				safestrncpy(log_config.log_npc, w2, sizeof(log_config.log_npc));
 			else if( strcmpi(w1, "log_chat_db") == 0 )
 				safestrncpy(log_config.log_chat, w2, sizeof(log_config.log_chat));
+			else if( strcmpi(w1, "log_debug") == 0 )
+				safestrncpy(log_config.log_debug, w2, sizeof(log_config.log_debug));
 			//support the import command, just like any other config
 			else if( strcmpi(w1,"import") == 0 )
 				log_config_read(w2);

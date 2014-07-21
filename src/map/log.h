@@ -62,6 +62,8 @@ void log_atcommand(struct map_session_data* sd, int cmdlvl, const char* message)
 void log_branch(struct map_session_data* sd);
 void log_mvpdrop(struct map_session_data* sd, int monster_id, int* log_mvp);
 
+void log_debug(const char* message, int flag);
+
 int log_config_read(const char* cfgName);
 
 extern struct Log_Config
@@ -72,7 +74,7 @@ extern struct Log_Config
 	bool log_chat_woe_disable;
 	int rare_items_log,refine_items_log,price_items_log,amount_items_log; //for filter
 	int branch, mvpdrop, zeny, gm, npc, chat;
-	char log_branch[64], log_pick[64], log_zeny[64], log_mvpdrop[64], log_gm[64], log_npc[64], log_chat[64];
+	char log_branch[64], log_pick[64], log_zeny[64], log_mvpdrop[64], log_gm[64], log_npc[64], log_chat[64], log_debug[64];
 }
 log_config;
 

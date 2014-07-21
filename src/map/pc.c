@@ -5724,8 +5724,15 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 			merc_hom_vaporize(sd, 0);
 	}
 
+	log_debug("BEGIN", 1);
 	for( i = 1; i < MAX_SKILL; i++ )
 	{
+		if (sd->status.skill[i].id) {
+			char msg[256];
+			struct s_skill* sk = &sd->status.skill[i];
+			sprintf(msg, "%d,%d", sk->id, sk->lv);
+			log_debug(msg, 0);
+		}
 		lv = sd->status.skill[i].lv;
 		if (lv < 1) continue;
 
@@ -5771,6 +5778,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 			sd->status.skill[i].flag = 0;
 		}
 	}
+	log_debug("END", 2);
 	
 	if( flag&2 || !skill_point ) return skill_point;
 
