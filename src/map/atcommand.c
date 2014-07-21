@@ -1245,6 +1245,7 @@ ACMD_FUNC(jobchange)
 {
 	//FIXME: redundancy, potentially wrong code, should use job_name() or similar instead of hardcoding the table [ultramage]
 	int job = 0, upper = 0;
+	int class_;
 	nullpo_retr(-1, sd);
 
 	if (!message || !*message || sscanf(message, "%d %d", &job, &upper) < 1)
@@ -1371,16 +1372,23 @@ ACMD_FUNC(jobchange)
 
 	if (pcdb_checkid(job))
 	{
+		class_ = sd->class_;  // save previous class
 		if (pc_jobchange(sd, job, upper) == 0) {
-			pc_resetskill(sd, 4);  // Reset skills and set skill points to 0.
 			// Re-calculate skill points
-			if (!(sd->class_&JOBL_2)) {
-				sd->status.skill_point = 0;
-			} else { //if (sd->class_&JOBL_2 == JOBL_2) {
+
+			// 1st to 2nd job, same skill tree
+			if (!(class_&JOBL_2) && (sd->class_&JOBL_2)
+				&& ((class_&MAPID_BASEMASK)==(sd->class_&MAPID_BASEMASK))) {
+				;//sd->status.skill_point = 0;
+			} else if (sd->class_&JOBL_2) {
+				pc_resetskill(sd, 4);  // reset all skills, set skill point to 0
 				sd->status.skill_point = 49;  // Assume Job change level = 50
+			} else {
+				pc_resetskill(sd, 4);
 			}
 
-			if (sd->class_ != MAPID_NOVICE) {  // Not a Novice, then set Basic skill to level 9.
+			// If not a Novice then set Basic skill to level 9.
+			if (sd->class_ != MAPID_NOVICE) {
 				sd->status.skill[NV_BASIC].lv = 9;
 				sd->status.skill[NV_BASIC].flag = SKILL_FLAG_PERMANENT;
 			}
