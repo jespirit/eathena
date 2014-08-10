@@ -52,7 +52,7 @@ REPLACE INTO `item_db` VALUES (513,'Banana','Banana',0,15,NULL,20,NULL,NULL,NULL
 REPLACE INTO `item_db` VALUES (514,'Grape','Grape',0,200,NULL,20,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 0,rand(10,15);',NULL,NULL);
 REPLACE INTO `item_db` VALUES (515,'Carrot','Carrot',0,15,NULL,20,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(18,20),0;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (516,'Sweet_Potato','Potato',0,15,NULL,20,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(15,23),0;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (517,'Meat','Meat',0,50,NULL,150,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(70,100),0;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (517,'Meat','Meat',0,50,NULL,20,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(70,100),0;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (518,'Honey','Honey',0,500,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(70,100),rand(20,40);',NULL,NULL);
 REPLACE INTO `item_db` VALUES (519,'Milk','Milk',0,25,NULL,30,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(27,37),0;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (520,'Leaflet_Of_Hinal','Hinalle Leaflet',0,150,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(175,235),0;',NULL,NULL);
@@ -2270,7 +2270,9 @@ REPLACE INTO `item_db` VALUES (4453,'Hilsrion_Card','Hillsrion Card',6,20,NULL,1
 REPLACE INTO `item_db` VALUES (4454,'Light_Up_Card1','Light Up Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (4455,'Light_Up_Card2','Light Up Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
+REPLACE INTO `item_db` VALUES (4505,'Scaraba_Card','Scaraba Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,136,NULL,NULL,NULL,NULL,'bonus bMatkRate,5; bonus bMaxSPrate,-5;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (4507,'Queen_Scaraba_Card','Queen Scaraba Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus2 bAddRace,RC_NonBoss,15; bonus2 bAddRace,RC_Boss,15; bonus2 bAddRace2,5,15; bonus bHit,35;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (4508,'Gold_Scaraba_Card','Gold Scaraba Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,136,NULL,NULL,NULL,NULL,'bonus bBaseAtk,(JobLevel/5); bonus bMaxHPrate,-1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (4509,'Gold_Q_Scaraba_Card','Gold Queen Scaraba Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus bAspdRate,15; bonus2 bSubSize,0,1; bonus2 bSubSize,1,1; bonus2 bSubSize,2,1; if(getiteminfo(getequipid(EQI_HAND_R),11) == 10) bonus bIgnoreMdefRate,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (4520,'Leak_Card','Leak Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,NULL,NULL,'bonus bInt,5; bonus2 bSubSize,0,10; bonus2 bSubSize,1,10; bonus2 bSubSize,2,10; bonus3 bAddEff,Eff_Confusion,1000,ATF_SKILL;',NULL,NULL);
 
@@ -4587,7 +4589,7 @@ REPLACE INTO `item_db` VALUES (8010,'Blinker','Blinker',5,20,NULL,100,NULL,1,NUL
 REPLACE INTO `item_db` VALUES (8016,'Angel_Wing_Kaho','Angel Wing Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,38,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8027,'Black_Ribbon_Kaho','Back Ribbon Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,242,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8048,'Valkyrie_Helm','Valkyrie Helm',5,100000,NULL,1000,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,0,1,225,'bonus bMdef,20; bonus bAgi,20; bonus bVit,20; bonus bLuk,20; bonus2 bSubRace,RC_DemiHuman,10;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (8049,'Sleipnir','Sleipnir',5,20,NULL,3500,NULL,5,NULL,1,0xFFFFFFFF,7,2,64,NULL,85,1,0,'bonus bMdef,10; bonus bMaxHPrate,20; bonus bMaxSPrate,20; bonus bSPrecovRate,15; bonus bSpeedRate,25;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (8049,'Sleipnir_','Sleipnir',5,20,NULL,3500,NULL,5,NULL,1,0xFFFFFFFF,7,2,64,NULL,85,1,0,'bonus bMdef,10; bonus bMaxHPrate,20; bonus bMaxSPrate,20; bonus bSPrecovRate,15; bonus bSpeedRate,25;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8061,'Contact_Lenses','Contact Lenses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,23,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (8066,'Angeling_Kaho','Angeling Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,204,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8100,'Alice_Kaho','Alice Doll Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,208,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
