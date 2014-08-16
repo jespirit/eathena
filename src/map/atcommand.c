@@ -9341,6 +9341,46 @@ ACMD_FUNC(getarmor)
 	return 0;
 }
 
+/*===================================
+ * Minimum attack
+ *-----------------------------------*/
+ACMD_FUNC(minatk)
+{
+	sd->state.minmax = 1;
+	clif_displaymessage(fd, "Minimum attack is now active");
+	return 0;
+}
+
+/*===================================
+ * Average attack
+ *-----------------------------------*/
+ACMD_FUNC(avgatk)
+{
+	sd->state.minmax = 2;
+	clif_displaymessage(fd, "Average attack is now active");
+	return 0;
+}
+
+/*===================================
+ * Maximum attack
+ *-----------------------------------*/
+ACMD_FUNC(maxatk)
+{
+	sd->state.minmax = 4;
+	clif_displaymessage(fd, "Maximum attack is now active");
+	return 0;
+}
+
+/*===================================
+ * Turn off attack minmax
+ *-----------------------------------*/
+ACMD_FUNC(atkoff)
+{
+	sd->state.minmax = 0;
+	clif_displaymessage(fd, "Your attack damage has been restored to normal");
+	return 0;
+}
+
 /*==========================================
  * atcommand_info[] structure definition
  *------------------------------------------*/
@@ -9643,13 +9683,17 @@ AtCommandInfo atcommand_info[] = {
 	{ "delitem",           60,60,     atcommand_delitem },
 	{ "charcommands",       1,1,      atcommand_commands },
 	{ "font",               1,1,      atcommand_font },
-	{ "sqibonus",           40,40,      atcommand_sqibonus },
-	{ "copyskill",          40,40,      atcommand_copyskill },
-	{ "rent",               20,20,      atcommand_rent },
-	{ "fcp",                40,40,      atcommand_fcp },
-	{ "hurt",               60,60,      atcommand_hurt },
-	{ "clearall",           60,60,      atcommand_clearall },
-	{ "getarmor",           60,60,      atcommand_getarmor },
+	{ "sqibonus",          40,40,      atcommand_sqibonus },
+	{ "copyskill",         40,40,      atcommand_copyskill },
+	{ "rent",              20,20,      atcommand_rent },
+	{ "fcp",               40,40,      atcommand_fcp },
+	{ "hurt",              60,60,      atcommand_hurt },
+	{ "clearall",          60,60,      atcommand_clearall },
+	{ "getarmor",          60,60,      atcommand_getarmor },
+	{ "minatk",            40,40,      atcommand_minatk },
+	{ "avgatk",            40,40,      atcommand_avgatk },
+	{ "maxatk",            40,40,      atcommand_maxatk },
+	{ "atkoff",            40,40,      atcommand_atkoff },
 };
 
 

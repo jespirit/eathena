@@ -139,6 +139,7 @@ struct map_session_data {
 		unsigned short autolootid; // [Zephyrus]
 		unsigned short autobonus; //flag to indicate if an autobonus is activated. [Inkfish]
 		unsigned int warping : 1;//states whether you're in the middle of a warp processing
+		unsigned int minmax: 3; // min,avg,max damage
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;

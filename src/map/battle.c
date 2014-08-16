@@ -790,6 +790,27 @@ int battle_addmastery(struct map_session_data *sd,struct block_list *target,int 
 
 	return damage;
 }
+
+int damage_calc_minmax(struct map_session_data* sd, int min, int max)
+{
+	int damage;
+
+	if (sd) { // PC
+		if (sd->state.minmax == 1) // min
+			damage = min;
+		else if (sd->state.minmax == 2) // avg
+			damage = (max-min)/2;
+		else if (sd->state.minmax == 4) // max
+			damage = max;
+		else
+			damage = rand()%(max-min+1)+min;
+	}
+	else
+		damage = rand()%(max-min+1)+min;
+
+	return damage;
+}
+
 /*==========================================
  * Calculates the standard damage of a normal attack assuming it hits,
  * it calculates nothing extra fancy, is needed for magnum break's WATK_ELEMENT bonus. [Skotlex]
@@ -848,7 +869,7 @@ static int battle_calc_base_damage(struct status_data *status, struct weapon_atk
 	
 	//Weapon Damage calculation
 	if (!(flag&1))
-		damage = (atkmax>atkmin? rand()%(atkmax-atkmin):0)+atkmin;
+		damage = (atkmax>atkmin? damage_calc_minmax(sd, 0, atkmax-atkmin-1):0)+atkmin;
 	else 
 		damage = atkmax;
 	
@@ -856,7 +877,7 @@ static int battle_calc_base_damage(struct status_data *status, struct weapon_atk
 	{
 		//rodatazone says the range is 0~arrow_atk-1 for non crit
 		if (flag&2 && sd->arrow_atk)
-			damage += ((flag&1)?sd->arrow_atk:rand()%sd->arrow_atk);
+			damage += ((flag&1)?sd->arrow_atk:damage_calc_minmax(sd, 0, sd->arrow_atk-1));
 
 		//SizeFix only for players
 		if (!(sd->special_state.no_sizefix || (flag&8)))
@@ -876,12 +897,12 @@ static int battle_calc_base_damage(struct status_data *status, struct weapon_atk
 	if(sd) {
 		if (type == EQI_HAND_L) {
 			if(sd->left_weapon.overrefine)
-				damage += rand()%sd->left_weapon.overrefine+1;
+				damage += damage_calc_minmax(sd, 1, sd->left_weapon.overrefine);
 			if (sd->weapon_atk_rate[sd->weapontype2])
 				damage += damage*sd->weapon_atk_rate[sd->weapontype2]/100;;
 		} else { //Right hand
 			if(sd->right_weapon.overrefine)
-				damage += rand()%sd->right_weapon.overrefine+1;
+				damage += damage_calc_minmax(sd, 1, sd->right_weapon.overrefine);
 			if (sd->weapon_atk_rate[sd->weapontype1])
 				damage += damage*sd->weapon_atk_rate[sd->weapontype1]/100;;
 		}
@@ -2421,7 +2442,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 			default:
 			{
 				if (sstatus->matk_max > sstatus->matk_min) {
-					MATK_ADD(sstatus->matk_min+rand()%(1+sstatus->matk_max-sstatus->matk_min));
+					MATK_ADD(sstatus->matk_min+damage_calc_minmax(sd, 0, sstatus->matk_max-sstatus->matk_min));
 				} else {
 					MATK_ADD(sstatus->matk_min);
 				}
