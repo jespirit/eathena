@@ -1898,7 +1898,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 			if (tsd)	//Sd vit-eq
 			{	//[VIT*0.5] + rnd([VIT*0.3], max([VIT*0.3],[VIT^2/150]-1))
 				vit_def = def2*(def2-15)/150;
-				vit_def = def2/2 + (vit_def>0?rand()%vit_def:0);
+				vit_def = def2/2 + (vit_def>0?((sd&&sd->state.minmax)?0:rand()%vit_def):0);
 				
 				if((battle_check_undead(sstatus->race,sstatus->def_ele) || sstatus->race==RC_DEMON) && //This bonus already doesnt work vs players
 					src->type == BL_MOB && (skill=pc_checkskill(tsd,AL_DP)) > 0)
@@ -1906,7 +1906,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 			} else { //Mob-Pet vit-eq
 				//VIT + rnd(0,[VIT/20]^2-1)
 				vit_def = (def2/20)*(def2/20);
-				vit_def = def2 + (vit_def>0?rand()%vit_def:0);
+				vit_def = def2 + (vit_def>0?((sd&&sd->state.minmax)?0:rand()%vit_def):0);
 			}
 			
 			if (battle_config.weapon_defense_type) {
