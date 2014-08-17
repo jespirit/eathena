@@ -9372,9 +9372,9 @@ ACMD_FUNC(maxatk)
 }
 
 /*===================================
- * Turn of attack minmax
+ * Turn off attack minmax
  *-----------------------------------*/
-ACMD_FUNC(maxatk)
+ACMD_FUNC(atkoff)
 {
 	sd->state.minmax = 0;
 	clif_displaymessage(fd, "Your attack damage has been restored to normal");

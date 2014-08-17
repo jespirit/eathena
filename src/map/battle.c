@@ -793,14 +793,18 @@ int battle_addmastery(struct map_session_data *sd,struct block_list *target,int 
 
 int damage_calc_minmax(struct map_session_data* sd, int min, int max)
 {
-	int damage = 0;
+	int damage;
 
-	if (sd->state.minmax == 1) // min
-		damage = min;
-	else if (sd->state.minmax == 2) // avg
-		damage = (max-min)/2;
-	else if (sd->state.minmax == 3) // max
-		damage = max - 1;
+	if (sd) { // PC
+		if (sd->state.minmax == 1) // min
+			damage = min;
+		else if (sd->state.minmax == 2) // avg
+			damage = (max-min)/2;
+		else if (sd->state.minmax == 4) // max
+			damage = max;
+		else
+			damage = rand()%(max-min+1)+min;
+	}
 	else
 		damage = rand()%(max-min+1)+min;
 
@@ -2438,7 +2442,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 			default:
 			{
 				if (sstatus->matk_max > sstatus->matk_min) {
-					MATK_ADD(sstatus->matk_min+rand()%(1+sstatus->matk_max-sstatus->matk_min));
+					MATK_ADD(sstatus->matk_min+damage_calc_minmax(sd, 0, sstatus->matk_max-sstatus->matk_min));
 				} else {
 					MATK_ADD(sstatus->matk_min);
 				}
