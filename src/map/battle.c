@@ -791,8 +791,21 @@ int battle_addmastery(struct map_session_data *sd,struct block_list *target,int 
 	return damage;
 }
 
-int damage_calc(struct map_session_data* sd, int low, int high) {
+int damage_calc_minmax(struct map_session_data* sd, int min, int max)
+{
+	int damage = 0;
 
+	if (sd->state.minmax == 1) // min
+		damage = min;
+	else if (sd->state.minmax == 2) // avg
+		damage = (max-min)/2;
+	else if (sd->state.minmax == 3) // max
+		damage = max - 1;
+	else
+		damage = rand()%(max-min+1)+min;
+
+	return damage;
+}
 
 /*==========================================
  * Calculates the standard damage of a normal attack assuming it hits,
@@ -851,32 +864,16 @@ static int battle_calc_base_damage(struct status_data *status, struct weapon_atk
 		atkmin = atkmax;
 	
 	//Weapon Damage calculation
-	if (!(flag&1)) {
-		if (sd->state.minmax == 1) // min
-			damage = atkmin;
-		else if (sd->state.minmax == 2) // avg
-			damage = atkmin + (atkmax-atkmin)/2;
-		else if (sd->state.minmax == 3) // max
-			damage = atkmax - 1;
-		else
-			damage = (atkmax>atkmin? rand()%(atkmax-atkmin):0)+atkmin;
-	}
+	if (!(flag&1))
+		damage = (atkmax>atkmin? damage_calc_minmax(sd, 0, atkmax-atkmin-1):0)+atkmin;
 	else 
 		damage = atkmax;
 	
 	if (sd)
 	{
 		//rodatazone says the range is 0~arrow_atk-1 for non crit
-		if (flag&2 && sd->arrow_atk) {
-			if (sd->state.minmax == 1)
-				damage += 0;
-			else if (sd->state.minmax == 2)
-				damage += sd->arrow_atk/2;
-			else if (sd->state.minmax == 3)
-				damage += sd->arrow_atk;
-			else
-				damage += ((flag&1)?sd->arrow_atk:rand()%sd->arrow_atk);
-		}
+		if (flag&2 && sd->arrow_atk)
+			damage += ((flag&1)?sd->arrow_atk:damage_calc_minmax(sd, 0, sd->arrow_atk-1));
 
 		//SizeFix only for players
 		if (!(sd->special_state.no_sizefix || (flag&8)))
@@ -896,12 +893,12 @@ static int battle_calc_base_damage(struct status_data *status, struct weapon_atk
 	if(sd) {
 		if (type == EQI_HAND_L) {
 			if(sd->left_weapon.overrefine)
-				damage += rand()%sd->left_weapon.overrefine+1;
+				damage += damage_calc_minmax(sd, 1, sd->left_weapon.overrefine);
 			if (sd->weapon_atk_rate[sd->weapontype2])
 				damage += damage*sd->weapon_atk_rate[sd->weapontype2]/100;;
 		} else { //Right hand
 			if(sd->right_weapon.overrefine)
-				damage += rand()%sd->right_weapon.overrefine+1;
+				damage += damage_calc_minmax(sd, 1, sd->right_weapon.overrefine);
 			if (sd->weapon_atk_rate[sd->weapontype1])
 				damage += damage*sd->weapon_atk_rate[sd->weapontype1]/100;;
 		}
