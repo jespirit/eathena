@@ -1769,7 +1769,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 					break;
 				case GS_MAGICALBULLET:
 					if(sstatus->matk_max>sstatus->matk_min) {
-						ATK_ADD(sstatus->matk_min+rand()%(sstatus->matk_max-sstatus->matk_min));
+						ATK_ADD(sstatus->matk_min+damage_calc_minmax(sd, 0, sstatus->matk_max-sstatus->matk_min-1));
 					} else {
 						ATK_ADD(sstatus->matk_min);
 					}
@@ -2804,7 +2804,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	case NJ_ZENYNAGE:
 		md.damage = skill_get_zeny(skill_num ,skill_lv);
 		if (!md.damage) md.damage = 2;
-		md.damage = md.damage + rand()%md.damage;
+		md.damage = md.damage + damage_calc_minmax(sd, 0, md.damage-1);
 		if (is_boss(target))
 			md.damage=md.damage/3;
 		else if (tsd)
@@ -2817,7 +2817,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 		md.damage = sstatus->max_hp * (50 + 50 * skill_lv) / 100 ;
 		break ;
 	case ASC_BREAKER:
-		md.damage = 500+rand()%500 + 5*skill_lv * sstatus->int_;
+		md.damage = 500+damage_calc_minmax(sd, 0, 500-1) + 5*skill_lv * sstatus->int_;
 		nk|=NK_IGNORE_FLEE|NK_NO_ELEFIX; //These two are not properties of the weapon based part.
 		break;
 	case HW_GRAVITATION:
