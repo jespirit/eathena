@@ -476,17 +476,17 @@ OnThisMobDeath:
 		announce strcharinfo(0)+" is now the NO. 1 Emperium Breaker!!",0;
 		set $empbrk_record, .time;
 		set $empbrk_record$,strcharinfo(0);
-		}
-		set .m, .time / 60000;
-		set .time, .time - (.m * 60000);
-		set .s, .time /1000;
-		set .time, .time - (.s * 1000);
-		areaannounce "pvp_n_4-5",.x1,.y1,.x2,.y2,"Your time is "+.m+"m "+.s+"s "+.time+"ms",0;
-		set .end,1;
-		set .charid,getcharid(0);
-		initnpctimer;
-		end;
 	}
+	set .m, .time / 60000;
+	set .time, .time - (.m * 60000);
+	set .s, .time /1000;
+	set .time, .time - (.s * 1000);
+	areaannounce "pvp_n_4-5",.x1,.y1,.x2,.y2,"Your time is "+.m+"m "+.s+"s "+.time+"ms",0;
+	set .end,1;
+	set .charid,getcharid(0);
+	initnpctimer;
+	end;
+}
 		
 pvp_n_4-5,125,100,0	script	EmpBrk#4_touch	-1,1,2,{
 
