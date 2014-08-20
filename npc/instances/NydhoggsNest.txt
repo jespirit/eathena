@@ -123,14 +123,15 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	111,8,8,{
 			next;
 			switch(select("Please allow me to enter.:I want to go in.:I want to leave.")) {
 			case 1:
-				set .@party,getcharid(1);
-				set .@leader,getpartyleader(.@party,2);
+				set .@party,getcharid(1);  // party id
+				set .@leader,getpartyleader(.@party,2);  
 				set .@md_name$,"Nidhoggur's Nest";
 
-				getpartymember(.@party);
+				getpartymember(.@party);  // fills up global $@partymembername$[]
 				set .@partymembercount,$@partymembercount;
 				copyarray .@partymembername$[0],$@partymembername$[0],.@partymembercount;
 
+				// the leader must start the instance
 				if ((.@party > 0) && ((.@partymembercount > 1)) && (.@leader == getcharid(0))) {
 					set .@instance, instance_create(.@md_name$, .@party);
 					if (.@instance < 0) {
@@ -139,6 +140,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	111,8,8,{
 						close;
 					}
 					else {
+						// attach maps 1@nyd and 2@nyd
 						for( set .@i, 1; .@i <= 2; set .@i, .@i + 1 ) {
 							if( instance_attachmap(.@i + "@nyd", .@instance) == "" )
 								break;
@@ -147,10 +149,13 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	111,8,8,{
 							instance_destroy(.@instance);
 							close;
 						}
-						instance_attach(.@instance);
-						instance_set_timeout 144000,300,.@instance;
-						instance_init(.@instance);
+						instance_attach(.@instance);  // attaches the current script to the instance
+						instance_set_timeout 144000,300,.@instance;  // timeout <alive>, <idle>
+						instance_init(.@instance);  // initialize instance, copy all NPCs from source maps to instance
 
+						// instance_npcname("<npc_name>"{,<instance_id>}) will get the unique name given to a copy of the npc
+						// returns a string in the form of dup_<instance_id>_<block_list.id>
+						
 						// Spawn standard mobs
 						donpcevent instance_npcname("ins_nyd1_spawn_mobs", instance_id())+"::OnInstanceInit";
 						donpcevent instance_npcname("ins_nyd2_spawn_mobs", instance_id())+"::OnInstanceInit";
@@ -1942,6 +1947,7 @@ OnDisable:
 	end;
 
 OnMyMobDead:
+	// mobcount returns the count of mobs with the specific event
 	set .@mob_dead_num,mobcount("1@nyd", instance_npcname("nyd_call_mon_1", instance_id())+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		instance_announce 0, "All of Nidhoggur's Guardians have been defeated!",bc_map,"0x00ff99";
@@ -1969,15 +1975,15 @@ OnDisable:
 	killmonsterall "1@nyd";
 	end;
 
-OnTimer900000:
+OnTimer900000:  // 15 mins, 60*15*1000
 	instance_announce 0, "World Tree Yggdrasil : There's not much time left. Please hurry.",bc_map,"0xFFFF00";
 	end;
 
-OnTimer1200000:
+OnTimer1200000:  // +5 mins, 20 mins
 	instance_announce 0, "World Tree Yggdrasil : My powers are slowly disappearing. Please hurry.",bc_map,"0xFFFF00";
 	end;
 
-OnTimer1500000:
+OnTimer1500000:  // +5 mins, 25 mins
 	instance_announce 0, "World Tree Yggdrasil : I'm... almost at my limit... please hurry up."	,bc_map,"0xFFFF00";
 	end;
 
