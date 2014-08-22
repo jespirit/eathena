@@ -4661,9 +4661,9 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 				case SC_INTOABYSS:		case SC_SIEGFRIED:		case SC_WHISTLE:
 				case SC_ASSNCROS:		case SC_POEMBRAGI:		case SC_APPLEIDUN:
 				case SC_HUMMING:		case SC_DONTFORGETME:	case SC_FORTUNE:
-				case SC_SERVICE4U:		case SC_FOOD_STR_CASH:	case SC_FOOD_AGI_CASH:
-				case SC_FOOD_VIT_CASH:	case SC_FOOD_DEX_CASH:	case SC_FOOD_INT_CASH:
-				case SC_FOOD_LUK_CASH:
+				case SC_SERVICE4U:		case SC_MIRACLE:		case SC_FOOD_STR_CASH:
+				case SC_FOOD_AGI_CASH:	case SC_FOOD_VIT_CASH:	case SC_FOOD_DEX_CASH:
+				case SC_FOOD_INT_CASH:	case SC_FOOD_LUK_CASH:
 					continue;
 				case SC_ASSUMPTIO:
 					if( bl->type == BL_MOB )
