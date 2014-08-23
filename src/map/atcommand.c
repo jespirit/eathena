@@ -9381,6 +9381,36 @@ ACMD_FUNC(atkoff)
 	return 0;
 }
 
+/*===================================
+ * Toggles SG Miracle on/off
+ *-----------------------------------*/
+ACMD_FUNC(miracle)
+{
+	if(sd && (sd->class_&MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR) {
+		if (sd->sc.data[SC_MIRACLE]) {
+			status_change_end(&sd->bl, SC_BOSSMAPINFO, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_WARM, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_SUN_COMFORT, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_MOON_COMFORT, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_STAR_COMFORT, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_MIRACLE, INVALID_TIMER);
+			if (sd->sc.data[SC_KNOWLEDGE]) {
+				struct status_change_entry *sce = sd->sc.data[SC_KNOWLEDGE];
+				if (sce->timer != INVALID_TIMER)
+					delete_timer(sce->timer, status_change_timer);
+				sce->timer = add_timer(gettick() + skill_get_time(SG_KNOWLEDGE, sce->val1), status_change_timer, sd->bl.id, SC_KNOWLEDGE);
+			}
+
+			clif_displaymessage(fd, "You have turned off Miracle state");
+		} else {
+			sc_start(&sd->bl,SC_MIRACLE,100,1,battle_config.sg_miracle_skill_duration);
+			clif_displaymessage(fd, "Miracle is now active");
+		}
+	}
+
+	return 0;
+}
+
 /*==========================================
  * atcommand_info[] structure definition
  *------------------------------------------*/
@@ -9694,6 +9724,7 @@ AtCommandInfo atcommand_info[] = {
 	{ "avgatk",            40,40,      atcommand_avgatk },
 	{ "maxatk",            40,40,      atcommand_maxatk },
 	{ "atkoff",            40,40,      atcommand_atkoff },
+	{ "miracle",           40,40,     atcommand_miracle },
 };
 
 
