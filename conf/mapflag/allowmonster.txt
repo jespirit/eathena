@@ -1,0 +1,14 @@
+//===== eAthena Script =======================================
+//= allowmonster map flag
+//===== By: ==================================================
+//= jespirit
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= allowmonster: Allows the use of @monster command but the map
+//                must also be an instanced map
+//===== Additional Comments: =================================
+//= None
+//============================================================
+
+2@nyd	mapflag	allowmonster

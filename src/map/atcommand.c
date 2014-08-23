@@ -36,6 +36,7 @@
 #include "storage.h"
 #include "trade.h"
 #include "unit.h"
+#include "instance.h"
 
 #ifndef TXT_ONLY
 #include "mail.h"
@@ -2392,18 +2393,29 @@ ACMD_FUNC(go)
  *------------------------------------------*/
 ACMD_FUNC(monster)
 {
+	struct party_data* p;
 	char name[NAME_LENGTH];
 	char monster[NAME_LENGTH];
 	int mob_id;
 	int number = 0;
 	int count;
-	int i, k, range;
+	int i, k, m, range;
 	short mx, my;
 	nullpo_retr(-1, sd);
 
 	memset(name, '\0', sizeof(name));
 	memset(monster, '\0', sizeof(monster));
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
+
+	m = sd->bl.m;
+
+	// Player must be on a map that allows @monster command and is instanced.
+	if ((!map[m].flag.allowmonster ||
+		!(sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id)) &&
+		pc_isGM(sd) < 99) { // Lv 99 GMs can bypass map flag or instance restrictions.
+			clif_displaymessage(fd, "You are not allowed to spawn a monster on this map");
+			return -1;
+	}
 
 	if (!message || !*message) {
 			clif_displaymessage(fd, msg_txt(80)); // Give the display name or monster name/id please.
