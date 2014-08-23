@@ -2686,6 +2686,17 @@ void atcommand_killmonster_sub(const int fd, struct map_session_data* sd, const 
 
 ACMD_FUNC(killmonster)
 {
+	struct party_data* p;
+	nullpo_retr(-1, sd);
+
+	// Able to kill monsters summoned on instanced maps.
+	if ((!map[sd->bl.m].flag.allowmonster ||
+		!(sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id)) &&
+		pc_isGM(sd) < 99) { // Lv 99 GMs can bypass map flag or instance restrictions.
+			clif_displaymessage(fd, "You are not allowed to kill monsters on this map");
+			return -1;
+	}
+
 	atcommand_killmonster_sub(fd, sd, message, 1);
 	return 0;
 }
