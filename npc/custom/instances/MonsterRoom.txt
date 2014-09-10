@@ -1,6 +1,6 @@
 
 
-prontera,165,188,6	script	Monster Room Manager::mobmgr	63,{
+prontera,165,188,3	script	Monster Room Manager::mobmgr	734,{
 	mes "[Monster Room Manager]";
 	mes "Good morning!";
 	next;
