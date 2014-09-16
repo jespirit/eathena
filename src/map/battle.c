@@ -3828,8 +3828,6 @@ static const struct _battle_data {
 	{ "gvg_magic_attack_damage_rate",       &battle_config.gvg_magic_damage_rate,           60,     0,      INT_MAX,        },
 	{ "gvg_misc_attack_damage_rate",        &battle_config.gvg_misc_damage_rate,            60,     0,      INT_MAX,        },
 	{ "gvg_flee_penalty",                   &battle_config.gvg_flee_penalty,                20,     0,      INT_MAX,        },
-	{ "gvg_castle_flag_check",              &battle_config.gvg_castle_flag_check,           1,      0,      1,              },
-	{ "gvg_castle_spawn_emperium",          &battle_config.gvg_castle_spawn_emperium,       1,      0,      1,              },
 	{ "pk_short_attack_damage_rate",        &battle_config.pk_short_damage_rate,            80,     0,      INT_MAX,        },
 	{ "pk_long_attack_damage_rate",         &battle_config.pk_long_damage_rate,             70,     0,      INT_MAX,        },
 	{ "pk_weapon_attack_damage_rate",       &battle_config.pk_weapon_damage_rate,           60,     0,      INT_MAX,        },
@@ -4047,6 +4045,12 @@ static const struct _battle_data {
 	{ "bg_magic_attack_damage_rate",        &battle_config.bg_magic_damage_rate,            60,     0,      INT_MAX,        },
 	{ "bg_misc_attack_damage_rate",         &battle_config.bg_misc_damage_rate,             60,     0,      INT_MAX,        },
 	{ "bg_flee_penalty",                    &battle_config.bg_flee_penalty,                 20,     0,      INT_MAX,        },
+// Custom
+	{ "gvg_castle_flag_check",              &battle_config.gvg_castle_flag_check,           1,      0,      1,              },
+	{ "gvg_castle_spawn_emperium",          &battle_config.gvg_castle_spawn_emperium,       1,      0,      1,              },
+	{ "atcommand_monster_spawn_limit",      &battle_config.atc_monster_spawn_limit,         10,     0,      INT_MAX,        },
+	{ "gm_bypass_monster_spawn_lv",         &battle_config.gm_bypass_monster_spawn_lv,      99,     0,      99,             },
+	{ "gm_bypass_monster_spawn_limit_lv",   &battle_config.gm_bypass_monster_spawn_limit,   99,     0,      99,             },
 };
 
 

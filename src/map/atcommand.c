@@ -2409,18 +2409,19 @@ ACMD_FUNC(monster)
 
 	m = sd->bl.m;
 
-	// Player must be on a map that allows @monster command and is instanced.
-	if ((!map[m].flag.allowmonster ||
-		!(sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id)) &&
-		pc_isGM(sd) < 99) { // Lv 99 GMs can bypass map flag or instance restrictions.
-			clif_displaymessage(fd, "You are not allowed to spawn a monster on this map");
-			return -1;
-	}
-
 	if (!message || !*message) {
 			clif_displaymessage(fd, msg_txt(80)); // Give the display name or monster name/id please.
 			return -1;
 	}
+
+	// Player must be on a map that allows @monster command and is instanced.
+	if ((!map[m].flag.allowmonster ||
+		!(sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id)) &&
+		pc_isGM(sd) < battle_config.gm_bypass_monster_spawn_lv) { // GMs can bypass map flag or instance restrictions.
+			clif_displaymessage(fd, "You are not allowed to spawn a monster on this map");
+			return -1;
+	}
+
 	if (sscanf(message, "\"%23[^\"]\" %23s %d", name, monster, &number) > 1 ||
 		sscanf(message, "%23s \"%23[^\"]\" %d", monster, name, &number) > 1) {
 		//All data can be left as it is.
@@ -2453,6 +2454,12 @@ ACMD_FUNC(monster)
 
 	if (number <= 0)
 		number = 1;
+
+	if (pc_isGM(sd) < battle_config.gm_bypass_monster_spawn_limit &&
+		map_foreachinmap(mob_count_sub, m, BL_MOB, "") + number > battle_config.atc_monster_spawn_limit) {
+		clif_displaymessage(fd, "You have exceeded the monster limit of 10.");
+		return -1;
+	}
 
 	if( !name[0] )
 		strcpy(name, "--ja--");
