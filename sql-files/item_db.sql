@@ -6799,7 +6799,7 @@ REPLACE INTO `item_db` VALUES (19507,'Clear_Sun','Clear Sun',5,0,NULL,0,NULL,0,N
 REPLACE INTO `item_db` VALUES (16000,'Erde','Erde Mace',4,20,NULL,500,130,NULL,1,2,0x0004C5B2,2,2,2,4,50,1,8,'bonus2 bSkillAtk,\"AM_ACIDTERROR\",20; bonus2 bSkillAtk,\"AM_DEMONSTRATION\",20; bonus bMaxSP,50; bonus bHealPower,10;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (16001,'Red_Square_Bag','Red Square Bag',4,20,NULL,500,130,NULL,1,2,0x0004C5B2,2,2,2,3,50,1,8,'bonus bMaxHP,200; bonus2 bSkillAtk,\"AM_ACIDTERROR\",20; bonus2 bSkillAtk,\"AM_DEMONSTRATION\",20; bonus2 bAddMonsterDropItem,501,50; bonus2 bAddMonsterDropItem,502,20; bonus2 bAddMonsterDropItem,503,20; bonus2 bAddMonsterDropItem,504,20; bonus2 bAddMonsterDropItem,505,10; if(readparam(bStr)>=95) bonus2 bAddEff,Eff_Stun,500;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (16002,'Stunner_C','Stunner',4,0,NULL,0,175,NULL,1,0,0x00008110,7,2,2,3,1,0,8,'bonus2 bAddEff,Eff_Stun,1000; bonus2 bAddSize,0,40; bonus2 bAddSize,1,40; bonus2 bAddSize,2,40;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (16003,'Carga_Mace','Carga Mace',4,20,NULL,1500,175,NULL,1,2,0x0004C5B2,7,2,2,3,100,1,8,NULL,NULL,NULL);
+REPLACE INTO `item_db` VALUES (16003,'Carga_Mace','Carga Mace',4,20,NULL,1500,175,NULL,1,2,0x0004C5B2,7,2,2,3,90,1,8,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (16004,'P_Mace1','P.Mace',4,0,NULL,0,142,NULL,1,0,0x0004C5B2,7,2,2,2,26,0,8,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (16005,'P_Mace2','P.Mace',4,0,NULL,0,163,NULL,1,0,0x0004C5B2,7,2,2,2,40,0,8,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (16006,'Tourist_Mace','Traveler\'s Mace',4,0,NULL,500,45,NULL,1,0,0x0004C5B3,7,2,2,1,1,0,8,'bonus bInt,1; bonus bAgi,1;',NULL,NULL);
