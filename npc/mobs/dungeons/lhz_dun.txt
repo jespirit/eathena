@@ -121,12 +121,6 @@ lhz_dun03,240,213,16,17	monster	Margaretha Sorin	1637,1,120000,60000,0
 lhz_dun03,240,213,16,17	monster	Cecil Damon	1638,1,120000,60000,0
 lhz_dun03,240,213,16,17	monster	Kathryne Keyron	1639,1,120000,60000,0
 
-lhz_dun03,140,65,108,38	monster	Seyren Windsor	1634,7,120000,160000,0
-lhz_dun03,140,65,108,38	monster	Eremes Guile	1635,7,120000,160000,0
-lhz_dun03,140,65,108,38	monster	Howard Alt-Eisen	1636,7,120000,160000,0
-lhz_dun03,140,65,108,38	monster	Margaretha Sorin	1637,7,120000,160000,0
-lhz_dun03,140,65,108,38	monster	Cecil Damon	1638,7,120000,60000,0
-lhz_dun03,140,65,108,38	monster	Kathryne Keyron	1639,7,120000,60000,0
 
 lhz_dun03,140,31,8,15	monster	Seyren Windsor	1634,1,600000,540000,0
 lhz_dun03,140,31,8,15	monster	Eremes Guile	1635,1,540000,480000,0
@@ -194,26 +188,6 @@ lhz_dun03,171,109,4,5	monster	Cecil Damon	1638,3,120000,60000,0
 lhz_dun03,189,113,4,9	monster	Kathryne Keyron	1639,1,120000,60000,0
 lhz_dun03,189,113,4,9	monster	Cecil Damon	1638,3,120000,60000,0
 
-lhz_dun03,96,164,13,8	monster	Seyren Windsor	1634,2,300000,120000,0
-lhz_dun03,96,164,13,8	monster	Eremes Guile	1635,2,300000,120000,0
-lhz_dun03,96,164,13,8	monster	Margaretha Sorin	1637,2,300000,120000,0
-lhz_dun03,96,164,13,8	monster	Cecil Damon	1638,5,0,0,0
-lhz_dun03,96,164,13,8	monster	Kathryne Keyron	1639,3,0,0,0
-lhz_dun03,180,164,13,8	monster	Seyren Windsor	1634,2,300000,120000,0
-lhz_dun03,180,164,13,8	monster	Howard Alt-Eisen	1636,2,300000,120000,0
-lhz_dun03,180,164,13,8	monster	Margaretha Sorin	1637,2,300000,120000,0
-lhz_dun03,180,164,13,8	monster	Cecil Damon	1638,5,0,0,0
-lhz_dun03,180,164,13,8	monster	Kathryne Keyron	1639,3,0,0,0
-lhz_dun03,98,113,13,9	monster	Seyren Windsor	1634,2,300000,120000,0
-lhz_dun03,98,113,13,9	monster	Eremes Guile	1635,2,300000,120000,0
-lhz_dun03,98,113,13,9	monster	Howard Alt-Eisen	1636,2,300000,120000,0
-lhz_dun03,98,113,13,9	monster	Cecil Damon	1638,5,0,0,0
-lhz_dun03,98,113,13,9	monster	Kathryne Keyron	1639,3,0,0,0
-lhz_dun03,180,113,13,9	monster	Eremes Guile	1635,2,300000,120000,0
-lhz_dun03,180,113,13,9	monster	Howard Alt-Eisen	1636,2,300000,120000,0
-lhz_dun03,180,113,13,9	monster	Margaretha Sorin	1637,2,300000,120000,0
-lhz_dun03,180,113,13,9	monster	Cecil Damon	1638,5,0,0,0
-lhz_dun03,180,113,13,9	monster	Kathryne Keyron	1639,3,0,0,0
 
 lhz_dun03,114,138,12,16	monster	Lord Knight Seyren	1640,1,2700000,2400000,1
 lhz_dun03,163,138,12,16	monster	Whitesmith Howard	1642,1,3000000,2700000,1
