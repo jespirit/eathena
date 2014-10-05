@@ -9369,8 +9369,11 @@ ACMD_FUNC(getarmor)
  *-----------------------------------*/
 ACMD_FUNC(minatk)
 {
+	nullpo_retr(-1, sd);
+
 	sd->state.minmax = 1;
 	clif_displaymessage(fd, "Minimum attack is now active");
+
 	return 0;
 }
 
@@ -9379,8 +9382,11 @@ ACMD_FUNC(minatk)
  *-----------------------------------*/
 ACMD_FUNC(avgatk)
 {
+	nullpo_retr(-1, sd);
+
 	sd->state.minmax = 2;
 	clif_displaymessage(fd, "Average attack is now active");
+
 	return 0;
 }
 
@@ -9389,8 +9395,11 @@ ACMD_FUNC(avgatk)
  *-----------------------------------*/
 ACMD_FUNC(maxatk)
 {
+	nullpo_retr(-1, sd);
+
 	sd->state.minmax = 4;
 	clif_displaymessage(fd, "Maximum attack is now active");
+
 	return 0;
 }
 
@@ -9399,8 +9408,11 @@ ACMD_FUNC(maxatk)
  *-----------------------------------*/
 ACMD_FUNC(atkoff)
 {
+	nullpo_retr(-1, sd);
+
 	sd->state.minmax = 0;
 	clif_displaymessage(fd, "Your attack damage has been restored to normal");
+
 	return 0;
 }
 
@@ -9409,6 +9421,8 @@ ACMD_FUNC(atkoff)
  *-----------------------------------*/
 ACMD_FUNC(miracle)
 {
+	nullpo_retr(-1, sd);
+
 	if(sd && (sd->class_&MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR) {
 		if (sd->sc.data[SC_MIRACLE]) {
 			status_change_end(&sd->bl, SC_BOSSMAPINFO, INVALID_TIMER);
@@ -9430,6 +9444,35 @@ ACMD_FUNC(miracle)
 			clif_displaymessage(fd, "Miracle is now active");
 		}
 	}
+
+	return 0;
+}
+
+/*===================================
+ * Change exp rates.
+ *-----------------------------------*/
+ACMD_FUNC(changerates)
+{
+	int rates;
+	nullpo_retr(-1, sd);
+
+	if (!message || !*message || sscanf(message, "%d", &rates) < 1) {
+		clif_displaymessage(fd, "Please enter the new rates (usage: @changerates 500)");
+		return -1;
+	}
+
+	if (rates < 100 || rates > INT_MAX) {
+		clif_displaymessage(fd, "Rates cannot be less than 0 or greater than INT_MAX");
+		return -1;
+	}
+
+	battle_config.base_exp_rate = rates;
+	battle_config.job_exp_rate = rates;
+
+	// Reload mobs for the exp rates to take effect.
+	mob_reload();
+
+	clif_displaymessage(fd, "You have changed the rates");
 
 	return 0;
 }
@@ -9747,7 +9790,8 @@ AtCommandInfo atcommand_info[] = {
 	{ "avgatk",            40,40,     atcommand_avgatk },
 	{ "maxatk",            40,40,     atcommand_maxatk },
 	{ "atkoff",            40,40,     atcommand_atkoff },
-	{ "miracle",           40,40,     atcommand_miracle },
+	{ "miracle",           60,60,     atcommand_miracle },
+	{ "changerates",       99,99,     atcommand_changerates },
 };
 
 
