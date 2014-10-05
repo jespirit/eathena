@@ -1189,9 +1189,9 @@ REPLACE INTO `item_db` VALUES (2140,'Energy_Rune_Guard','Energy Rune Guard',5,20
 # REPLACE INTO `item_db` VALUES (2143,'Freyja_SShield60','Freyja Spirit Shield',5,0,NULL,300,NULL,5,NULL,0,0xFFFFFFFF,7,2,32,NULL,20,0,1,NULL,NULL,NULL);
 # REPLACE INTO `item_db` VALUES (2144,'Freyja_SShield90','Freyja Spirit Shield',5,0,NULL,300,NULL,5,NULL,0,0xFFFFFFFF,7,2,32,NULL,20,0,1,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (2145,'Time_Keepr_Shield','Guardian Shield',5,30000,NULL,0,NULL,20,NULL,0,0xFFFFFFFF,7,2,32,NULL,1,1,3,'bonus bMdef,1;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (2146,'Siver_Guard','silver Guard',5,12500,NULL,300,NULL,60,NULL,1,0xFFFFFFFF,7,2,32,NULL,22,1,1,NULL,NULL,NULL);
-REPLACE INTO `item_db` VALUES (2147,'Round_Buckler','Round Buckler',5,24000,NULL,600,NULL,90,NULL,1,0xFFFFFFFE,2,2,32,NULL,22,1,2,NULL,NULL,NULL);
-REPLACE INTO `item_db` VALUES (2148,'Rotha_Shield','Rosa Shield',5,56000,NULL,1300,NULL,3,NULL,1,0xFFFFFFFF,7,2,32,NULL,100,1,3,NULL,NULL,NULL);
+REPLACE INTO `item_db` VALUES (2146,'Siver_Guard','silver Guard',5,12500,NULL,300,NULL,4,NULL,1,0xFFFFFFFF,7,2,32,NULL,22,1,1,'bonus bMdef,-1;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (2147,'Round_Buckler','Round Buckler',5,24000,NULL,600,NULL,5,NULL,1,0xFFFFFFFE,2,2,32,NULL,22,1,2,NULL,NULL,NULL);
+REPLACE INTO `item_db` VALUES (2148,'Rotha_Shield','Rosa Shield',5,56000,NULL,1300,NULL,3,NULL,1,0xFFFFFFFF,7,2,32,NULL,22,1,3,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (2149,'Upg_Guard','Reinforcement Guard',5,20,NULL,150,NULL,25,NULL,1,0xFFFFFFFF,7,2,32,NULL,1,1,1,NULL,NULL,NULL);
 # REPLACE INTO `item_db` VALUES (2150,'Upg_Buckler','Reinforcement Buckler',5,20,NULL,300,NULL,45,NULL,1,0x000ED5F2,7,2,32,NULL,1,1,2,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (2150,'Aegis_Shield','Aegis Shield',5,20,NULL,4000,NULL,6,NULL,1,0x00004000,7,2,32,NULL,0,1,1,'bonus bVit,5; bonus bInt,3; bonus bStr,3; bonus bMdef,5; SQI_Func();',NULL,NULL);
@@ -6753,7 +6753,7 @@ REPLACE INTO `item_db` VALUES (14606,'Job_Manual25','JOB Battle Manual',2,0,NULL
 REPLACE INTO `item_db` VALUES (14607,'Luxurious_Dinner_W','Luxurious Western Food',2,10000,NULL,600,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_start SC_INCALLSTATUS,3600000,3;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (14608,'Luxurious_Dinner_E','Manchu-Han Imperial Feast',2,20000,NULL,1200,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_start SC_INCALLSTATUS,3600000,6;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (14609,'Spoiled_Cuisine','Spoiled Cuisine',2,0,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal 10,10;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (15000,'Bone_Plate','Bone Plate',5,20,NULL,1000,NULL,7,NULL,1,0x00021040,2,2,16,NULL,85,1,0,'bonus bStr,1; bonus bMdef,3; bonus2 bIgnoreDefRate,RC_DemiHuman,10; bonus2 bIgnoreDefRate,RC_Brute,10; bonus3 bAutoSpellWhenHit,\"NPC_WIDEBLEEDING\",1,10;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (15000,'Bone_Plate','Bone Plate',5,20,NULL,1000,NULL,7,NULL,1,0x000654e2,2,2,16,NULL,85,1,0,'bonus bStr,1; bonus bMdef,3; bonus2 bIgnoreDefRate,RC_DemiHuman,10; bonus2 bIgnoreDefRate,RC_Brute,10; bonus3 bAutoSpellWhenHit,\"NPC_WIDEBLEEDING\",1,10;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (15001,'Odin\'s_Blessing_I','Odin\'s Blessing',5,0,NULL,0,NULL,10,NULL,0,0xFFFFFFFE,7,2,16,NULL,0,0,0,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (15002,'Rune_Plate','Rune Plate',5,0,NULL,0,NULL,95,NULL,1,0x00000000,7,2,16,NULL,99,1,0,NULL,NULL,NULL);
 # REPLACE INTO `item_db` VALUES (15003,'Freyja_SRobe7','Freyja SRobe7',5,0,NULL,300,NULL,7,NULL,0,0xFFFFFFFF,7,2,16,NULL,20,0,0,NULL,NULL,NULL);
@@ -6911,6 +6911,7 @@ REPLACE INTO `item_db` VALUES (18103,'Mystic_Bow','Mystic Bow',4,0,NULL,1700,75,
 # 18506,Hattah_Black,
 # 18507,Elven_Ears_,
 
+REPLACE INTO `item_db` VALUES (18600,'Cat_Ear_Beret','Cat Ear Beret',5,30000,NULL,300,NULL,5,NULL,0,0xFFFFFFFF,7,2,256,NULL,1,1,761,'if(getrefine()>=5) { bonus2 bAddRace,RC_DemiHuman,(getrefine()-5)*2; bonus2 bSubRace,RC_DemiHuman,(getrefine()-5)*2; }',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18653,'Deviruchi_Headphones','Deviruchi Headphones',5,20,NULL,200,NULL,0,NULL,1,0xFFFFFFFF,7,2,256,NULL,30,1,805,'bonus bMdef,1; bonus bMaxHPRate,-1; bonus2 bResEff,Eff_Stun,1500; if((BaseClass==Job_Mage||BaseClass==Job_Archer||BaseClass==Job_Acolyte) && getpetinfo(1) == 1109) { if(getpetinfo(3) > 900) bonus2 bResEff,Eff_Stun,1000; else bonus2 bResEff,Eff_Stun,500; }',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18750,'Poker_Card_In_Mouth','Poker Card In Mouth',5,20,NULL,50,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,889,'bonus2 bAddRace,RC_DemiHuman,1; bonus2 bSubRace,RC_DemiHuman,-1;',NULL,NULL);
 
