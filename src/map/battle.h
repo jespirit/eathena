@@ -152,7 +152,7 @@ extern struct Battle_Config
 	int chase_range_rate;
 	int lowest_gm_level;
 	int atc_gmonly;
-	int atc_spawn_quantity_limit;
+	int atc_monster_spawn_limit;
 	int atc_slave_clone_limit;
 	int partial_name_scan;
 	int gm_allskill;
@@ -268,8 +268,6 @@ extern struct Battle_Config
 	int gvg_misc_damage_rate;
 	int gvg_flee_penalty;
 	int gvg_eliminate_time;
-	int gvg_castle_flag_check;
-	int gvg_castle_spawn_emperium;
 	int pk_short_damage_rate;
 	int pk_long_damage_rate;
 	int pk_weapon_damage_rate;
@@ -499,6 +497,13 @@ extern struct Battle_Config
 	int bg_magic_damage_rate;
 	int bg_misc_damage_rate;
 	int bg_flee_penalty;
+
+	// Custom
+	int gvg_castle_flag_check;
+	int gvg_castle_spawn_emperium;
+	int atc_spawn_quantity_limit;
+	int gm_bypass_monster_spawn_lv;
+	int gm_bypass_monster_spawn_limit;
 } battle_config;
 
 void do_init_battle(void);
