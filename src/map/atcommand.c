@@ -2456,7 +2456,7 @@ ACMD_FUNC(monster)
 		number = 1;
 
 	if (pc_isGM(sd) < battle_config.gm_bypass_monster_spawn_limit &&
-		map_foreachinmap(mob_count_sub, m, BL_MOB, "") + number > battle_config.atc_monster_spawn_limit) {
+		map_foreachinmap(mob_count_sub_no_slave, m, BL_MOB, "") + number > battle_config.atc_monster_spawn_limit) {
 		clif_displaymessage(fd, "You have exceeded the monster limit of 10.");
 		return -1;
 	}

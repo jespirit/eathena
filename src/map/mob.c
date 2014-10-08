@@ -817,6 +817,15 @@ int mob_count_sub(struct block_list *bl,va_list ap)	// Added by RoVeRT
 	return 0;
 }
 
+int mob_count_sub_no_slave(struct block_list *bl,va_list ap)
+{
+	char *event=va_arg(ap,char *);
+	struct mob_data *md = ((struct mob_data *)bl);
+	if(strcmp(event,md->npc_event)==0 && md->status.hp > 0 && !md->master_id)
+		return 1;
+	return 0;
+}
+
 /*==========================================
  * Mob spawning. Initialization is also variously here.
  *------------------------------------------*/
