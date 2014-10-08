@@ -4589,7 +4589,7 @@ REPLACE INTO `item_db` VALUES (8010,'Blinker','Blinker',5,20,NULL,100,NULL,1,NUL
 REPLACE INTO `item_db` VALUES (8016,'Angel_Wing_Kaho','Angel Wing Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,38,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8027,'Black_Ribbon_Kaho','Back Ribbon Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,242,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8048,'Valkyrie_Helm','Valkyrie Helm',5,100000,NULL,1000,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,0,1,225,'bonus bMdef,20; bonus bAgi,20; bonus bVit,20; bonus bLuk,20; bonus2 bSubRace,RC_DemiHuman,10;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (8049,'Sleipnir_','Sleipnir',5,20,NULL,3500,NULL,5,NULL,1,0xFFFFFFFF,7,2,64,NULL,85,1,0,'bonus bMdef,10; bonus bMaxHPrate,20; bonus bMaxSPrate,20; bonus bSPrecovRate,15; bonus bSpeedRate,25;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (8049,'Sleipnir_','Sleipnir',5,20,NULL,3500,NULL,5,NULL,1,0xFFFFFFFF,7,2,64,NULL,80,1,0,'bonus bMdef,10; bonus bMaxHPrate,20; bonus bMaxSPrate,20; bonus bSPrecovRate,15; bonus bSpeedRate,25;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8061,'Contact_Lenses','Contact Lenses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,23,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (8066,'Angeling_Kaho','Angeling Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,204,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8100,'Alice_Kaho','Alice Doll Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,208,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
@@ -6912,8 +6912,10 @@ REPLACE INTO `item_db` VALUES (18103,'Mystic_Bow','Mystic Bow',4,0,NULL,1700,75,
 # 18507,Elven_Ears_,
 
 REPLACE INTO `item_db` VALUES (18600,'Cat_Ear_Beret','Cat Ear Beret',5,30000,NULL,300,NULL,5,NULL,0,0xFFFFFFFF,7,2,256,NULL,1,1,761,'if(getrefine()>=5) { bonus2 bAddRace,RC_DemiHuman,(getrefine()-5)*2; bonus2 bSubRace,RC_DemiHuman,(getrefine()-5)*2; }',NULL,NULL);
+REPLACE INTO `item_db` VALUES (18649,'Lude_Mask','Lude Mask',5,20,NULL,500,NULL,2,NULL,1,0xFFFFFFFF,7,2,513,NULL,50,0,802,'bonus2 bAddRace,RC_NonBoss,2; bonus2 bAddRace,RC_Boss,2; bonus bMatkRate,2; bonus2 bSubRace,RC_DemiHuman,1; bonus2 bAddMonsterDropItem,12192,100;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18653,'Deviruchi_Headphones','Deviruchi Headphones',5,20,NULL,200,NULL,0,NULL,1,0xFFFFFFFF,7,2,256,NULL,30,1,805,'bonus bMdef,1; bonus bMaxHPRate,-1; bonus2 bResEff,Eff_Stun,1500; if((BaseClass==Job_Mage||BaseClass==Job_Archer||BaseClass==Job_Acolyte) && getpetinfo(1) == 1109) { if(getpetinfo(3) > 900) bonus2 bResEff,Eff_Stun,1000; else bonus2 bResEff,Eff_Stun,500; }',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18750,'Poker_Card_In_Mouth','Poker Card In Mouth',5,20,NULL,50,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,889,'bonus2 bAddRace,RC_DemiHuman,1; bonus2 bSubRace,RC_DemiHuman,-1;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (18867,'Vajra','Vajra',5,20,NULL,300,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,48,0,1283,'bonus bLongAtkRate,1;',NULL,NULL);
 
 # 19500,T_Mr_Smile
 # 19501,T_Spinx_Helm
