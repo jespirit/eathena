@@ -6912,6 +6912,7 @@ REPLACE INTO `item_db` VALUES (18103,'Mystic_Bow','Mystic Bow',4,0,NULL,1700,75,
 # 18507,Elven_Ears_,
 
 REPLACE INTO `item_db` VALUES (18600,'Cat_Ear_Beret','Cat Ear Beret',5,30000,NULL,300,NULL,5,NULL,0,0xFFFFFFFF,7,2,256,NULL,1,1,761,'if(getrefine()>=5) { bonus2 bAddRace,RC_DemiHuman,(getrefine()-5)*2; bonus2 bSubRace,RC_DemiHuman,(getrefine()-5)*2; }',NULL,NULL);
+REPLACE INTO `item_db` VALUES (18649,'Lude_Mask','Lude Mask',5,20,NULL,500,NULL,2,NULL,1,0xFFFFFFFF,7,2,513,NULL,50,0,802,'bonus2 bAddRace,RC_NonBoss,2; bonus2 bAddRace,RC_Boss,2; bonus bMatkRate,2; bonus2 bSubRace,RC_DemiHuman,1; bonus2 bAddMonsterDropItem,12192,100;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18653,'Deviruchi_Headphones','Deviruchi Headphones',5,20,NULL,200,NULL,0,NULL,1,0xFFFFFFFF,7,2,256,NULL,30,1,805,'bonus bMdef,1; bonus bMaxHPRate,-1; bonus2 bResEff,Eff_Stun,1500; if((BaseClass==Job_Mage||BaseClass==Job_Archer||BaseClass==Job_Acolyte) && getpetinfo(1) == 1109) { if(getpetinfo(3) > 900) bonus2 bResEff,Eff_Stun,1000; else bonus2 bResEff,Eff_Stun,500; }',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18750,'Poker_Card_In_Mouth','Poker Card In Mouth',5,20,NULL,50,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,889,'bonus2 bAddRace,RC_DemiHuman,1; bonus2 bSubRace,RC_DemiHuman,-1;',NULL,NULL);
 
