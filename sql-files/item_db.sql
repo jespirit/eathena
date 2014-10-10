@@ -4589,7 +4589,7 @@ REPLACE INTO `item_db` VALUES (8010,'Blinker','Blinker',5,20,NULL,100,NULL,1,NUL
 REPLACE INTO `item_db` VALUES (8016,'Angel_Wing_Kaho','Angel Wing Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,38,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8027,'Black_Ribbon_Kaho','Back Ribbon Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,242,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8048,'Valkyrie_Helm','Valkyrie Helm',5,100000,NULL,1000,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,0,1,225,'bonus bMdef,20; bonus bAgi,20; bonus bVit,20; bonus bLuk,20; bonus2 bSubRace,RC_DemiHuman,10;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (8049,'Sleipnir_','Sleipnir',5,20,NULL,3500,NULL,5,NULL,1,0xFFFFFFFF,7,2,64,NULL,85,1,0,'bonus bMdef,10; bonus bMaxHPrate,20; bonus bMaxSPrate,20; bonus bSPrecovRate,15; bonus bSpeedRate,25;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (8049,'Sleipnir_','Sleipnir',5,20,NULL,3500,NULL,5,NULL,1,0xFFFFFFFF,7,2,64,NULL,80,1,0,'bonus bMdef,10; bonus bMaxHPrate,20; bonus bMaxSPrate,20; bonus bSPrecovRate,15; bonus bSpeedRate,25;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8061,'Contact_Lenses','Contact Lenses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,23,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (8066,'Angeling_Kaho','Angeling Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,204,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8100,'Alice_Kaho','Alice Doll Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,208,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
