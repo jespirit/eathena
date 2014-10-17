@@ -6915,6 +6915,7 @@ REPLACE INTO `item_db` VALUES (18600,'Cat_Ear_Beret','Cat Ear Beret',5,30000,NUL
 REPLACE INTO `item_db` VALUES (18649,'Lude_Mask','Lude Mask',5,20,NULL,500,NULL,2,NULL,1,0xFFFFFFFF,7,2,513,NULL,50,0,802,'bonus2 bAddRace,RC_NonBoss,2; bonus2 bAddRace,RC_Boss,2; bonus bMatkRate,2; bonus2 bSubRace,RC_DemiHuman,1; bonus2 bAddMonsterDropItem,12192,100;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18653,'Deviruchi_Headphones','Deviruchi Headphones',5,20,NULL,200,NULL,0,NULL,1,0xFFFFFFFF,7,2,256,NULL,30,1,805,'bonus bMdef,1; bonus bMaxHPRate,-1; bonus2 bResEff,Eff_Stun,1500; if((BaseClass==Job_Mage||BaseClass==Job_Archer||BaseClass==Job_Acolyte) && getpetinfo(1) == 1109) { if(getpetinfo(3) > 900) bonus2 bResEff,Eff_Stun,1000; else bonus2 bResEff,Eff_Stun,500; }',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18750,'Poker_Card_In_Mouth','Poker Card In Mouth',5,20,NULL,50,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,889,'bonus2 bAddRace,RC_DemiHuman,1; bonus2 bSubRace,RC_DemiHuman,-1;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (18867,'Vajra','Vajra',5,20,NULL,300,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,48,0,1283,'bonus bLongAtkRate,1;',NULL,NULL);
 
 # 19500,T_Mr_Smile
 # 19501,T_Spinx_Helm
