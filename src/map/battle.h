@@ -504,6 +504,7 @@ extern struct Battle_Config
 	int atc_spawn_quantity_limit;
 	int gm_bypass_monster_spawn_lv;
 	int gm_bypass_monster_spawn_limit;
+	int monster_minmax;  // Global minmax for monsters
 } battle_config;
 
 void do_init_battle(void);

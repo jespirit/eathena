@@ -9424,6 +9424,58 @@ ACMD_FUNC(atkoff)
 }
 
 /*===================================
+ * Minimum attack
+ *-----------------------------------*/
+ACMD_FUNC(mob_minatk)
+{
+	nullpo_retr(-1, sd);
+
+	battle_config.monster_minmax = 1;
+	clif_displaymessage(fd, "Monster minimum attack is now active");
+
+	return 0;
+}
+
+/*===================================
+ * Average attack
+ *-----------------------------------*/
+ACMD_FUNC(mob_avgatk)
+{
+	nullpo_retr(-1, sd);
+
+	battle_config.monster_minmax = 2;
+	clif_displaymessage(fd, "Monster average attack is now active");
+
+	return 0;
+}
+
+/*===================================
+ * Maximum attack
+ *-----------------------------------*/
+ACMD_FUNC(mob_maxatk)
+{
+	nullpo_retr(-1, sd);
+
+	battle_config.monster_minmax = 4;
+	clif_displaymessage(fd, "Monster maximum attack is now active");
+
+	return 0;
+}
+
+/*===================================
+ * Turn off attack monster minmax
+ *-----------------------------------*/
+ACMD_FUNC(mob_atkoff)
+{
+	nullpo_retr(-1, sd);
+
+	battle_config.monster_minmax = 0;
+	clif_displaymessage(fd, "Monster minmax is back to normal");
+
+	return 0;
+}
+
+/*===================================
  * Toggles SG Miracle on/off
  *-----------------------------------*/
 ACMD_FUNC(miracle)
@@ -9797,6 +9849,10 @@ AtCommandInfo atcommand_info[] = {
 	{ "avgatk",            40,40,     atcommand_avgatk },
 	{ "maxatk",            40,40,     atcommand_maxatk },
 	{ "atkoff",            40,40,     atcommand_atkoff },
+	{ "mob_minatk",        99,99,     atcommand_mob_minatk },
+	{ "mob_avgatk",        99,99,     atcommand_mob_avgatk },
+	{ "mob_maxatk",        99,99,     atcommand_mob_maxatk },
+	{ "mob_atkoff",        99,99,     atcommand_mob_atkoff },
 	{ "miracle",           60,60,     atcommand_miracle },
 	{ "changerates",       99,99,     atcommand_changerates },
 };

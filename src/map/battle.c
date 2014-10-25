@@ -805,8 +805,16 @@ int damage_calc_minmax(struct map_session_data* sd, int min, int max)
 		else
 			damage = rand()%(max-min+1)+min;
 	}
-	else
-		damage = rand()%(max-min+1)+min;
+	else {
+		if (battle_config.monster_minmax == 1) // min
+			damage = min;
+		else if (battle_config.monster_minmax == 2) // avg
+			damage = (max-min)/2;
+		else if (battle_config.monster_minmax == 4) // max
+			damage = max;
+		else
+			damage = rand()%(max-min+1)+min;
+	}
 
 	return damage;
 }
@@ -4051,6 +4059,7 @@ static const struct _battle_data {
 	{ "atcommand_monster_spawn_limit",      &battle_config.atc_monster_spawn_limit,         10,     0,      INT_MAX,        },
 	{ "gm_bypass_monster_spawn_lv",         &battle_config.gm_bypass_monster_spawn_lv,      50,     0,      99,             },
 	{ "gm_bypass_monster_spawn_limit",      &battle_config.gm_bypass_monster_spawn_limit,   50,     0,      99,             },
+	{ "monster_minmax",                     &battle_config.monster_minmax,                  0,      0,      4,              },
 };
 
 
