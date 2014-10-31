@@ -4585,7 +4585,7 @@ REPLACE INTO `item_db` VALUES (7999,'Spring_Stanza22','Spring Stanza22',3,2,NULL
 REPLACE INTO `item_db` VALUES (8006,'Valkyrie_Kaho','Valkyrie Helm Kaho',5,20,NULL,100,NULL,5,NULL,0,0xFFFFFFFF,7,2,256,NULL,1,1,225,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8007,'Evil_Wing_Ears','Evil Wing Ears',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,512,NULL,70,0,152,'bonus bStr,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8008,'Angel_Wing_Ears','Angel Wing Ears',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,512,NULL,70,0,158,'bonus bStr,1;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (8010,'Blinker_','Blinker',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,70,0,82,'bonus bAgi,1;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (8010,'Blinker_','Blinker',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,512,NULL,1,0,82,'bonus bAgi,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8016,'Angel_Wing_Kaho','Angel Wing Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,1,1,38,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8027,'Black_Ribbon_Kaho','Back Ribbon Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,1,1,242,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8048,'Valkyrie_Helm_','Valkyrie Helm',5,100000,NULL,1000,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,1,1,225,'bonus bMdef,20; bonus bAgi,20; bonus bVit,20; bonus bLuk,20; bonus2 bSubRace,RC_DemiHuman,10;',NULL,NULL);
