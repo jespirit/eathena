@@ -5683,6 +5683,7 @@ REPLACE INTO `item_db` VALUES (13059,'E_Asura_C','Asura',4,1,NULL,0,120,NULL,1,0
 REPLACE INTO `item_db` VALUES (13060,'E_Counter_Dagger_C','Counter Dagger',4,1,NULL,0,209,NULL,1,0,0x00810204,7,2,2,4,1,0,1,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (13061,'Black_Wing','Black Wing',4,20,NULL,600,142,NULL,1,1,124,7,2,2,3,102,1,1,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (13062,'Ancient_Dagger','Ancient Dagger',4,20,NULL,600,107,NULL,0,0,0x028F5EEE,2,2,2,4,120,1,1,'/* bonus bMAtk,120; */',NULL,NULL);
+REPLACE INTO `item_db` VALUES (13067,'Kris','Kris',5,20,NULL,700,107,NULL,1,1,0x3E9F7EEF,18,2,2,3,30,1,1,'bonus bMatkRate,10; bonus2 bHpDrainRate,50,10;',NULL,NULL);
 #  Guns
 REPLACE INTO `item_db` VALUES (13100,'Six_Shooter','Six Shooter',4,4500,NULL,400,30,NULL,7,1,0x01000000,7,2,34,1,10,1,17,'bonus bHit,-10;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (13101,'Six_Shooter_','Six Shooter',4,4500,NULL,400,30,NULL,7,2,0x01000000,7,2,34,1,10,1,17,'bonus bHit,-10;',NULL,NULL);

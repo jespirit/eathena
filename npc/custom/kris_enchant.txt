@@ -1,0 +1,113 @@
+//===== eAthena Script ======================================= 
+//= Kris Enchanter
+//===== By: ================================================== 
+//= jespirit
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= eAhena SVN
+//===== Description: ========================================= 
+//= Enchants a Kris[1] weapon with any two bonuses of your
+//= choice.
+//===== Additional Comments: ================================= 
+//= 1.0 First version.
+//============================================================ 
+
+prt_in,58,57,2	script	Special Gatti	73,{
+    mes "[Special Gatti]";
+    mes "Would you like to enchant a Kris [1]?";
+    next;
+    if (select("Yes:No")==2) goto L_Nothing;
+    
+    set .@index, 0;
+    setarray .@msg$[0], "first", "second";
+    
+    while (.@index < 2) {
+        mes "[Special Gatti]";
+        mes "Okay. Please choose the " + .@msg$[.@index] + " bonus:";
+        next;
+        switch(select("STR+1:STR+2:STR+3:AGI+1:AGI+2:AGI+3:VIT+1:VIT+2:VIT+3:INT+1:INT+2:INT+3:DEX+1:DEX+2:DEX+3:LUK+1:LUK+2:LUK+3:HP+100:HP+200:HP+300:SP+50:SP+100:SP+150:DEF+2:DEF+3:DEF+4:MDEF+2:MDEF+3:MDEF+4:ATK+1%:ATK+1%:MATK+1%:MATK+2%:CRIT+3:CRIT+4:CRIT+5")) {
+        case 1:  //STR
+            set .@bonus[.@index],4700; break;
+        case 2:
+            set .@bonus[.@index],4701; break;
+        case 3:
+            set .@bonus[.@index],4702; break;
+        case 4:  //AGI
+            set .@bonus[.@index],4730; break;
+        case 5:
+            set .@bonus[.@index],4731; break;
+        case 6:
+            set .@bonus[.@index],4732; break;
+        case 7:  //VIT
+            set .@bonus[.@index],4740; break;
+        case 8:
+            set .@bonus[.@index],4741; break;
+        case 9:
+            set .@bonus[.@index],4742; break;
+        case 10:  //INT
+            set .@bonus[.@index],4710; break;
+        case 11:
+            set .@bonus[.@index],4711; break;
+        case 12:
+            set .@bonus[.@index],4712; break;
+        case 13:  //DEX
+            set .@bonus[.@index],4720; break;
+        case 14:
+            set .@bonus[.@index],4721; break;
+        case 15:
+            set .@bonus[.@index],4722; break;
+        case 16:  //LUK
+            set .@bonus[.@index],4750; break;
+        case 17:
+            set .@bonus[.@index],4751; break;
+        case 18:
+            set .@bonus[.@index],4752; break;
+        case 19:  //HP
+            set .@bonus[.@index],4795; break;
+        case 20:
+            set .@bonus[.@index],4796; break;
+        case 21:
+            set .@bonus[.@index],4797; break;
+        case 22:  //SP
+            set .@bonus[.@index],4800; break;
+        case 23:
+            set .@bonus[.@index],4801; break;
+        case 24:
+            set .@bonus[.@index],4802; break;
+        case 25:  //DEF
+            set .@bonus[.@index],4900; break;
+        case 26:
+            set .@bonus[.@index],4901; break;
+        case 27:
+            set .@bonus[.@index],4902; break;
+        case 28:  //MDEF
+            set .@bonus[.@index],4903; break;
+        case 29:
+            set .@bonus[.@index],4904; break;
+        case 30:
+            set .@bonus[.@index],4905; break;
+        case 31:  //ATK
+            set .@bonus[.@index],4766; break;
+        case 32:
+            set .@bonus[.@index],4767; break;
+        case 33:  //MATK
+            set .@bonus[.@index],4760; break;
+        case 34:
+            set .@bonus[.@index],4761; break;
+        case 35:  //CRIT
+            set .@bonus[.@index],4916; break;
+        case 36:
+            set .@bonus[.@index],4917; break;
+        case 37:
+            set .@bonus[.@index],4764; break;
+        }
+        
+        set .@index, .@index + 1;
+    }
+    
+    getitem2 13067, 1, 1, 0, 0, 0, 0, .@bonus[0], .@bonus[1];
+    
+L_Nothing:
+    close;
+}
