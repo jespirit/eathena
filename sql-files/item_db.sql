@@ -1945,7 +1945,7 @@ REPLACE INTO `item_db` VALUES (4127,'Nightmare_Card','Nightmare Card',6,20,NULL,
 REPLACE INTO `item_db` VALUES (4128,'Golden_Bug_Card','Golden Thief Bug Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,32,NULL,NULL,NULL,NULL,'bonus bNoMagicDamage,100; bonus bUseSPrate,100;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (4129,'Baphomet__Card','Bapho Jr. Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,NULL,NULL,'bonus bAgi,3; bonus bCritical,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (4130,'Scorpion_King_Card','Scorpion King Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus2 bAddEle,Ele_Undead,20;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (4131,'Moonlight_Flower_Card','Moonlight Flower Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,64,NULL,NULL,NULL,NULL,'bonus bSpeedRate,25;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (4131,'Moonlight_Flower_Card','Moonlight Flower Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,64,NULL,NULL,NULL,NULL,'bonus bSpeedRate,25; bonus bDex,5; bonus bMaxHPrate,25;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (4132,'Mistress_Card','Mistress Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,769,NULL,NULL,NULL,NULL,'bonus bNoGemStone,0; bonus bUseSPrate,25;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (4133,'Daydric_Card','Raydric Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,NULL,NULL,'bonus2 bSubEle,Ele_Neutral,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (4134,'Dracula_Card','Dracula Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus2 bSubSize,0,4; bonus2 bSubSize,1,4; bonus2 bSubSize,2,4;',NULL,'heal -1500,0;');
@@ -4609,7 +4609,7 @@ REPLACE INTO `item_db` VALUES (8181,'Angled_Glasses_','Angled Glasses',5,20,NULL
 REPLACE INTO `item_db` VALUES (8182,'Red_Glasses_','Red Glasses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,512,NULL,70,0,316,'bonus bInt,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8186,'Blush_','Blush',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,512,NULL,70,0,125,'bonus bInt,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8187,'Blank_Eyes_','Blank Eyes',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,512,NULL,70,0,185,'bonus bStr,1;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (8189,'Angel_Of_Ghost_','Angel Of Ghost',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,512,NULL,70,0,290,'bonus bStr,1;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (8189,'Angel_Of_Ghost_','Angel Of Ghost',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,512,NULL,70,0,394,'bonus bStr,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8198,'Balloon_Hat_Kaho','Balloon Hat Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,1,1,385,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8214,'Black_Glasses_','Black Framed Glasses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,512,NULL,70,0,404,'bonus bInt,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8215,'Ifrit\'s_Ear_','Ears Of Ifrit',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,512,NULL,70,0,422,'bonus bStr,1;',NULL,NULL);
