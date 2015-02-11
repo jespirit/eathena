@@ -5136,6 +5136,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 		break;
 
 	case PF_MINDBREAKER:
+	case PF_SELFMINDBREAKER:
 		{
 			if(tstatus->mode&MD_BOSS || battle_check_undead(tstatus->race,tstatus->def_ele))
 			{
@@ -5152,7 +5153,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 
 			//Has a 55% + skilllv*5% success chance.
 			if (!clif_skill_nodamage(src,bl,skillid,skilllv,
-				sc_start(bl,type,55+5*skilllv,skilllv,skill_get_time(skillid,skilllv))))
+				sc_start(bl,type,skillid == PF_SELFMINDBREAKER ? 100:( 55+5*skilllv ),skilllv,skill_get_time(skillid,skilllv))))
 			{
 				if (sd) clif_skill_fail(sd,skillid,USESKILL_FAIL_LEVEL,0);
 				map_freeblock_unlock();
