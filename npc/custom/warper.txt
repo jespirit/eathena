@@ -202,67 +202,53 @@
 			break;
 		case 4:
 			mes "[Warp Agent]";
-			mes "Please select either Vanilla or Unrestricted.";
+			mes "Please select either Vanilla or Normal.";
 			next;
-			switch(select("Vanilla:Unrestricted")) {
-				case 1:
-					mes "[Warp Agent]";
-					mes "Do you want First Edition or Second?";
-					next;
-					switch(select("First Edition:Second Edition")) {
-						case 1:
-							mes "[Warp Agent]";
-							mes "Please select a castle:";
-							switch(select("Bamboo Grove Hill:Bergel (Non-Trans):Skoegul (Non-Trans)")) {
-								case 1:
-									warp "pay_gld",204,266;
-									break;
-								case 2:
-									warp "gef_fild13",193,278;
-									break;
-								case 3:
-									warp "prt_gld",111,240;
-									break;
-							}
-							break;
-						case 2:
-							mes "[Warp Agent]";
-							mes "Please select a castle:";
-							switch(select("Cyr")) {
-								case 1:
-									warp "aru_gld",83,47;
-									break;
-							}
-							break;
-					}
-					break;
-				case 2:
-					mes "[Warp Agent]";
-					mes "Do you want First Edition or Second?";
-					next;
-					switch(select("First Edition:Second Edition")) {
-						case 1:
-							mes "[Warp Agent]";
-							mes "Please select a castle:";
-							switch(select("Gondul")) {
-								case 1:
-									warp "prt_gld",208,240;
-									break;
-							}
-							break;
-						case 2:
-							mes "[Warp Agent]";
-							mes "Please select a castle:";
-							switch(select("Andlangr")) {
-								case 1:
-									warp "sch_gld",288,252;
-									break;
-							}
-							break;
-					}
-					break;
-			}
-			break;
+			switch(select("Vanilla First Edition:Vanilla Second Edition:Normal First Edition:Normal Second Edition")) {
+                case 1:
+                    mes "[Warp Agent]";
+                    mes "Please select a castle:";
+                    switch(select("Bamboo Grove Hill (payg_cas05):Bergel (Non-Trans):Skoegul (Non-Trans)")) {
+                        case 1:
+                            warp "pay_gld",204,266;
+                            break;
+                        case 2:
+                            warp "gef_fild13",193,278;
+                            break;
+                        case 3:
+                            warp "prt_gld",111,240;
+                            break;
+                    }
+                    break;
+                case 2:
+                    mes "[Warp Agent]";
+                    mes "Please select a castle:";
+                    switch(select("Cyr (arug_cas02)")) {
+                        case 1:
+                            warp "aru_gld",83,47;
+                            break;
+                    }
+                    break;
+                case 3:
+                    mes "[Warp Agent]";
+                    mes "Please select a castle:";
+                    switch(select("Gondul")) {
+                        case 1:
+                            warp "prt_gld",208,240;
+                            break;
+                    }
+                    break;
+                case 4:
+                    mes "[Warp Agent]";
+                    mes "Please select a castle:";
+                    switch(select("Andlangr")) {
+                        case 1:
+                            warp "sch_gld",288,252;
+                            break;
+                    }
+                    break;
+            }
+            break;
 		case 5:
 			mes "[Warp Agent]";
 			mes "Please select a Battlegrounds map";

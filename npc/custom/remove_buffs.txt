@@ -17,7 +17,6 @@
 	mes " ";
 	mes "Would you like me to remove";
 	mes "all your buffs?";
-	next;
 	switch(select("Yes:No")) {
 		case 1:
 			sc_end SC_ALL;
