@@ -5683,7 +5683,7 @@ REPLACE INTO `item_db` VALUES (13059,'E_Asura_C','Asura',4,1,NULL,0,120,NULL,1,0
 REPLACE INTO `item_db` VALUES (13060,'E_Counter_Dagger_C','Counter Dagger',4,1,NULL,0,209,NULL,1,0,0x00810204,7,2,2,4,1,0,1,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (13061,'Black_Wing','Black Wing',4,20,NULL,600,142,NULL,1,1,124,7,2,2,3,102,1,1,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (13062,'Ancient_Dagger','Ancient Dagger',4,20,NULL,600,107,NULL,0,0,0x028F5EEE,2,2,2,4,120,1,1,'/* bonus bMAtk,120; */',NULL,NULL);
-REPLACE INTO `item_db` VALUES (13067,'Kris','Kris',5,20,NULL,700,107,NULL,1,1,0x3E9F7EEF,18,2,2,3,30,1,1,'bonus bMatkRate,10; bonus2 bHpDrainRate,50,10;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (13067,'Kris','Kris',4,20,NULL,700,107,NULL,1,1,0x3E9F7EEF,18,2,2,3,30,1,1,'bonus bMatkRate,10; bonus2 bHpDrainRate,50,10;',NULL,NULL);
 #  Guns
 REPLACE INTO `item_db` VALUES (13100,'Six_Shooter','Six Shooter',4,4500,NULL,400,30,NULL,7,1,0x01000000,7,2,34,1,10,1,17,'bonus bHit,-10;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (13101,'Six_Shooter_','Six Shooter',4,4500,NULL,400,30,NULL,7,2,0x01000000,7,2,34,1,10,1,17,'bonus bHit,-10;',NULL,NULL);
@@ -6918,9 +6918,12 @@ REPLACE INTO `item_db` VALUES (18103,'Mystic_Bow','Mystic Bow',4,0,NULL,1700,75,
 REPLACE INTO `item_db` VALUES (18505,'Umbala_Spirit','Umbala Spirit',5,20,NULL,200,NULL,1,NULL,0,0xFFFFFFFF,7,2,1,NULL,30,0,675,'bonus bVit,1; bonus2 bAddMonsterDropItem,517,1000;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18536,'Puppy_Grass','Puppy Grass',5,20,NULL,100,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,711,'bonus bCastrate,-1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18546,'Lover_In_Mouth','Lover In Mouth',5,20,NULL,300,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,720,'bonus2 bAddItemHealRate,529,50; bonus2 bAddItemHealRate,530,50; bonus2 bAddMonsterDropItem,529,100; bonus2 bAddMonsterDropItem,530,100;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (18561,'Black_Feather_Beret','Black Feather Beret',5,20,NULL,300,NULL,1,NULL,0,0xFFFFFFFF,7,2,256,NULL,40,1,731,'bonus bVit,1; bonus bMdef,1; bonus2 bSubRace,RC_DemiHuman,10;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18564,'Love_Piece','Love Piece',5,20,NULL,200,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,50,0,734,'if(isequipped(18563)) bonus bCastrate,-5;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18566,'Nut_Donut_In_Mouth','Nut Donut In Mouth',5,20,NULL,0,NULL,1,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,736,'bonus bAtk,5;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (18600,'Cat_Ear_Beret','Cat Ear Beret',5,30000,NULL,300,NULL,5,NULL,0,0xFFFFFFFF,7,2,256,NULL,1,1,761,'if(getrefine()>=5) { bonus2 bAddRace,RC_DemiHuman,(getrefine()-5)*2; bonus2 bSubRace,RC_DemiHuman,(getrefine()-5)*2; }',NULL,NULL);
+REPLACE INTO `item_db` VALUES (18586,'Violet_Sheila_Hairnet','Violet Sheila Hairnet',5,20,NULL,10,NULL,0,NULL,1,0xFFFFFFFF,7,2,256,NULL,1,1,752,'bonus bVit,2; bonus bInt,3; bonus bStr,1; if(getrefine()>=9) { bonus2 bAddRace,RC_NonBoss,2; bonus2 bAddRace,RC_Boss,2; bonus bMatkRate,2; } if(getrefine()>=10) { bonus bCastrate,-10; }',NULL,NULL);
+REPLACE INTO `item_db` VALUES (18588,'Silver_Sheila_Hairnet','Silver Sheila Hairnet',5,20,NULL,10,NULL,0,NULL,1,0xFFFFFFFF,7,2,256,NULL,1,1,754,'bonus bVit,1; bonus bInt,3; bonus bStr,2; if(getrefine()>=9) { bonus2 bAddRace,RC_NonBoss,2; bonus2 bAddRace,RC_Boss,2; bonus bMatkRate,2; } if(getrefine()>=10) { bonus bCastrate,-10; }',NULL,NULL);
+REPLACE INTO `item_db` VALUES (18600,'Cat_Ear_Beret','Cat Ear Beret',5,30000,NULL,300,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,1,1,761,'if(getrefine()>=5) { bonus2 bAddRace,RC_DemiHuman,(getrefine()-5)*2; bonus2 bSubRace,RC_DemiHuman,(getrefine()-5)*2; }',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18642,'Scissors_Replica','Scissors Replica',5,20,NULL,200,NULL,0,NULL,0,0xFFFFFFFE,7,2,1,NULL,20,0,795,'bonus bAgi,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18643,'Rock_Replica','Rock Replica',5,20,NULL,200,NULL,0,NULL,0,0xFFFFFFFE,7,2,1,NULL,20,0,796,'bonus bStr,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18644,'Paper_Replica','Paper Replica',5,20,NULL,200,NULL,0,NULL,0,0xFFFFFFFE,7,2,1,NULL,20,0,797,'bonus bLuk,1;',NULL,NULL);
