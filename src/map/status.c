@@ -1871,9 +1871,10 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 		+ sizeof(sd->speed_rate)
 		+ sizeof(sd->speed_add_rate)
 		+ sizeof(sd->aspd_add)
+		+ sizeof(sd->itemhealrate2)
 		+ sizeof(sd->setitem_hash)
 		+ sizeof(sd->setitem_hash2)
-		+ sizeof(sd->itemhealrate2)
+		+ sizeof(sd->ematk)
 		// shorts
 		+ sizeof(sd->splash_range)
 		+ sizeof(sd->splash_add_range)
@@ -3010,8 +3011,8 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
 
 	if(flag&SCB_MATK) {
 		//New matk
-		status->matk_min = status_base_matk_min(status);
-		status->matk_max = status_base_matk_max(status);
+		status->matk_min = status_base_matk_min(status) + (sd?sd->ematk:0);
+		status->matk_max = status_base_matk_max(status) + (sd?sd->ematk:0);
 
 		if( bl->type&BL_PC && sd->matk_rate != 100 )
 		{
