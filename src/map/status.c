@@ -3010,8 +3010,8 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
 
 	if(flag&SCB_MATK) {
 		//New matk
-		status->matk_min = status_base_matk_min(status);
-		status->matk_max = status_base_matk_max(status);
+		status->matk_min = status_base_matk_min(status) + (sd?sd->ematk:0);
+		status->matk_max = status_base_matk_max(status) + (sd?sd->ematk:0);
 
 		if( bl->type&BL_PC && sd->matk_rate != 100 )
 		{

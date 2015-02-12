@@ -2501,6 +2501,10 @@ int pc_bonus(struct map_session_data *sd,int type,int val)
 		if(sd->state.lr_flag != 2)
 			sd->itemhealrate2 += val;
 		break;
+	case SP_EMATK:
+		if(sd->state.lr_flag != 2)
+			sd->ematk += val;
+		break;
 	default:
 		ShowWarning("pc_bonus: unknown type %d %d !\n",type,val);
 		break;
