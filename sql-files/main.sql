@@ -409,8 +409,10 @@ CREATE TABLE IF NOT EXISTS `login` (
   `lastlogin` datetime NOT NULL default '0000-00-00 00:00:00',
   `last_ip` varchar(100) NOT NULL default '',
   `birthdate` DATE NOT NULL DEFAULT '0000-00-00',
+  `account_num` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`account_id`),
   KEY `name` (`userid`)
+  KEY `account` (`account_num`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2000000; 
 
 -- added standard accounts for servers, VERY INSECURE!!!
