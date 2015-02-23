@@ -270,6 +270,23 @@ int battle_attr_fix(struct block_list *src, struct block_list *target, int damag
 }
 
 /*==========================================
+ * Apply diminishing returns to final Asura damage when the damage
+ * is over the soft cap (default=200000).
+ *------------------------------------------*/
+int battle_asura_fix(int damage)
+{
+	int C = 250000;
+	int soft_cap = 200000;  // (max asura=450000)
+	float k = 1.98E-6f;
+
+	// y = C * (1 - e^(-kx)), where x = asura damage, C = maximum output
+	if (damage > soft_cap)
+		damage = (int)(soft_cap + C * (1.0f - exp(-k*(damage-soft_cap))));
+
+	return damage;
+}
+
+/*==========================================
  * É_??[ÉW??IåvéZ
  *------------------------------------------*/
 int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damage *d,int damage,int skill_num,int skill_lv)
@@ -575,6 +592,10 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 	  if (skill_num)
 			mobskill_event((TBL_MOB*)bl,src,gettick(),MSC_SKILLUSED|(skill_num<<16));
 	}
+
+	// custom TalonRO Asura Strike soft cap (PVM only)
+	if (!map_flag_vs(bl->m) && skill_num == MO_EXTREMITYFIST)
+		damage = battle_asura_fix(damage);
 
 	return damage;
 }
@@ -4051,6 +4072,8 @@ static const struct _battle_data {
 	{ "atcommand_monster_spawn_limit",      &battle_config.atc_monster_spawn_limit,         10,     0,      INT_MAX,        },
 	{ "gm_bypass_monster_spawn_lv",         &battle_config.gm_bypass_monster_spawn_lv,      50,     0,      99,             },
 	{ "gm_bypass_monster_spawn_limit",      &battle_config.gm_bypass_monster_spawn_limit,   50,     0,      99,             },
+	{ "asura_strike_delay",                 &battle_config.asura_strike_delay,              15000,  0,      INT_MAX,        },
+	{ "asura_strike_delay_pvm",             &battle_config.asura_strike_delay_pvm,          10000,  0,      INT_MAX,        },
 };
 
 

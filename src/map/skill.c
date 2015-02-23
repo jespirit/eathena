@@ -2728,9 +2728,14 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, int 
 			}
 		}
 
-		// Create 15 seconds unique cooldown
-		if (sd)
-			skill_blockpc_start(sd, skillid, skill_get_time(skillid,skilllv));
+		// Apply unique cooldown to Asura
+		if( skillid == MO_EXTREMITYFIST )
+		{
+			if (sd && map_flag_vs(sd->bl.m))  // non-PVM
+				skill_blockpc_start(sd, skillid, battle_config.asura_strike_delay);
+			else  // PVM
+				skill_blockpc_start(sd, skillid, battle_config.asura_strike_delay_pvm);
+		}
 		break;
 
 	//Splash attack skills.
@@ -6337,7 +6342,14 @@ int skill_castend_pos2(struct block_list* src, int x, int y, int skillid, int sk
 		if (unit_movepos(src, x, y, 1, 1)) {
 			clif_skill_poseffect(src,skillid,skilllv,src->x,src->y,tick);
 //			clif_slide(src, src->x, src->y); //Poseffect is the one that makes the char snap on the client...
-			if (sd) skill_blockpc_start (sd, MO_EXTREMITYFIST, 2000);
+			if (sd)
+			{
+				if (map_flag_vs(src->m))
+				{
+					skill_blockpc_start(sd, MO_EXTREMITYFIST, 2000);  // 2s unique delay
+					skill_blockpc_start(sd, MO_BODYRELOCATION, 700);  // 0.7s delay in PvP/WoE
+				}
+			}
 		}
 		break;
 	case NJ_SHADOWJUMP:
@@ -9045,11 +9057,6 @@ int skill_delayfix (struct block_list *bl, int skill_id, int skill_lv)
 	case CH_TIGERFIST:
 	case CH_CHAINCRUSH:
 		time -= 4*status_get_agi(bl) - 2*status_get_dex(bl);
-		break;
-	// Body Relocation delay only applies in PvP/GvG/Battleground [ragnarok_champ]
-	case MO_BODYRELOCATION:
-		if (!(map[sd->bl.m].flag.pvp || map_flag_gvg(sd->bl.m) || map[sd->bl.m].flag.battleground))
-			time = 0;
 		break;
 	case HP_BASILICA:
 		if( sc && !sc->data[SC_BASILICA] )
