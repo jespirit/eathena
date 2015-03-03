@@ -7322,6 +7322,7 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 {
 	struct skill_unit_group *sg;
 	struct block_list *ss;
+	TBL_PC* sd;
 	TBL_PC* tsd;
 	struct status_data *tstatus, *sstatus;
 	struct status_change *tsc, *sc;
@@ -7338,6 +7339,7 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 
 	nullpo_ret(sg=src->group);
 	nullpo_ret(ss=map_id2bl(sg->src_id));
+	sd = BL_CAST(BL_PC, ss);
 	tsd = BL_CAST(BL_PC, bl);
 	tsc = status_get_sc(bl);
 	tstatus = status_get_status_data(bl);
@@ -7602,6 +7604,9 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 				int heal;
 				int i = rand()%13; // Positive buff count
 				int time = skill_get_time2(sg->skill_id, sg->skill_lv); //Duration
+				if (sd->gospel_count > 0) {
+					i = sd->gospelbuffs[rand()%sd->gospel_count];
+				}
 				switch (i)
 				{
 					case 0: // Heal 1~9999 HP
