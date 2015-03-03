@@ -1008,6 +1008,12 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	for( i = 0; i < 3; i++ )
 		sd->hate_mob[i] = -1;
 
+	// Gospel Buffs
+	sd->gospel_count = 13;
+	for (i=0; i<13; i++) {
+		sd->gospelbuffs[i] = i;
+	}
+
 	// ˆÊ’u‚ÌÝ’è
 	if ((i=pc_setpos(sd,sd->status.last_point.map, sd->status.last_point.x, sd->status.last_point.y, CLR_OUTSIGHT)) != 0) {
 		ShowError ("Last_point_map %s - id %d not found (error code %d)\n", mapindex_id2name(sd->status.last_point.map), sd->status.last_point.map, i);
