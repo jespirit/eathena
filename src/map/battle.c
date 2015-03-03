@@ -277,11 +277,11 @@ int battle_asura_fix(int damage)
 {
 	int C = 250000;
 	int soft_cap = 200000;  // (max asura=450000)
-	float k = 1.98E-6;
+	float k = 1.98E-6f;
 
 	// y = C * (1 - e^(-kx)), where x = asura damage, C = maximum output
 	if (damage > soft_cap)
-		damage = soft_cap + C * (1.0f - exp(-k*(damage-soft_cap)));
+		damage = (int)(soft_cap + C * (1.0f - exp(-k*(damage-soft_cap))));
 
 	return damage;
 }
