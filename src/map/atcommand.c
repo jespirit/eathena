@@ -8923,7 +8923,7 @@ ACMD_FUNC(sqibonus)
 	int add, remove;
 	int err, count;
 	StringBuf buf;
-	int sqis[] = {
+	int sqis[] = {//TODO: Read Ids from file
 		2150, 1745, 1990, 1190, 1320,  // Aegis, Artemis, Belmont, Blade of Angels, Djinn
 		1913, 1549, 2480, 1651, 13320,  // EG, Evang, Eversong, Ghostdancer, Hira Shurikat
 		1530, 1430, 5600, 1746, 1650,  // Mjolnir, Nibelungen, Scouter, Sherwood, SoM
@@ -9469,7 +9469,7 @@ ACMD_FUNC(changerates)
 	}
 
 	if (rates < 100 || rates > INT_MAX) {
-		clif_displaymessage(fd, "Rates cannot be less than 0 or greater than INT_MAX");
+		clif_displaymessage(fd, "Rates cannot be less than 100 or greater than INT_MAX");
 		return -1;
 	}
 
@@ -9480,6 +9480,160 @@ ACMD_FUNC(changerates)
 	mob_reload();
 
 	clif_displaymessage(fd, "You have changed the rates");
+
+	return 0;
+}
+
+/*===================================
+ * Modify party gospel buffs for Paladins.
+ *-----------------------------------*/
+ACMD_FUNC(gospelbuffs)
+{
+	int i, n;
+	int count, slen;
+	int low, high, start;
+	int bad, good, active[13];
+	char *p, *p2;
+	char* msg = NULL;
+	StringBuf buf;
+	char *gospel_info[13] = {
+		"Heal 1~9999 HP", "End all negative status", "Immunity to all status",
+		"MaxHP +100%", "MaxSP +100%", "All stats +20",
+		"Level 10 Blessing", "Level 10 Increase AGI",
+		"Enchant weapon with Holy element", "Enchant armor with Holy element",
+		"DEF +25%", "ATK +100%", "HIT/FLEE +50"
+	};
+	nullpo_retr(-1, sd);
+
+	StringBuf_Init(&buf);
+
+	if (sd->class_ != MAPID_PALADIN) {
+		clif_displaymessage(fd, "@gospelbuffs only accessible to the Paladin class");
+		return -1;
+	}
+
+	memset(active, 0, sizeof(active));
+	// get active list
+	for (i=0; i<sd->gospel_count; i++) {
+		active[sd->gospelbuffs[i]] = 1;
+	}
+
+	if (!message || !*message) {//display active/inactive buffs
+		//clif_displaymessage(fd, "Please enter the new rates (usage: @changerates 500)");
+		for (i=0; i<13; i++) {
+			StringBuf_Clear(&buf);
+			StringBuf_Printf(&buf, "[%d]: %s", i+1, gospel_info[i]);
+			if (active[i])
+				StringBuf_AppendStr(&buf, "\t[ACTIVE]");
+			clif_displaymessage(fd, StringBuf_Value(&buf));
+		}
+		return 0;
+	}
+
+	slen = strlen(message);
+	msg = (char*)malloc(slen+1);
+	if (msg == NULL) {
+		clif_displaymessage(fd, "malloc: Out of memory");
+		return -1;
+	}
+	strncpy(msg, message, slen);
+	msg[slen] = '\0';
+
+	p = msg;
+	bad = good = 0;
+
+	//TODO: Use PCRE to validate.
+	while (*p) {
+		while (ISSPACE(*p))
+			p++;
+		p2 = p;
+		while (*p && !ISSPACE(*p))
+			p++;
+		if (*p)
+			*p++ = '\0';
+
+		// p2 is our token
+		if (*p2) {
+			bad = 0;
+			StringBuf_Clear(&buf);
+
+			if (sscanf(p2, "%d:%d", &low, &high) == 2) {
+				if (high < 1)
+					bad++;//high cannot be less than 1
+				else if (abs(low) > 13)
+					bad++;//low exceeds 13
+				else if (abs(low) == 0)
+					bad++;//low cannot be 0
+				else if (high > 13)
+					bad++;//high exceeds 13
+				else if (abs(low) > high)
+					bad++;//bad range
+				//low and high can be equal
+
+				if (bad) {
+					StringBuf_Printf(&buf, "Skipping bad parameter %s", p2);
+					clif_displaymessage(fd, StringBuf_Value(&buf));
+				}
+				else {
+					good++;
+					start = abs(low) - 1;
+
+					for (i=start; i<high; i++) {
+						active[i] = (low < 0) ? 0 : 1;
+					}
+				}
+			}
+			else if (sscanf(p2, "%d", &low) == 1) {
+				if (abs(low) > 13)
+					bad++;//>13
+				else if (abs(low) == 0)
+					bad++;//0
+
+				if (bad) {
+					StringBuf_Printf(&buf, "Skipping bad parameter '%s'", p2);
+					clif_displaymessage(fd, StringBuf_Value(&buf));
+				}
+				else {
+					good++;
+					active[abs(low)-1] = (low < 0) ? 0 : 1;
+				}
+			}
+			else if (strcmp(p2, "reset") == 0) {
+				good++;
+				for (i=0; i<13; i++)  // activate all buffs
+					active[i] = 1;
+			}
+			else {
+				bad++;
+				StringBuf_Printf(&buf, "Skipping bad parameter '%s'", p2);
+				clif_displaymessage(fd, StringBuf_Value(&buf));
+			}
+		}
+	}
+
+	// copy back modified list of buffs
+	n = 0;
+	for (i=0; i<13; i++) {
+		if (active[i])
+			sd->gospelbuffs[n++] = i;  // store index of buff
+	}
+
+	count = sd->gospel_count;
+	sd->gospel_count = n;
+
+	if (msg)
+		free(msg);
+	StringBuf_Destroy(&buf);
+
+	if (count != n)
+		clif_displaymessage(fd, "Gospel buffs have changed.");
+	else if (good && count == n)
+		clif_displaymessage(fd, "No change to Gospel buffs.");
+	else if (!good && bad) {
+		clif_displaymessage(fd, "Usage: @gospelbuffs (+-)<low>:<high> (Activate/Deactivate range of buffs)");
+		clif_displaymessage(fd, "       @gospelbuffs (+-)<index> (Activate/Deactivate single buff");
+		clif_displaymessage(fd, "       @gospelbuffs reset (Activate all buffs)");
+	}
 
 	return 0;
 }
@@ -9799,6 +9953,7 @@ AtCommandInfo atcommand_info[] = {
 	{ "atkoff",            40,40,     atcommand_atkoff },
 	{ "miracle",           60,60,     atcommand_miracle },
 	{ "changerates",       99,99,     atcommand_changerates },
+	{ "gospelbuffs",       60,60,     atcommand_gospelbuffs },
 };
 
 

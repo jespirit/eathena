@@ -343,6 +343,8 @@ struct map_session_data {
 	int devotion[5]; //Stores the account IDs of chars devoted to.
 	int reg_num; //Number of registries (type numeric)
 	int regstr_num; //Number of registries (type string)
+	short gospelbuffs[13];  //Active list of Gospel buffs
+	short gospel_count;
 
 	struct script_reg *reg;
 	struct script_regstr *regstr;
