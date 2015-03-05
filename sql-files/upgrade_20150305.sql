@@ -1,18 +1,5 @@
-DROP TABLE IF EXISTS `register`;
-CREATE TABLE `register` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
-  `account_num` int(11) unsigned NOT NULL default '0',
-  `userid` varchar(23) NOT NULL default '',
-  `user_pass` varchar(32) NOT NULL default '',
-  `sex` enum('M','F','S') NOT NULL default 'M',
-  `email` varchar(39) NOT NULL default '',
-  `level` tinyint(3) NOT NULL default '0',
-  `birthdate` DATE NOT NULL DEFAULT '0000-00-00',
-  `ip` varchar(100) NOT NULL default '',
-  PRIMARY KEY (`id`),
-  KEY `userid` (`userid`)
-) ENGINE=MyISAM AUTO_INCREMENT=1;
+ALTER TABLE `register` ADD `account_num` int(11) unsigned NOT NULL default 0 AFTER `time`;
+ALTER TABLE `register` DROP COLUMN `data`;
 
 DROP TABLE IF EXISTS `account`;
 CREATE TABLE `account` (
