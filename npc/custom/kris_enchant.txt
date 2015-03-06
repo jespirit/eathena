@@ -11,10 +11,11 @@
 //= choice.
 //===== Additional Comments: ================================= 
 //= 1.0 First version.
+//= 1.1 Added HP+400,HP+500
 //============================================================ 
 
-prt_in,58,57,2	script	Special Gatti	73,{
-    mes "[Special Gatti]";
+prontera,162,170,2	script	Kris Enchanter	73,{
+    mes "[Kris Enchanter]";
     mes "Would you like to enchant a Kris [1]?";
     next;
     if (select("Yes:No")==2) goto L_Nothing;
@@ -23,10 +24,10 @@ prt_in,58,57,2	script	Special Gatti	73,{
     setarray .@msg$[0], "first", "second";
     
     while (.@index < 2) {
-        mes "[Special Gatti]";
+        mes "[Kris Enchanter]";
         mes "Okay. Please choose the " + .@msg$[.@index] + " bonus:";
         next;
-        switch(select("STR+1:STR+2:STR+3:AGI+1:AGI+2:AGI+3:VIT+1:VIT+2:VIT+3:INT+1:INT+2:INT+3:DEX+1:DEX+2:DEX+3:LUK+1:LUK+2:LUK+3:HP+100:HP+200:HP+300:SP+50:SP+100:SP+150:DEF+2:DEF+3:DEF+4:MDEF+2:MDEF+3:MDEF+4:ATK+1%:ATK+1%:MATK+1%:MATK+2%:CRIT+3:CRIT+4:CRIT+5")) {
+        switch(select("STR+1:STR+2:STR+3:AGI+1:AGI+2:AGI+3:VIT+1:VIT+2:VIT+3:INT+1:INT+2:INT+3:DEX+1:DEX+2:DEX+3:LUK+1:LUK+2:LUK+3:HP+100:HP+200:HP+300:HP+400:HP+500:SP+50:SP+100:SP+150:DEF+2:DEF+3:DEF+4:MDEF+2:MDEF+3:MDEF+4:ATK+1%:ATK+1%:MATK+1%:MATK+2%:CRIT+3:CRIT+4:CRIT+5")) {
         case 1:  //STR
             set .@bonus[.@index],4700; break;
         case 2:
@@ -69,37 +70,41 @@ prt_in,58,57,2	script	Special Gatti	73,{
             set .@bonus[.@index],4796; break;
         case 21:
             set .@bonus[.@index],4797; break;
-        case 22:  //SP
-            set .@bonus[.@index],4800; break;
+        case 22:
+            set .@bonus[.@index],4798; break;
         case 23:
+            set .@bonus[.@index],4799; break;
+        case 24:  //SP
+            set .@bonus[.@index],4800; break;
+        case 25:
             set .@bonus[.@index],4801; break;
-        case 24:
-            set .@bonus[.@index],4802; break;
-        case 25:  //DEF
-            set .@bonus[.@index],4900; break;
         case 26:
+            set .@bonus[.@index],4802; break;
+        case 27:  //DEF
+            set .@bonus[.@index],4900; break;
+        case 28:
             set .@bonus[.@index],4901; break;
-        case 27:
-            set .@bonus[.@index],4902; break;
-        case 28:  //MDEF
-            set .@bonus[.@index],4903; break;
         case 29:
+            set .@bonus[.@index],4902; break;
+        case 30:  //MDEF
+            set .@bonus[.@index],4903; break;
+        case 31:
             set .@bonus[.@index],4904; break;
-        case 30:
-            set .@bonus[.@index],4905; break;
-        case 31:  //ATK
-            set .@bonus[.@index],4766; break;
         case 32:
-            set .@bonus[.@index],4767; break;
-        case 33:  //MATK
-            set .@bonus[.@index],4760; break;
+            set .@bonus[.@index],4905; break;
+        case 33:  //ATK
+            set .@bonus[.@index],4766; break;
         case 34:
-            set .@bonus[.@index],4761; break;
-        case 35:  //CRIT
-            set .@bonus[.@index],4916; break;
+            set .@bonus[.@index],4767; break;
+        case 35:  //MATK
+            set .@bonus[.@index],4760; break;
         case 36:
+            set .@bonus[.@index],4761; break;
+        case 37:  //CRIT
+            set .@bonus[.@index],4916; break;
+        case 38:
             set .@bonus[.@index],4917; break;
-        case 37:
+        case 39:
             set .@bonus[.@index],4764; break;
         }
         
