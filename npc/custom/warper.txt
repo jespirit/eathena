@@ -204,11 +204,11 @@
 			mes "[Warp Agent]";
 			mes "Please select either Vanilla or Normal.";
 			next;
-			switch(select("Vanilla First Edition:Vanilla Second Edition:Normal First Edition:Normal Second Edition")) {
+			switch(select("Vanilla:Normal")) {
                 case 1:
                     mes "[Warp Agent]";
                     mes "Please select a castle:";
-                    switch(select("Bamboo Grove Hill (payg_cas05):Bergel (Non-Trans):Skoegul (Non-Trans)")) {
+                    switch(select("Bamboo Grove Hill (payg_cas05):Bergel (Non-Trans):Skoegul (Non-Trans):Cyr (arug_cas02)")) {
                         case 1:
                             warp "pay_gld",204,266;
                             break;
@@ -218,31 +218,19 @@
                         case 3:
                             warp "prt_gld",111,240;
                             break;
+                        case 4:
+                            warp "aru_gld",83,47;
+                            break;
                     }
                     break;
                 case 2:
                     mes "[Warp Agent]";
                     mes "Please select a castle:";
-                    switch(select("Cyr (arug_cas02)")) {
-                        case 1:
-                            warp "aru_gld",83,47;
-                            break;
-                    }
-                    break;
-                case 3:
-                    mes "[Warp Agent]";
-                    mes "Please select a castle:";
-                    switch(select("Gondul")) {
+                    switch(select("Gondul (prt_cas05):Andlangr (schg_cas02)")) {
                         case 1:
                             warp "prt_gld",208,240;
                             break;
-                    }
-                    break;
-                case 4:
-                    mes "[Warp Agent]";
-                    mes "Please select a castle:";
-                    switch(select("Andlangr")) {
-                        case 1:
+                        case 2:
                             warp "sch_gld",288,252;
                             break;
                     }
