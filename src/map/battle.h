@@ -506,6 +506,7 @@ extern struct Battle_Config
 	int gm_bypass_monster_spawn_limit;
 	int asura_strike_delay;
 	int asura_strike_delay_pvm;
+	int item_ignore_restriction;
 } battle_config;
 
 void do_init_battle(void);

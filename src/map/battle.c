@@ -4074,6 +4074,7 @@ static const struct _battle_data {
 	{ "gm_bypass_monster_spawn_limit",      &battle_config.gm_bypass_monster_spawn_limit,   50,     0,      99,             },
 	{ "asura_strike_delay",                 &battle_config.asura_strike_delay,              15000,  0,      INT_MAX,        },
 	{ "asura_strike_delay_pvm",             &battle_config.asura_strike_delay_pvm,          10000,  0,      INT_MAX,        },
+	{ "item_ignore_restriction",            &battle_config.item_ignore_restriction,         0,      0,      1,              },
 };
 
 

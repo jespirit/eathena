@@ -435,8 +435,13 @@ int itemdb_canguildstore_sub(struct item_data* item, int gmlv, int unused)
 
 int itemdb_isrestricted(struct item* item, int gmlv, int gmlv2, int (*func)(struct item_data*, int, int))
 {
-	struct item_data* item_data = itemdb_search(item->nameid);
+	struct item_data* item_data;
 	int i;
+
+	if (battle_config.item_ignore_restriction)
+		return 1;
+
+	item_data = itemdb_search(item->nameid);
 
 	if (!func(item_data, gmlv, gmlv2))
 		return 0;

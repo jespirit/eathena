@@ -1599,18 +1599,20 @@ ACMD_FUNC(heal)
  *------------------------------------------*/
 ACMD_FUNC(item)
 {
-	char item_name[100];
+	char item_name[100], dummy[2];
 	int number = 0, item_id, flag;
 	struct item item_tmp;
 	struct item_data *item_data;
-	int get_count, i;
+	int get_count, i, ret;
 	nullpo_retr(-1, sd);
 
 	memset(item_name, '\0', sizeof(item_name));
 
 	if (!message || !*message || (
 		sscanf(message, "\"%99[^\"]\" %d", item_name, &number) < 1 &&
-		sscanf(message, "%99s %d", item_name, &number) < 1
+		((ret=sscanf(message, "%99s %d", item_name, &number)) < 2 &&
+		  (ret == 1 && sscanf(message, "%99s %1s", item_name, dummy) == 2)) &&
+		sscanf(message, "%99[^0-9] %d", item_name, &number) < 1  // at this point, there must be 2 or more strings
 	)) {
 		clif_displaymessage(fd, "Please, enter an item name/id (usage: @item <item name or ID> [quantity]).");
 		return -1;
@@ -1618,6 +1620,13 @@ ACMD_FUNC(item)
 
 	if (number <= 0)
 		number = 1;
+
+	// trim trailing spaces if any from the item name
+	i = strlen(item_name) - 1;
+	while (i>=0 && ISSPACE(item_name[i])) {
+		i--;
+	}
+	item_name[++i] = '\0';
 
 	if ((item_data = itemdb_searchname(item_name)) == NULL &&
 	    (item_data = itemdb_exists(atoi(item_name))) == NULL)
