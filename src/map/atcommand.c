@@ -9647,6 +9647,92 @@ ACMD_FUNC(gospelbuffs)
 	return 0;
 }
 
+/*===================================
+ * Allow player to link himself/herself.
+ *-----------------------------------*/
+ACMD_FUNC(linkme)
+{
+	int skillid, skilllv;
+	struct block_list* bl = &sd->bl;
+	nullpo_retr(-1, sd);
+
+	if (!message || !*message || sscanf(message, "%d", &skilllv) < 1) {
+		clif_displaymessage(fd, "Please enter the skill level (usage: @linkme 5)");
+		return -1;
+	} else if (skilllv < 0 || skilllv > 5) {
+		clif_displaymessage(fd, "Skill level must be between 1 and 5.");
+		return -1;
+	}
+
+	switch (sd->class_&MAPID_UPPERMASK) {
+		//2-1 classes
+		case MAPID_SUPER_NOVICE:
+			skillid = SL_SUPERNOVICE;
+			break;
+		case MAPID_KNIGHT:
+			skillid = SL_KNIGHT;
+			break;
+		case MAPID_WIZARD:
+			skillid = SL_WIZARD;
+			break;
+		case MAPID_HUNTER:
+			skillid = SL_HUNTER;
+			break;
+		case MAPID_PRIEST:
+			skillid = SL_PRIEST;
+			break;
+		case MAPID_BLACKSMITH:
+			skillid = SL_BLACKSMITH;
+			break;
+		case MAPID_ASSASSIN:
+			skillid = SL_ASSASIN;
+			break;
+		case MAPID_STAR_GLADIATOR:
+			skillid = SL_STAR;
+			break;
+
+		//2-2 classes
+		case MAPID_CRUSADER:
+			skillid = SL_CRUSADER;
+			break;
+		case MAPID_SAGE:
+			skillid = SL_SAGE;
+			break;
+		case MAPID_BARDDANCER:
+			skillid = SL_BARDDANCER;
+			break;
+		case MAPID_MONK:
+			skillid = SL_MONK;
+			break;
+		case MAPID_ALCHEMIST:
+			skillid = SL_ALCHEMIST;
+			break;
+		case MAPID_ROGUE:
+			skillid = SL_ROGUE;
+			break;
+		case MAPID_SOUL_LINKER:
+			skillid = SL_SOULLINKER;
+			break;
+
+		default:
+			skillid = SL_HIGH;
+			if (sd && !(sd && (sd->class_&JOBL_UPPER) && !(sd->class_&JOBL_2) && sd->status.base_level < 70)) {
+				clif_skill_fail(sd,skillid,USESKILL_FAIL_LEVEL,0);
+				return -1;
+			}
+			clif_skill_nodamage(bl,bl,skillid,skilllv,
+				sc_start4(bl,SC_REBIRTH,100,skilllv,skillid,0,0,skill_get_time(skillid,skilllv)));
+			sc_start(bl,SC_SMA,100,skilllv,skill_get_time(SL_SMA,skilllv));
+			return 0;
+	}
+
+	clif_skill_nodamage(bl,bl,skillid,skilllv,
+		sc_start4(bl,SC_SPIRIT,100,skilllv,skillid,0,0,skill_get_time(skillid,skilllv)));
+	sc_start(bl,SC_SMA,100,skilllv,skill_get_time(SL_SMA,skilllv));
+
+	return 0;
+}
+
 /*==========================================
  * atcommand_info[] structure definition
  *------------------------------------------*/
@@ -9963,6 +10049,7 @@ AtCommandInfo atcommand_info[] = {
 	{ "miracle",           60,60,     atcommand_miracle },
 	{ "changerates",       99,99,     atcommand_changerates },
 	{ "gospelbuffs",       60,60,     atcommand_gospelbuffs },
+	{ "linkme",            60,60,     atcommand_linkme },
 };
 
 
