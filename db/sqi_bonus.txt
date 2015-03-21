@@ -56,7 +56,7 @@
 { bonus bDex,15; }, "15 DEX"
 { bonus bCritical,15; }, "15 CRIT"
 { bonus bLuk,15; }, "15 LUK"
-{ skill "KN_CHARGEATK",1; bonus2 bSkillDelayrate,"KN_CHARGEATK",-30; }, "Enables use of Charge Attack Level 1, 30% Cast Reduction with Charge Attack"
+{ skill "KN_CHARGEATK",1; bonus2 bCastrate,"KN_CHARGEATK",-30; }, "Enables use of Charge Attack Level 1, 30% Cast Time Reduction with Charge Attack"
 { bonus2 bAddZenyRate,"WS_OVERTHRUSTMAX",-75; }, "Spend 75% less Zeny when using Maximum Over Thrust"
 { bonus bCritAtkRate,15; }, "15% more damage with Critical Hits"
 // Assassin
