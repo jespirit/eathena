@@ -686,7 +686,7 @@ REPLACE INTO `item_db` VALUES (1312,'Orcish_Axe_C','Orcish Axe',4,0,NULL,0,110,N
 REPLACE INTO `item_db` VALUES (1313,'Tourist_Axe','Traveler\'s Axe',4,0,NULL,500,77,NULL,1,0,0x000654E3,7,2,2,1,1,0,6,'bonus bStr,2;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (1314,'F_Tomahawk_C','Tomahawk',4,2,NULL,0,200,NULL,1,0,0x000444A2,7,2,34,4,0,0,7,'bonus bAtkEle,Ele_Wind;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (1315,'F_Right_Epsilon_C','Light Epsilon',4,1,NULL,0,229,NULL,1,0,0x000444A2,7,2,34,4,1,0,7,'bonus bAtkEle,Ele_Holy; bonus bStr,10;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (1320,'Djinn','Djinn',4,20,NULL,6000,250,NULL,1,2,0x00040000,7,2,2,4,0,1,6,'bonus bAtkEle,Ele_Earth; bonus bDex,5; bonus bLuk,5; bonus bVit,3; SQI_Func();',NULL,NULL);
+REPLACE INTO `item_db` VALUES (1320,'Djinn','Djinn',4,20,NULL,6000,250,NULL,1,3,0x00040000,7,2,2,4,0,1,6,'bonus bAtkEle,Ele_Earth; bonus bDex,5; bonus bLuk,5; bonus bVit,3; SQI_Func();',NULL,NULL);
 #  2-Handed Axes
 REPLACE INTO `item_db` VALUES (1351,'Battle_Axe','Battle Axe',4,5400,NULL,1500,80,NULL,1,3,0x000444A2,7,2,34,1,3,1,7,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (1352,'Battle_Axe_','Battle Axe',4,5400,NULL,1500,80,NULL,1,4,0x000444A2,7,2,34,1,3,1,7,NULL,NULL,NULL);
