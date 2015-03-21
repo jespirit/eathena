@@ -41,7 +41,7 @@
 	mes "I can teleport you to any Town or Dungeon!";
 	mes "Where do you want to go?";
 	next;
-	switch(select("Cities:Dungeons:PvP Rooms:WoE Castles:Battlegrounds")) {
+	switch(select("Cities:Dungeons:PvP Rooms:GvG Maps:WoE Castles:Battlegrounds")) {
 		case 1:
 			mes "[Warp Agent]";
 			mes "Please select which town you would like to be teleported to.";
@@ -200,7 +200,20 @@
 					break;
 			}
 			break;
-		case 4:
+        case 4:
+			mes "[Warp Agent]";
+			mes "Please select which GvG map you would like to be teleported to.";
+			next;
+			switch(select("Arena:Yuno Arena")) {
+				case 1:
+					warp "guild_vs1-1",0,0;
+					break;
+				case 2:
+					warp "guild_vs2-1",0,0;
+					break;
+			}
+			break;
+		case 5:
 			mes "[Warp Agent]";
 			mes "Please select either Vanilla or Normal.";
 			next;
@@ -237,7 +250,7 @@
                     break;
             }
             break;
-		case 5:
+		case 6:
 			mes "[Warp Agent]";
 			mes "Please select a Battlegrounds map";
 			next;
