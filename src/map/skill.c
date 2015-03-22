@@ -9035,7 +9035,7 @@ int skill_castfix_sc (struct block_list *bl, int time)
  *------------------------------------------*/
 int skill_delayfix (struct block_list *bl, int skill_id, int skill_lv)
 {
-	int i;
+	int i, bragi = 0;
 	int delaynodex = skill_get_delaynodex(skill_id, skill_lv);
 	int time = skill_get_delay(skill_id, skill_lv);
 	struct map_session_data *sd;
@@ -9103,8 +9103,10 @@ int skill_delayfix (struct block_list *bl, int skill_id, int skill_lv)
 	if (!(delaynodex&2))
 	{
 		if (sc && sc->count) {
-			if (sc->data[SC_POEMBRAGI])
+			if (sc->data[SC_POEMBRAGI]) {
+				bragi = 1;
 				time -= time * sc->data[SC_POEMBRAGI]->val3 / 100;
+			}
 		}
 	}
 
@@ -9114,8 +9116,12 @@ int skill_delayfix (struct block_list *bl, int skill_id, int skill_lv)
 	if (i == ARRAYLENGTH(sd->skilldelay))
 		i = -1;
 
-	if( !(delaynodex&4) && sd && sd->delayrate != 100 )
-		time = time * (sd->delayrate + (i>=0?sd->skilldelay[i].val:0)) / 100;  // Delay rate will stack for now
+	if (!(delaynodex&4) && i >= 0 && sd->skilldelay[i].val != 100)
+		time = time * sd->skilldelay[i].val / 100;
+
+	// Ignore equip/item delay bonuses while in bragi (this allows eg. Arrow Vulcan to be affected)
+	if( !(delaynodex&4) && sd && sd->delayrate != 100 && !bragi )
+		time = time * sd->delayrate / 100;
 
 	if (battle_config.delay_rate != 100)
 		time = time * battle_config.delay_rate / 100;

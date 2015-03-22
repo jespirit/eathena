@@ -597,6 +597,13 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 	if (!map_flag_vs(bl->m) && skill_num == MO_EXTREMITYFIST)
 		damage = battle_asura_fix(damage);
 
+	// custom TalonRO ACD damage reduction (PVM only - excludes Asura Strike)
+	if (sc && sc->count) {
+		if (sc->data[SC_POEMBRAGI] && sc->data[SC_POEMBRAGI]->val3 > 0 &&
+			!map_flag_vs(bl->m) && skill_num != MO_EXTREMITYFIST)
+			damage = (200 - sc->data[SC_POEMBRAGI]->val3) * damage / 200;
+	}
+
 	return damage;
 }
 
