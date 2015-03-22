@@ -9272,9 +9272,6 @@ ACMD_FUNC(clearall)
  *------------------------------------------*/
 ACMD_FUNC(getarmor)
 {
-	struct item item_tmp;
-	struct item_data *item_data;
-	char item_name[100];
 	int item_id, number = 1;
 	int identify = 0, refine = 0, attr = 0;
 	int c1 = 0, c2 = 0, c3 = 0, c4 = 0;
@@ -9282,6 +9279,9 @@ ACMD_FUNC(getarmor)
 	int loop, get_count, i, j;
 	int* p;
 	char stat_name[5];
+	struct item item_tmp;
+	struct item_data *item_data;
+	char item_name[100];
 	StringBuf buf;
 	struct {
 		int id;
@@ -9348,6 +9348,11 @@ ACMD_FUNC(getarmor)
 	if ((item_data = itemdb_searchname(item_name)) != NULL ||
 	    (item_data = itemdb_exists(atoi(item_name))) != NULL)
 		item_id = item_data->nameid;
+
+	if (item_id == 0) {
+		clif_displaymessage(fd, "Cannot find specified armor.");
+		return -1;
+	}
 
 	if (item_id > 500 && item_data->equip&EQP_ARMOR) {  // Only armors
 		loop = 1;
@@ -9733,6 +9738,153 @@ ACMD_FUNC(linkme)
 	return 0;
 }
 
+/*===================================
+ * Obtain ranked potions.
+ *-----------------------------------*/
+ACMD_FUNC(getranked)
+{
+	int flag;
+	int nameid, get_count;
+	struct block_list* bl = &sd->bl;
+	char item_name[100];
+	struct item item_tmp;
+	struct item_data *item_data;
+
+	nullpo_retr(-1, sd);
+
+	get_count = 1;
+	memset(item_name, '\0', sizeof(item_name));
+
+	if (!message || !*message || (
+		sscanf(message, "\"%99[^\"]\" %d", item_name, &get_count) < 1 &&
+		sscanf(message, "%99s %d", item_name, &get_count) < 1
+	)) {
+		clif_displaymessage(fd, "Usage: @getranked <item name or ID> <Amount>.");
+		return -1;
+	}
+
+	if (chemist_fame_list[0].id < 150000) {
+		clif_displaymessage(fd, "Cannot create ranked potions without a number one ranked Chemist.");
+		return -1;
+	}
+
+	nameid = 0;
+	if ((item_data = itemdb_searchname(item_name)) != NULL ||
+	    (item_data = itemdb_exists(atoi(item_name))) != NULL)
+		nameid = item_data->nameid;
+
+	if (nameid == 0) {
+		clif_displaymessage(fd, msg_txt(19)); // Invalid item ID or name.
+		return -1;
+	}
+
+	if ((nameid < 501 || nameid > 505) && (nameid < 545 || nameid > 547)) {
+		clif_displaymessage(fd, "Specified item must be a potion.");
+		return -1;
+	}
+
+	memset(&item_tmp, 0, sizeof(item_tmp));
+
+	item_tmp.nameid = nameid;
+	item_tmp.identify = 1;
+	item_tmp.refine = 0;
+	item_tmp.attribute = 0;
+	item_tmp.card[0]=CARD0_CREATE;
+	item_tmp.card[1]=0;
+	item_tmp.card[2]=GetWord(chemist_fame_list[0].id,0); // CharId
+	item_tmp.card[3]=GetWord(chemist_fame_list[0].id,1);
+	if ((flag = pc_additem(sd, &item_tmp, get_count)))
+		clif_additem(sd, 0, 0, flag);
+
+	log_pick(&sd->bl, LOG_TYPE_COMMAND, item_tmp.nameid, get_count, &item_tmp);
+
+	clif_displaymessage(fd, msg_txt(18)); // Item created.
+
+	return 0;
+}
+
+/*===================================
+ * Obtain ranked weapons.
+ *-----------------------------------*/
+ACMD_FUNC(getweapon)
+{
+	int i, flag;
+	int nameid, get_count;
+	int sc, ele;
+	struct block_list* bl = &sd->bl;
+	char item_name[100];
+	struct item item_tmp;
+	struct item_data *item_data;
+
+	nullpo_retr(-1, sd);
+
+	memset(item_name, '\0', sizeof(item_name));
+
+	if (!message || !*message || (
+		sscanf(message, "\"%99[^\"]\" %d %d", item_name, &ele, &sc) < 3 &&
+		sscanf(message, "%99s %d %d", item_name, &ele, &sc) < 3
+	)) {
+		clif_displaymessage(fd, "Usage: @getweapon <item name or ID> <Element> <Star Crumb>.");
+		clif_displaymessage(fd, "Element is 0=Neutral, 1=Ice, 2=Earth, 3=Fire, 4=Wind");
+		return -1;
+	} else if (ele < 0 || ele > 4) {
+		clif_displaymessage(fd, "Weapon element must between 1 and 4.");
+		return -1;
+	} else if (sc < 0 || sc > 3) {
+		clif_displaymessage(fd, "A weapon can only have up to 3 star crumbs or none.");
+		return -1;
+	} else if (ele != 0 && sc > 2) {
+		clif_displaymessage(fd, "Only a neutral weapon can have 3 star crumbs.");
+		return -1;
+	}
+
+	if (smith_fame_list[0].id < 150000) {
+		clif_displaymessage(fd, "Cannot forge weapon without a number one ranked Smith.");
+		return -1;
+	}
+
+	nameid = 0;
+	if ((item_data = itemdb_searchname(item_name)) != NULL ||
+	    (item_data = itemdb_exists(atoi(item_name))) != NULL)
+		nameid = item_data->nameid;
+
+	if (nameid == 0) {
+		clif_displaymessage(fd, msg_txt(19)); // Invalid item ID or name.
+		return -1;
+	}
+
+	for(i=0;i<MAX_SKILL_PRODUCE_DB;i++){
+		if(skill_produce_db[i].itemlv > 3)
+			continue;  // only weapons level 1-3 can be forged
+		if(skill_produce_db[i].nameid == nameid )
+			break;
+	}
+	if( i >= MAX_SKILL_PRODUCE_DB ) {
+		clif_displaymessage(fd, "The weapon you specified cannot be forged.");
+		return -1;
+	}
+
+	get_count = 1;
+	memset(&item_tmp, 0, sizeof(item_tmp));
+
+	item_tmp.nameid = nameid;
+	item_tmp.identify = 1;
+	item_tmp.refine = 0;
+	item_tmp.attribute = 0;
+	item_tmp.card[0]=CARD0_FORGE;
+	item_tmp.card[1]=((sc*5)<<8)+ele;
+	item_tmp.card[2]=GetWord(smith_fame_list[0].id,0); // CharId
+	item_tmp.card[3]=GetWord(smith_fame_list[0].id,1);
+	if ((flag = pc_additem(sd, &item_tmp, get_count)))
+		clif_additem(sd, 0, 0, flag);
+
+	log_pick(&sd->bl, LOG_TYPE_COMMAND, item_tmp.nameid, 1, &item_tmp);
+
+	clif_displaymessage(fd, msg_txt(18)); // Item created.
+
+	return 0;
+}
+
 /*==========================================
  * atcommand_info[] structure definition
  *------------------------------------------*/
@@ -10050,6 +10202,8 @@ AtCommandInfo atcommand_info[] = {
 	{ "changerates",       99,99,     atcommand_changerates },
 	{ "gospelbuffs",       60,60,     atcommand_gospelbuffs },
 	{ "linkme",            60,60,     atcommand_linkme },
+	{ "getranked",         60,60,     atcommand_getranked },
+	{ "getweapon",         60,60,     atcommand_getweapon },
 };
 
 

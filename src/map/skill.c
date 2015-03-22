@@ -9119,8 +9119,9 @@ int skill_delayfix (struct block_list *bl, int skill_id, int skill_lv)
 	if (!(delaynodex&4) && i >= 0 && sd->skilldelay[i].val != 100)
 		time = time * sd->skilldelay[i].val / 100;
 
-	// Ignore equip/item delay bonuses while in bragi (this allows eg. Arrow Vulcan to be affected)
-	if( !(delaynodex&4) && sd && sd->delayrate != 100 && !bragi )
+	// Ignore equip/item delay bonuses while in bragi PvM only.
+	// NOTE: this allows skills eg. Arrow Vulcan to still be affected by equip/cards
+	if( !(delaynodex&4) && sd && sd->delayrate != 100 && !(bragi && !map_flag_vs(bl->m)) )
 		time = time * sd->delayrate / 100;
 
 	if (battle_config.delay_rate != 100)
