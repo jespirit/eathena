@@ -4641,6 +4641,7 @@ REPLACE INTO `item_db` VALUES (8350,'Hexagonal_Glasses_','Hexagonal Glasses',5,2
 REPLACE INTO `item_db` VALUES (8363,'Antler_Gentleman_Hat_Kaho','Antler Gentleman Hat Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,811,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8370,'Amistr_Cap_Kaho','Amistr Cap Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,1,1,643,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8376,'Ancient_Horns_Kaho','Ancient Horns Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,1,1,757,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (8390,'Unique_Sunglasses_','Unique Sunglasses',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,512,NULL,70,0,856,'bonus bStr,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8397,'Aqua_Quartz_Crown_Kaho','Aqua Quartz Crown Kaho',5,20,NULL,100,NULL,6,NULL,0,0xFFFFFFFF,7,2,256,NULL,1,1,866,'bonus bMdef,20; bonus bStr,20; bonus bInt,20; bonus bDex,20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8403,'Anemos_Mask_','Anemos Mask',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,512,NULL,70,0,1206,'bonus bAgi,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (8404,'Ifrit_Eyes_','Ifrit Eyes',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,512,NULL,70,0,886,'bonus bStr,1;',NULL,NULL);
@@ -6939,6 +6940,7 @@ REPLACE INTO `item_db` VALUES (18677,'Cherry_Blossom_In_Mouth','Cherry Blossom I
 REPLACE INTO `item_db` VALUES (18678,'Green_Onion_In_Mouth','Green Onion In Mouth',5,20,NULL,200,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,20,0,824,'bonus2 bSubSize,0,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18683,'Special_Carrot_In_Mouth','Special Carrot In Mouth',5,20,NULL,200,NULL,1,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,829,'bonus2 bSubRace,RC_Plant,1; if(isequipped(5213)) bonus3 bAutoSpellWhenHit,"TK_HIGHJUMP",1,10;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18703,'Plant_Stem_In_Mouth','Plant Stem In Mouth',5,20,NULL,50,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,848,'bonus2 bResEff,Eff_Poison,2000;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (18711,'Unique_Sunglasses','Unique Sunglasses',5,20,NULL,400,NULL,3,NULL,0,0xFFFFFFFE,7,2,512,NULL,20,0,856,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (18745,'Choco_Stick_In_Mouth','Choco Stick In Mouth',5,20,NULL,100,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,884,'bonus bMaxSP,10; bonus2 bAddRace,RC_NonBoss,-1; bonus2 bAddRace,RC_Boss,-1; bonus2 bAddRace2,5,-1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18746,'Cold_Breath','Cold Breath',5,20,NULL,100,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,10,0,885,'bonus bInt,1; bonus bVit,-1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18750,'Poker_Card_In_Mouth','Poker Card In Mouth',5,20,NULL,50,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,10,0,889,'bonus2 bAddRace,RC_DemiHuman,1; bonus2 bSubRace,RC_DemiHuman,-1;',NULL,NULL);
