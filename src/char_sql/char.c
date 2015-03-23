@@ -3764,12 +3764,9 @@ int parse_char(int fd)
 			memcpy(email, RFIFOP(fd,6), 40);
 			RFIFOSKIP(fd,( cmd == 0x68) ? 46 : 56);
 			
-			// Check if e-mail is correct 
-			if(strcmpi(email, sd->email) && //email does not matches and 
-			(
-				strcmp("a@a.com", sd->email) || //it is not default email, or
-				(strcmp("a@a.com", email) && strcmp("", email)) //email sent does not matches default
-			)) {	//Fail
+			// User just needs to enter the text "delete"
+			if(strcmpi(email, "delete"))
+			{	//Fail
 				WFIFOHEAD(fd,3);
 				WFIFOW(fd,0) = 0x70;
 				WFIFOB(fd,2) = 0; // 00 = Incorrect Email address
