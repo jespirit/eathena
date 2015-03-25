@@ -819,7 +819,7 @@ int battle_addmastery(struct map_session_data *sd,struct block_list *target,int 
 	return damage;
 }
 
-int damage_calc_minmax(struct map_session_data* sd, int min, int max)
+int damage_calc_minmax(struct map_session_data* sd, struct mob_data* md, int min, int max)
 {
 	int damage;
 
@@ -827,16 +827,69 @@ int damage_calc_minmax(struct map_session_data* sd, int min, int max)
 		if (sd->state.minmax == 1) // min
 			damage = min;
 		else if (sd->state.minmax == 2) // avg
-			damage = (max-min)/2;
+			damage = min + (max-min)/2;
 		else if (sd->state.minmax == 4) // max
 			damage = max;
 		else
 			damage = rand()%(max-min+1)+min;
 	}
-	else
-		damage = rand()%(max-min+1)+min;
+	else { // Mob/Pet
+		if (md) { // Mob
+			if (md->state.minmax == 1) // min
+				damage = min;
+			else if (md->state.minmax == 2) // avg
+				damage = min + (max-min)/2;
+			else if (md->state.minmax == 4) // max
+				damage = max;
+			else
+				damage = rand()%(max-min+1)+min;
+		}
+		else
+			damage = rand()%(max-min+1)+min;
+	}
 
 	return damage;
+}
+
+/*==========================================
+ * Calculates the random component in the vit_def calculations based
+ * on whether the source has minmax on/off.
+ *------------------------------------------*/
+int damage_calc_vitdef(struct map_session_data* sd, struct mob_data* md, int vit_def, int pdef)
+{
+	if (!vit_def)
+		return 0;
+
+	if (sd) { // PC
+		if (sd->state.minmax == 1) {
+			if (pdef)  // pierce defense?
+				vit_def = 0;
+			// otherwise leave as is
+		} else if (sd->state.minmax == 2) {
+			vit_def /= 2;  // half it
+		} else if (sd->state.minmax == 4) {
+			if (!pdef)  // non-piercing so vit def must be 0
+				vit_def = 0;
+			// otherwise leave as high as possible
+		} else
+			vit_def = rand()%(vit_def+1);
+	} else if (md) { // Mob
+		if (md->state.minmax == 1) {
+			if (pdef)  // pierce defense?
+				vit_def = 0;
+			// otherwise leave as is
+		} else if (md->state.minmax == 2) {
+			vit_def /= 2;  // half it
+		} else if (md->state.minmax == 4) {
+			if (!pdef)  // non-piercing so vit def must be 0
+				vit_def = 0;
+			// otherwise leave as high as possible
+		} else
+			vit_def = rand()%(vit_def+1);
+	} else
+		vit_def = rand()%(vit_def+1);
+
+	return vit_def;
 }
 
 /*==========================================
@@ -851,7 +904,7 @@ int damage_calc_minmax(struct map_session_data* sd, int min, int max)
  * &8: Skip target size adjustment (Extremity Fist?)
  *&16: Arrow attack but BOW, REVOLVER, RIFLE, SHOTGUN, GATLING or GRENADE type weapon not equipped (i.e. shuriken, kunai and venom knives not affected by DEX)
  */
-static int battle_calc_base_damage(struct status_data *status, struct weapon_atk *wa, struct status_change *sc, unsigned short t_size, struct map_session_data *sd, int flag)
+static int battle_calc_base_damage(struct status_data *status, struct weapon_atk *wa, struct status_change *sc, unsigned short t_size, struct map_session_data *sd, struct mob_data *md, int flag)
 {
 	unsigned short atkmin=0, atkmax=0;
 	short type = 0;
@@ -897,7 +950,7 @@ static int battle_calc_base_damage(struct status_data *status, struct weapon_atk
 	
 	//Weapon Damage calculation
 	if (!(flag&1))
-		damage = (atkmax>atkmin? damage_calc_minmax(sd, 0, atkmax-atkmin-1):0)+atkmin;
+		damage = (atkmax>atkmin? damage_calc_minmax(sd, md, 0, atkmax-atkmin-1):0)+atkmin;
 	else 
 		damage = atkmax;
 	
@@ -905,7 +958,7 @@ static int battle_calc_base_damage(struct status_data *status, struct weapon_atk
 	{
 		//rodatazone says the range is 0~arrow_atk-1 for non crit
 		if (flag&2 && sd->arrow_atk)
-			damage += ((flag&1)?sd->arrow_atk:damage_calc_minmax(sd, 0, sd->arrow_atk-1));
+			damage += ((flag&1)?sd->arrow_atk:damage_calc_minmax(sd, NULL, 0, sd->arrow_atk-1));
 
 		//SizeFix only for players
 		if (!(sd->special_state.no_sizefix || (flag&8)))
@@ -925,12 +978,12 @@ static int battle_calc_base_damage(struct status_data *status, struct weapon_atk
 	if(sd) {
 		if (type == EQI_HAND_L) {
 			if(sd->left_weapon.overrefine)
-				damage += damage_calc_minmax(sd, 1, sd->left_weapon.overrefine);
+				damage += damage_calc_minmax(sd, NULL, 1, sd->left_weapon.overrefine);
 			if (sd->weapon_atk_rate[sd->weapontype2])
 				damage += damage*sd->weapon_atk_rate[sd->weapontype2]/100;;
 		} else { //Right hand
 			if(sd->right_weapon.overrefine)
-				damage += damage_calc_minmax(sd, 1, sd->right_weapon.overrefine);
+				damage += damage_calc_minmax(sd, NULL, 1, sd->right_weapon.overrefine);
 			if (sd->weapon_atk_rate[sd->weapontype1])
 				damage += damage*sd->weapon_atk_rate[sd->weapontype1]/100;;
 		}
@@ -1006,6 +1059,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 	bool n_ele = false; // non-elemental
 
 	struct map_session_data *sd, *tsd;
+	struct mob_data *md;
 	struct Damage wd;
 	struct status_change *sc = status_get_sc(src);
 	struct status_change *tsc = status_get_sc(target);
@@ -1062,6 +1116,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 
 	sd = BL_CAST(BL_PC, src);
 	tsd = BL_CAST(BL_PC, target);
+	md = BL_CAST(BL_MOB, src);
 
 	if(sd)
 		wd.blewcount += battle_blewcount_bonus(sd, skill_num);
@@ -1431,9 +1486,9 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 					default:
 						i |= 16; // for ex. shuriken must not be influenced by DEX
 				}
-				wd.damage = battle_calc_base_damage(sstatus, &sstatus->rhw, sc, tstatus->size, sd, i);
+				wd.damage = battle_calc_base_damage(sstatus, &sstatus->rhw, sc, tstatus->size, sd, md, i);
 				if (flag.lh)
-					wd.damage2 = battle_calc_base_damage(sstatus, &sstatus->lhw, sc, tstatus->size, sd, i);
+					wd.damage2 = battle_calc_base_damage(sstatus, &sstatus->lhw, sc, tstatus->size, sd, md, i);
 
 				if (nk&NK_SPLASHSPLIT){ // Divide ATK among targets
 					if(wflag>0)
@@ -1797,7 +1852,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 					break;
 				case GS_MAGICALBULLET:
 					if(sstatus->matk_max>sstatus->matk_min) {
-						ATK_ADD(sstatus->matk_min+damage_calc_minmax(sd, 0, sstatus->matk_max-sstatus->matk_min-1));
+						ATK_ADD(sstatus->matk_min+damage_calc_minmax(sd, md, 0, sstatus->matk_max-sstatus->matk_min-1));
 					} else {
 						ATK_ADD(sstatus->matk_min);
 					}
@@ -1926,7 +1981,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 			if (tsd)	//Sd vit-eq
 			{	//[VIT*0.5] + rnd([VIT*0.3], max([VIT*0.3],[VIT^2/150]-1))
 				vit_def = def2*(def2-15)/150;
-				vit_def = def2/2 + (vit_def>0?((sd&&sd->state.minmax)?0:rand()%vit_def):0);
+				vit_def = def2/2 + (vit_def>0?(damage_calc_vitdef(sd, md, vit_def-1, flag.pdef||flag.pdef2)):0);
 				
 				if((battle_check_undead(sstatus->race,sstatus->def_ele) || sstatus->race==RC_DEMON) && //This bonus already doesnt work vs players
 					src->type == BL_MOB && (skill=pc_checkskill(tsd,AL_DP)) > 0)
@@ -1934,7 +1989,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 			} else { //Mob-Pet vit-eq
 				//VIT + rnd(0,[VIT/20]^2-1)
 				vit_def = (def2/20)*(def2/20);
-				vit_def = def2 + (vit_def>0?((sd&&sd->state.minmax)?0:rand()%vit_def):0);
+				vit_def = def2 + (vit_def>0?(damage_calc_vitdef(sd, md, vit_def-1, flag.pdef||flag.pdef2)):0);
 			}
 			
 			if (battle_config.weapon_defense_type) {
@@ -2030,12 +2085,12 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 			wd.damage2 = battle_attr_fix(src,target,wd.damage2,s_ele_,tstatus->def_ele, tstatus->ele_lv);
 		if( sc && sc->data[SC_WATK_ELEMENT] )
 		{ // Descriptions indicate this means adding a percent of a normal attack in another element. [Skotlex]
-			int damage = battle_calc_base_damage(sstatus, &sstatus->rhw, sc, tstatus->size, sd, (flag.arrow?2:0)) * sc->data[SC_WATK_ELEMENT]->val2 / 100;
+			int damage = battle_calc_base_damage(sstatus, &sstatus->rhw, sc, tstatus->size, sd, md, (flag.arrow?2:0)) * sc->data[SC_WATK_ELEMENT]->val2 / 100;
 			wd.damage += battle_attr_fix(src, target, damage, sc->data[SC_WATK_ELEMENT]->val1, tstatus->def_ele, tstatus->ele_lv);
 
 			if( flag.lh )
 			{
-				damage = battle_calc_base_damage(sstatus, &sstatus->lhw, sc, tstatus->size, sd, (flag.arrow?2:0)) * sc->data[SC_WATK_ELEMENT]->val2 / 100;
+				damage = battle_calc_base_damage(sstatus, &sstatus->lhw, sc, tstatus->size, sd, md, (flag.arrow?2:0)) * sc->data[SC_WATK_ELEMENT]->val2 / 100;
 				wd.damage2 += battle_attr_fix(src, target, damage, sc->data[SC_WATK_ELEMENT]->val1, tstatus->def_ele, tstatus->ele_lv);
 			}
 		}
@@ -2370,6 +2425,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 	unsigned int skillratio = 100;	//Skill dmg modifiers.
 
 	struct map_session_data *sd, *tsd;
+	struct mob_data *md;
 	struct Damage ad;
 	struct status_data *sstatus = status_get_status_data(src);
 	struct status_data *tstatus = status_get_status_data(target);
@@ -2399,6 +2455,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 
 	sd = BL_CAST(BL_PC, src);
 	tsd = BL_CAST(BL_PC, target);
+	md = BL_CAST(BL_MOB, src);
 
 	//Initialize variables that will be used afterwards
 	s_ele = skill_get_ele(skill_num, skill_lv);
@@ -2470,7 +2527,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 			default:
 			{
 				if (sstatus->matk_max > sstatus->matk_min) {
-					MATK_ADD(sstatus->matk_min+damage_calc_minmax(sd, 0, sstatus->matk_max-sstatus->matk_min));
+					MATK_ADD(sstatus->matk_min+damage_calc_minmax(sd, md, 0, sstatus->matk_max-sstatus->matk_min));
 				} else {
 					MATK_ADD(sstatus->matk_min);
 				}
@@ -2725,6 +2782,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	short s_ele;
 
 	struct map_session_data *sd, *tsd;
+	struct mob_data *mbd;
 	struct Damage md; //DO NOT CONFUSE with md of mob_data!
 	struct status_data *sstatus = status_get_status_data(src);
 	struct status_data *tstatus = status_get_status_data(target);
@@ -2748,6 +2806,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	
 	sd = BL_CAST(BL_PC, src);
 	tsd = BL_CAST(BL_PC, target);
+	mbd = BL_CAST(BL_MOB, src);
 	
 	if(sd) {
 		sd->state.arrow_atk = 0;
@@ -2832,7 +2891,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	case NJ_ZENYNAGE:
 		md.damage = skill_get_zeny(skill_num ,skill_lv);
 		if (!md.damage) md.damage = 2;
-		md.damage = md.damage + damage_calc_minmax(sd, 0, md.damage-1);
+		md.damage = md.damage + damage_calc_minmax(sd, mbd, 0, md.damage-1);
 		if (is_boss(target))
 			md.damage=md.damage/3;
 		else if (tsd)
@@ -2845,7 +2904,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 		md.damage = sstatus->max_hp * (50 + 50 * skill_lv) / 100 ;
 		break ;
 	case ASC_BREAKER:
-		md.damage = 500+damage_calc_minmax(sd, 0, 500-1) + 5*skill_lv * sstatus->int_;
+		md.damage = 500+damage_calc_minmax(sd, mbd, 0, 500-1) + 5*skill_lv * sstatus->int_;
 		nk|=NK_IGNORE_FLEE|NK_NO_ELEFIX; //These two are not properties of the weapon based part.
 		break;
 	case HW_GRAVITATION:
