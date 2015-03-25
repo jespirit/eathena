@@ -1427,6 +1427,9 @@ int status_calc_mob_(struct mob_data* md, bool first)
 	if (md->master_id && md->special_state.ai>1)
 		flag|=16;
 
+	if (md->hp_per != 100)
+		flag|=32;
+
 	if (!flag)
 	{ //No special status required.
 		if (md->base_status) {
@@ -1451,6 +1454,12 @@ int status_calc_mob_(struct mob_data* md, bool first)
 		if (mstatus &&
 			battle_config.slaves_inherit_speed&(mstatus->mode&MD_CANMOVE?1:2))
 			status->speed = mstatus->speed;
+	}
+
+	if (flag&32)
+	{// HP Modified (at least 1)
+		status->hp = status->max_hp * md->hp_per / 100;
+		status->hp = cap_value(status->hp, 1, status->max_hp);
 	}
 
 	if (flag&16 && mbl)

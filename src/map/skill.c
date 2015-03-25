@@ -3399,7 +3399,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, in
 		break;
 	case SA_SUMMONMONSTER:
 		clif_skill_nodamage(src,bl,skillid,skilllv,1);
-		if (sd) mob_once_spawn(sd,src->m,src->x,src->y,"--ja--",-1,1,"");
+		if (sd) mob_once_spawn(sd,src->m,src->x,src->y,"--ja--",-1,1,100,"");
 		break;
 	case SA_LEVELUP:
 		clif_skill_nodamage(src,bl,skillid,skilllv,1);
@@ -6369,7 +6369,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, int skillid, int sk
 			struct mob_data *md;
 
 			// Correct info, don't change any of this! [celest]
-			md = mob_once_spawn_sub(src, src->m, x, y, status_get_name(src),class_,"");
+			md = mob_once_spawn_sub(src, src->m, x, y, status_get_name(src),class_,100,"");
 			if (md) {
 				md->master_id = src->id;
 				md->special_state.ai = skillid==AM_SPHEREMINE?2:3;
@@ -6468,7 +6468,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, int skillid, int sk
 			if (rand()%100 < 50) {
 				clif_skill_fail(sd,skillid,USESKILL_FAIL_LEVEL,0);
 			} else {
-				TBL_MOB* md = mob_once_spawn_sub(src, src->m, x, y, "--ja--",(skilllv < 2 ? 1084+rand()%2 : 1078+rand()%6),"");
+				TBL_MOB* md = mob_once_spawn_sub(src, src->m, x, y, "--ja--",(skilllv < 2 ? 1084+rand()%2 : 1078+rand()%6), 100, "");
 				if (!md) break;
 				if ((i = skill_get_time(skillid, skilllv)) > 0)
 				{

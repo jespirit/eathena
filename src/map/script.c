@@ -7967,7 +7967,7 @@ BUILDIN_FUNC(monster)
 		}
 	}
 
-	mob_once_spawn(sd,m,x,y,str,class_,amount,event);
+	mob_once_spawn(sd,m,x,y,str,class_,amount,100,event);
 	return 0;
 }
 /*==========================================
@@ -12216,7 +12216,7 @@ BUILDIN_FUNC(summon)
 
 	clif_skill_poseffect(&sd->bl,AM_CALLHOMUN,1,sd->bl.x,sd->bl.y,tick);
 
-	md = mob_once_spawn_sub(&sd->bl, sd->bl.m, sd->bl.x, sd->bl.y, str, _class, event);
+	md = mob_once_spawn_sub(&sd->bl, sd->bl.m, sd->bl.x, sd->bl.y, str, _class, 100, event);
 	if (md) {
 		md->master_id=sd->bl.id;
 		md->special_state.ai=1;

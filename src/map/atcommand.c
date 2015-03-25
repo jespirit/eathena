@@ -2405,10 +2405,12 @@ ACMD_FUNC(monster)
 	struct party_data* p;
 	char name[NAME_LENGTH];
 	char monster[NAME_LENGTH];
+	char atcmd_output[256];
 	int mob_id;
 	int number = 0;
 	int count;
 	int i, k, m, range;
+	int per = 100;
 	short mx, my;
 	nullpo_retr(-1, sd);
 
@@ -2419,8 +2421,8 @@ ACMD_FUNC(monster)
 	m = sd->bl.m;
 
 	if (!message || !*message) {
-			clif_displaymessage(fd, msg_txt(80)); // Give the display name or monster name/id please.
-			return -1;
+		clif_displaymessage(fd, msg_txt(80)); // Give the display name or monster name/id please.
+		return -1;
 	}
 
 	// Player must be on a map that allows @monster command and is instanced.
@@ -2431,20 +2433,25 @@ ACMD_FUNC(monster)
 			return -1;
 	}
 
-	if (sscanf(message, "\"%23[^\"]\" %23s %d", name, monster, &number) > 1 ||
-		sscanf(message, "%23s \"%23[^\"]\" %d", monster, name, &number) > 1) {
+	if (sscanf(message, "\"%23[^\"]\" %23s %d %d", name, monster, &number, &per) > 1 ||
+		sscanf(message, "%23s \"%23[^\"]\" %d %d", monster, name, &number, &per) > 1) {
 		//All data can be left as it is.
-	} else if ((count=sscanf(message, "%23s %d %23s", monster, &number, name)) > 1) {
+	} else if ((count=sscanf(message, "%23s %d %d %23s", monster, &number, &per, name)) > 1) {
 		//Here, it is possible name was not given and we are using monster for it.
-		if (count < 3) //Blank mob's name.
+		if (count < 4) //Blank mob's name.
 			name[0] = '\0';
-	} else if (sscanf(message, "%23s %23s %d", name, monster, &number) > 1) {
+	} else if (sscanf(message, "%23s %23s %d %d", name, monster, &number, &per) > 1) {
 		//All data can be left as it is.
 	} else if (sscanf(message, "%23s", monster) > 0) {
 		//As before, name may be already filled.
 		name[0] = '\0';
 	} else {
 		clif_displaymessage(fd, msg_txt(80)); // Give a display name and monster name/id please.
+		return -1;
+	}
+
+	if (per < 1 || per > 100) {
+		clif_displaymessage(fd, "Monster HP percentage must be between 1% and 100%");
 		return -1;
 	}
 
@@ -2466,7 +2473,8 @@ ACMD_FUNC(monster)
 
 	if (pc_isGM(sd) < battle_config.gm_bypass_monster_spawn_limit &&
 		map_foreachinmap(mob_count_sub_no_slave, m, BL_MOB, "") + number > battle_config.atc_monster_spawn_limit) {
-		clif_displaymessage(fd, "You have exceeded the monster limit of 10.");
+		sprintf(atcmd_output, "You have exceeded the monster limit of %d", battle_config.atc_monster_spawn_limit);
+		clif_displaymessage(fd, atcmd_output);
 		return -1;
 	}
 
@@ -2484,7 +2492,7 @@ ACMD_FUNC(monster)
 	range = (int)sqrt((float)number) +2; // calculation of an odd number (+ 4 area around)
 	for (i = 0; i < number; i++) {
 		map_search_freecell(&sd->bl, 0, &mx,  &my, range, range, 0);
-		k = mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, "");
+		k = mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, per, "");
 		count += (k != 0) ? 1 : 0;
 	}
 
@@ -2569,7 +2577,7 @@ ACMD_FUNC(monstersmall)
 			my = sd->bl.y + (rand() % 11 - 5);
 		else
 			my = y;
-		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, "2") != 0) ? 1 : 0;
+		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, 100, "2") != 0) ? 1 : 0;
 	}
 
 	if (count != 0)
@@ -2645,7 +2653,7 @@ ACMD_FUNC(monsterbig)
 			my = sd->bl.y + (rand() % 11 - 5);
 		else
 			my = y;
-		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, "4") != 0) ? 1 : 0;
+		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, 100, "4") != 0) ? 1 : 0;
 	}
 
 	if (count != 0)
@@ -6671,7 +6679,7 @@ ACMD_FUNC(summon)
 		return -1;
 	}
 
-	md = mob_once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, "--ja--", mob_id, "");
+	md = mob_once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, "--ja--", mob_id, 100, "");
 
 	if(!md)
 		return -1;

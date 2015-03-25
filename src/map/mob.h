@@ -149,6 +149,7 @@ struct mob_data {
 	int target_id,attacked_id;
 	int areanpc_id; //Required in OnTouchNPC (to avoid multiple area touchs)
 	unsigned int bg_id; // BattleGround System
+	int hp_per; //Percentage of HP to start
 
 	unsigned int next_walktime,last_thinktime,last_linktime,last_pcneartime;
 	short move_fail_count;
@@ -223,8 +224,8 @@ int mobdb_searchname_array(struct mob_db** data, int size, const char *str);
 int mobdb_checkid(const int id);
 struct view_data* mob_get_viewdata(int class_);
 struct mob_data *mob_once_spawn_sub(struct block_list *bl, int m,
-	short x, short y, const char *mobname, int class_, const char *event);
-int mob_once_spawn(struct map_session_data* sd,int m,short x,short y,const char* mobname,int class_,int amount,const char* event);
+	short x, short y, const char *mobname, int class_, int hp_per, const char *event);
+int mob_once_spawn(struct map_session_data* sd,int m,short x,short y,const char* mobname,int class_,int amount,int hp_per,const char* event);
 int mob_once_spawn_area(struct map_session_data* sd,int m,int x0,int y0,int x1,int y1,const char* mobname,int class_,int amount,const char* event);
 
 bool mob_ksprotected (struct block_list *src, struct block_list *target);
