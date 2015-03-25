@@ -406,7 +406,7 @@ struct mob_data *mob_once_spawn_sub(struct block_list *bl, int m, short x, short
 /*==========================================
  * Spawn a single mob on the specified coordinates.
  *------------------------------------------*/
-int mob_once_spawn(struct map_session_data* sd, int m, short x, short y, const char* mobname, int class_, int amount, int hp_per, const char* event)
+int mob_once_spawn(struct map_session_data* sd, int m, short x, short y, const char* mobname, int class_, int amount, int hp_per, int minmax, const char* event)
 {
 	struct mob_data* md = NULL;
 	int count, lv;
@@ -445,6 +445,7 @@ int mob_once_spawn(struct map_session_data* sd, int m, short x, short y, const c
 		}	// end addition [Valaris]
 
 		mob_spawn(md);
+		md->state.minmax = minmax;  // Apply minmax state
 
 		if (class_ < 0 && battle_config.dead_branch_active)
 			//Behold Aegis's masterful decisions yet again...
@@ -502,7 +503,7 @@ int mob_once_spawn_area(struct map_session_data* sd,int m,int x0,int y0,int x1,i
 		lx = x;
 		ly = y;
 
-		id = mob_once_spawn(sd,m,x,y,mobname,class_,1,100,event);
+		id = mob_once_spawn(sd,m,x,y,mobname,class_,1,100,0,event);
 	}
 
 	return id; // id of last spawned mob

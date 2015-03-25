@@ -2411,6 +2411,7 @@ ACMD_FUNC(monster)
 	int count;
 	int i, k, m, range;
 	int per = 100;
+	int minmax = 0;
 	short mx, my;
 	nullpo_retr(-1, sd);
 
@@ -2433,14 +2434,14 @@ ACMD_FUNC(monster)
 			return -1;
 	}
 
-	if (sscanf(message, "\"%23[^\"]\" %23s %d %d", name, monster, &number, &per) > 1 ||
-		sscanf(message, "%23s \"%23[^\"]\" %d %d", monster, name, &number, &per) > 1) {
+	if (sscanf(message, "\"%23[^\"]\" %23s %d %d %d", name, monster, &number, &per, &minmax) > 1 ||
+		sscanf(message, "%23s \"%23[^\"]\" %d %d %d", monster, name, &number, &per, &minmax) > 1) {
 		//All data can be left as it is.
-	} else if ((count=sscanf(message, "%23s %d %d %23s", monster, &number, &per, name)) > 1) {
+	} else if ((count=sscanf(message, "%23s %d %d %d %23s", monster, &number, &per, &minmax, name)) > 1) {
 		//Here, it is possible name was not given and we are using monster for it.
 		if (count < 4) //Blank mob's name.
 			name[0] = '\0';
-	} else if (sscanf(message, "%23s %23s %d %d", name, monster, &number, &per) > 1) {
+	} else if (sscanf(message, "%23s %23s %d %d %d", name, monster, &number, &per, &minmax) > 1) {
 		//All data can be left as it is.
 	} else if (sscanf(message, "%23s", monster) > 0) {
 		//As before, name may be already filled.
@@ -2452,6 +2453,9 @@ ACMD_FUNC(monster)
 
 	if (per < 1 || per > 100) {
 		clif_displaymessage(fd, "Monster HP percentage must be between 1% and 100%");
+		return -1;
+	} else if (!(minmax == 0 || minmax == 1 || minmax == 2 || minmax == 4)) {
+		clif_displaymessage(fd, "Monster minmax value must be any of 0, 1, 2, or 4");
 		return -1;
 	}
 
@@ -2492,7 +2496,7 @@ ACMD_FUNC(monster)
 	range = (int)sqrt((float)number) +2; // calculation of an odd number (+ 4 area around)
 	for (i = 0; i < number; i++) {
 		map_search_freecell(&sd->bl, 0, &mx,  &my, range, range, 0);
-		k = mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, per, "");
+		k = mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, per, minmax, "");
 		count += (k != 0) ? 1 : 0;
 	}
 
@@ -2577,7 +2581,7 @@ ACMD_FUNC(monstersmall)
 			my = sd->bl.y + (rand() % 11 - 5);
 		else
 			my = y;
-		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, 100, "2") != 0) ? 1 : 0;
+		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, 100, 0, "2") != 0) ? 1 : 0;
 	}
 
 	if (count != 0)
@@ -2653,7 +2657,7 @@ ACMD_FUNC(monsterbig)
 			my = sd->bl.y + (rand() % 11 - 5);
 		else
 			my = y;
-		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, 100, "4") != 0) ? 1 : 0;
+		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, 100, 0, "4") != 0) ? 1 : 0;
 	}
 
 	if (count != 0)
