@@ -9898,6 +9898,28 @@ ACMD_FUNC(getweapon)
 }
 
 /*==========================================
+ * Toggle brew party requirement for creators.
+ *------------------------------------------*/
+ACMD_FUNC(brewpartyreq)
+{
+	nullpo_retr(-1,sd);
+
+	if (sd->class_ != MAPID_CREATOR) {
+		clif_displaymessage(fd, "Sorry, this command is only restricted to alchemist/creator.");
+		return -1;
+	}
+
+	sd->state.bypass_alchemy_req = sd->state.bypass_alchemy_req ? 0 : 1;
+
+	if (sd->state.bypass_alchemy_req)
+		clif_displaymessage(fd, "A brewing party is no longer required.");
+	else
+		clif_displaymessage(fd, "A brewing party is now required.");
+
+	return 0;
+}
+
+/*==========================================
  * atcommand_info[] structure definition
  *------------------------------------------*/
 
@@ -10216,6 +10238,7 @@ AtCommandInfo atcommand_info[] = {
 	{ "linkme",            60,60,     atcommand_linkme },
 	{ "getranked",         60,60,     atcommand_getranked },
 	{ "getweapon",         60,60,     atcommand_getweapon },
+	{ "brewpartyreq",      60,60,     atcommand_brewpartyreq },
 };
 
 

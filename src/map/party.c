@@ -846,9 +846,9 @@ int party_skill_check(struct map_session_data *sd, int party_id, int skillid, in
 			if (!p->state.sg) return 0;
 			break;
 		case AM_TWILIGHT2: //Twilight Pharmacy, requires Super Novice
-			return p->state.snovice;
+			return (p->state.snovice || sd->state.bypass_alchemy_req);
 		case AM_TWILIGHT3: //Twilight Pharmacy, Requires Taekwon
-			return p->state.tk;
+			return (p->state.tk || sd->state.bypass_alchemy_req);
 		default:
 			return 0; //Unknown case?
 	}
