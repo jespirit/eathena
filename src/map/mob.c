@@ -414,6 +414,12 @@ int mob_once_spawn(struct map_session_data* sd, int m, short x, short y, const c
 	if (m < 0 || amount <= 0)
 		return 0; // invalid input
 
+	if (hp_per < 1)
+		return 0;  // invalid HP %
+
+	if (!(minmax == 0 || minmax == 1 || minmax == 2 || minmax == 4))
+		return 0;  // invalid minmax value
+
 	if(sd)
 		lv = sd->status.base_level;
 	else

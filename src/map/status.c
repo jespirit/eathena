@@ -1457,9 +1457,10 @@ int status_calc_mob_(struct mob_data* md, bool first)
 	}
 
 	if (flag&32)
-	{// HP Modified (at least 1)
-		status->hp = status->max_hp * md->hp_per / 100;
-		status->hp = cap_value(status->hp, 1, status->max_hp);
+	{// Max HP Modified (at least 1)
+		status->max_hp = status->max_hp * md->hp_per / 100;
+		status->max_hp = cap_value(status->max_hp, 1, INT_MAX);
+		status->hp = status->max_hp;
 	}
 
 	if (flag&16 && mbl)

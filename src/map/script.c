@@ -7935,6 +7935,8 @@ BUILDIN_FUNC(monster)
 	int class_        = script_getnum(st,6);
 	int amount        = script_getnum(st,7);
 	const char* event = "";
+	int hp_per        = 100;
+	int minmax        = 0;
 
 	struct map_session_data* sd;
 	int m;
@@ -7943,6 +7945,16 @@ BUILDIN_FUNC(monster)
 	{
 		event = script_getstr(st,8);
 		check_event(st, event);
+	}
+
+	if( script_hasdata(st,9) )
+	{
+		hp_per = script_getnum(st,9);
+	}
+
+	if( script_hasdata(st,10) )
+	{
+		minmax = script_getnum(st,10);
 	}
 
 	if (class_ >= 0 && !mobdb_checkid(class_)) {
@@ -7967,7 +7979,7 @@ BUILDIN_FUNC(monster)
 		}
 	}
 
-	mob_once_spawn(sd,m,x,y,str,class_,amount,100,0,event);
+	mob_once_spawn(sd,m,x,y,str,class_,amount,hp_per,minmax,event);
 	return 0;
 }
 /*==========================================
@@ -15626,7 +15638,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(itemskill,"vi"),
 	BUILDIN_DEF(produce,"i"),
 	BUILDIN_DEF(cooking,"i"),
-	BUILDIN_DEF(monster,"siisii?"),
+	BUILDIN_DEF(monster,"siisii??"),
 	BUILDIN_DEF(getmobdrops,"i"),
 	BUILDIN_DEF(areamonster,"siiiisii?"),
 	BUILDIN_DEF(killmonster,"ss?"),

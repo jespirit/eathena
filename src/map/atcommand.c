@@ -2451,8 +2451,8 @@ ACMD_FUNC(monster)
 		return -1;
 	}
 
-	if (per < 1 || per > 100) {
-		clif_displaymessage(fd, "Monster HP percentage must be between 1% and 100%");
+	if (per < 1) {
+		clif_displaymessage(fd, "Monster HP percentage must be greater than/equal to 1%");
 		return -1;
 	} else if (!(minmax == 0 || minmax == 1 || minmax == 2 || minmax == 4)) {
 		clif_displaymessage(fd, "Monster minmax value must be any of 0, 1, 2, or 4");

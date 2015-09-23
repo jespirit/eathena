@@ -452,7 +452,7 @@ OnTimer11000:
 
 OnTimer12000:
 	areaannounce "pvp_n_4-5",.x1,.y1,.x2,.y2,"GO!!!",0;
-	monster "pvp_n_4-5",.xe,.ye,"Emperium",1288,1,"EmpBrk#4::OnThisMobDeath";
+	monster "pvp_n_4-5",.xe,.ye,"Emperium",1288,1,"EmpBrk#4::OnThisMobDeath",300;
 	end;
 
 OnTimer1200000:
