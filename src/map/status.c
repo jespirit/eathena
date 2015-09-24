@@ -507,6 +507,7 @@ void initChangeTables(void)
 	StatusIconChangeTable[SC_INCCRI] = SI_INCCRI;
 	StatusIconChangeTable[SC_INCFLEE2] = SI_PLUSAVOIDVALUE;
 	StatusIconChangeTable[SC_INCHEALRATE] = SI_INCHEALRATE;
+	StatusIconChangeTable[SC_INCASPDRATE] = SI_ASPDPOTION0;
 	StatusIconChangeTable[SC_S_LIFEPOTION] = SI_S_LIFEPOTION;
 	StatusIconChangeTable[SC_L_LIFEPOTION] = SI_L_LIFEPOTION;
 	StatusIconChangeTable[SC_SPCOST_RATE] = SI_ATKER_BLOOD;
@@ -556,6 +557,7 @@ void initChangeTables(void)
 	StatusChangeFlagTable[SC_BATKFOOD] |= SCB_BATK;
 	StatusChangeFlagTable[SC_WATKFOOD] |= SCB_WATK;
 	StatusChangeFlagTable[SC_MATKFOOD] |= SCB_MATK;
+	StatusChangeFlagTable[SC_INCASPDRATE] |= SCB_ASPD;
 	StatusChangeFlagTable[SC_ARMOR_ELEMENT] |= SCB_ALL;
 	StatusChangeFlagTable[SC_ARMOR_RESIST] |= SCB_ALL;
 	StatusChangeFlagTable[SC_SPCOST_RATE] |= SCB_ALL;
@@ -4002,6 +4004,8 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 		sc->data[i=SC_ASPDPOTION1] ||
 		sc->data[i=SC_ASPDPOTION0])
 		aspd_rate -= sc->data[i]->val2;
+	if(sc->data[SC_INCASPDRATE])
+		aspd_rate -= sc->data[SC_INCASPDRATE]->val1 * 10;
 	if(sc->data[SC_DONTFORGETME])
 		aspd_rate += 10 * sc->data[SC_DONTFORGETME]->val2;
 	if(sc->data[SC_LONGING])
