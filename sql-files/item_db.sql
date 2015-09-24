@@ -6928,6 +6928,8 @@ REPLACE INTO `item_db` VALUES (18103,'Mystic_Bow','Mystic Bow',4,0,NULL,1700,75,
 # 18507,Elven_Ears_,
 
 REPLACE INTO `item_db` VALUES (18505,'Umbala_Spirit','Umbala Spirit',5,20,NULL,200,NULL,1,NULL,0,0xFFFFFFFF,7,2,1,NULL,30,0,675,'bonus bVit,1; bonus2 bAddMonsterDropItem,517,1000;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (18522,'Evil_Marching_Hat','Evil Marching Hat',5,20,NULL,500,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,1,1,687,'bonus bStr,2; bonus bMdef,1; bonus2 bAddRace,RC_NonBoss,2; bonus2 bAddRace,RC_Boss,2; if(getrefine()>=7) { bonus bCritAtkRate,10; } if(getrefine()>=9) { bonus2 bAddRace,RC_NonBoss,5; bonus2 bAddRace,RC_Boss,5; bonus bLongAtkRate,5; }',NULL,NULL);
+REPLACE INTO `item_db` VALUES (18530,'Thanatos_Despero_Mask','Thanatos Despero Mask',5,20,NULL,100,NULL,0,NULL,0,0xFFFFFFFF,7,2,513,NULL,30,0,693,'bonus bFlee,4; bonus bLuk,-5;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18534,'Fancy_Phantom_Mask','Fancy Phantom Mask',5,20,NULL,1000,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,20,1,710,'bonus bStr,1; bonus2 bAddRace,RC_NonBoss,5; bonus2 bAddRace,RC_Boss,5; bonus2 bAddRace2,5,5; bonus bDelayRate,-1; bonus bMaxHP,(getrefine()*100); bonus2 bSkillAtk,"MC_MAMMONITE",20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18536,'Puppy_Grass','Puppy Grass',5,20,NULL,100,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,711,'bonus bCastrate,-1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18546,'Lover_In_Mouth','Lover In Mouth',5,20,NULL,300,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,720,'bonus2 bAddItemHealRate,529,50; bonus2 bAddItemHealRate,530,50; bonus2 bAddMonsterDropItem,529,100; bonus2 bAddMonsterDropItem,530,100;',NULL,NULL);
@@ -6949,6 +6951,7 @@ REPLACE INTO `item_db` VALUES (18670,'Handkerchief_In_Mouth','Handkerchief In Mo
 REPLACE INTO `item_db` VALUES (18677,'Cherry_Blossom_In_Mouth','Cherry Blossom In Mouth',5,20,NULL,200,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,20,0,823,'bonus2 bAddRace,RC_Plant,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18678,'Green_Onion_In_Mouth','Green Onion In Mouth',5,20,NULL,200,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,20,0,824,'bonus2 bSubSize,0,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18683,'Special_Carrot_In_Mouth','Special Carrot In Mouth',5,20,NULL,200,NULL,1,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,829,'bonus2 bSubRace,RC_Plant,1; if(isequipped(5213)) bonus3 bAutoSpellWhenHit,"TK_HIGHJUMP",1,10;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (18685,'Star_Dust_Hairband','Star Dust Hairband',5,20,NULL,1000,NULL,0,NULL,0,0xFFFFFFFF,7,2,256,NULL,10,1,831,'bonus2 bExpAddRace,RC_Formless,5; bonus2 bSubRace,RC_Formless,-10;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18703,'Plant_Stem_In_Mouth','Plant Stem In Mouth',5,20,NULL,50,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,848,'bonus2 bResEff,Eff_Poison,2000;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (18711,'Unique_Sunglasses','Unique Sunglasses',5,20,NULL,400,NULL,3,NULL,0,0xFFFFFFFE,7,2,512,NULL,20,0,856,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (18745,'Choco_Stick_In_Mouth','Choco Stick In Mouth',5,20,NULL,100,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,1,0,884,'bonus bMaxSP,10; bonus2 bAddRace,RC_NonBoss,-1; bonus2 bAddRace,RC_Boss,-1; bonus2 bAddRace2,5,-1;',NULL,NULL);
