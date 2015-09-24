@@ -330,6 +330,7 @@ typedef enum sc_type {
 	SC_FOOD_DEX_CASH,
 	SC_FOOD_INT_CASH,
 	SC_FOOD_LUK_CASH,
+	SC_CASTRATE,  // for Seductive Bathory
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;

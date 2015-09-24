@@ -557,7 +557,6 @@ void initChangeTables(void)
 	StatusChangeFlagTable[SC_BATKFOOD] |= SCB_BATK;
 	StatusChangeFlagTable[SC_WATKFOOD] |= SCB_WATK;
 	StatusChangeFlagTable[SC_MATKFOOD] |= SCB_MATK;
-	StatusChangeFlagTable[SC_INCASPDRATE] |= SCB_ASPD;
 	StatusChangeFlagTable[SC_ARMOR_ELEMENT] |= SCB_ALL;
 	StatusChangeFlagTable[SC_ARMOR_RESIST] |= SCB_ALL;
 	StatusChangeFlagTable[SC_SPCOST_RATE] |= SCB_ALL;
@@ -570,6 +569,9 @@ void initChangeTables(void)
 	StatusChangeFlagTable[SC_FOOD_DEX_CASH] = SCB_DEX;
 	StatusChangeFlagTable[SC_FOOD_INT_CASH] = SCB_INT;
 	StatusChangeFlagTable[SC_FOOD_LUK_CASH] = SCB_LUK;
+	// Summer Race Cocktail Effects
+	StatusChangeFlagTable[SC_INCASPDRATE] |= SCB_ASPD;
+	StatusChangeFlagTable[SC_CASTRATE] |= SCB_ALL;  // no room to add own castrate flag
 	// Mercenary Bonus Effects
 	StatusChangeFlagTable[SC_MERC_FLEEUP] |= SCB_FLEE;
 	StatusChangeFlagTable[SC_MERC_ATKUP] |= SCB_WATK;
@@ -3111,6 +3113,13 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
 
 	if(flag&SCB_REGEN && bl->type&BL_REGEN)
 		status_calc_regen_rate(bl, status_get_regen_data(bl), sc);
+
+	// No SCB flag associated with SC_CASTRATE, use SCB_ALL
+	if (flag&SCB_ALL && sc && sc->data[SC_CASTRATE]) {
+		if (bl->type&BL_PC) {
+			sd->castrate -= sc->data[SC_CASTRATE]->val1;
+		}
+	}
 }
 
 /// Recalculates parts of an object's base status and battle status according to the specified flags.
