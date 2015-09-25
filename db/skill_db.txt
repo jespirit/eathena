@@ -281,7 +281,7 @@
 236,1,6,16,0,0x1,0,5,1,yes,0,0,0,weapon,0,	AM_CP_ARMOR,Synthetic Armor
 237,1,6,16,0,0x1,0,5,1,yes,0,0,0,weapon,0,	AM_CP_HELM,Biochemical Helm
 238,0,0,0,0,0,0,1,0,no,0,0x1,0,none,0,		AM_BIOETHICS,Bioethics
-//239,0,0,0,0,0,0,10,0,no,0,0,0,none,0,		AM_BIOTECHNOLOGY,Biotechnology
+239,0,6,4,0,0x1,0,1,1,no,0,0,0,none,0,		ALL_INTRAVISION,Intravision
 //240,0,0,0,0,0,0,5,0,no,0,0,0,none,0,		AM_CREATECREATURE,Life Creation
 //241,0,0,0,0,0,0,5,0,no,0,0,0,none,0,		AM_CULTIVATION,Cultivation
 //242,0,0,0,0,0,0,5,0,no,0,0,0,none,0,		AM_FLAMECONTROL,Flame Control

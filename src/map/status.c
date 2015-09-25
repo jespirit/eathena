@@ -447,6 +447,8 @@ void initChangeTables(void)
 	set_sc( GD_BATTLEORDER       , SC_BATTLEORDERS    , SI_BLANK           , SCB_STR|SCB_INT|SCB_DEX );
 	set_sc( GD_REGENERATION      , SC_REGENERATION    , SI_BLANK           , SCB_REGEN );
 
+	set_sc( ALL_INTRAVISION      , SC_INTRAVISION     , SI_INTRAVISION     , SCB_NONE );
+
 	// Storing the target job rather than simply SC_SPIRIT simplifies code later on.
 	SkillStatusChangeTable[SL_ALCHEMIST]   = (sc_type)MAPID_ALCHEMIST,
 	SkillStatusChangeTable[SL_MONK]        = (sc_type)MAPID_MONK,
@@ -6090,6 +6092,10 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			val2 = 2; // Splendide group
 			break;
 
+		case SC_INTRAVISION:
+			clif_status_load(&sd->bl, SI_INTRAVISION, 1);
+			break;
+
 		default:
 			if( calc_flag == SCB_NONE && StatusSkillChangeTable[type] == 0 && StatusIconChangeTable[type] == 0 )
 			{	//Status change with no calc, no icon, and no skill associated...? 
@@ -6835,6 +6841,9 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 				if( tbl && (sc = status_get_sc(tbl)) && sc->data[SC_STOP] && sc->data[SC_STOP]->val2 == bl->id )
 					status_change_end(tbl, SC_STOP, INVALID_TIMER);
 			}
+			break;
+		case SC_INTRAVISION:
+			clif_status_load(bl, SI_INTRAVISION, 0);
 			break;
 		}
 
