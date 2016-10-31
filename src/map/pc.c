@@ -3140,11 +3140,15 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 			ShowWarning("pc_bonus3 (SP_ADD_SKILL_ON_SPIRIT): job id %d is out of range.\n", type3);
 			break;
 		}
-		else if ((idx=pc_mapid2linkidx(pc_jobid2mapid(type3), type3==JOB_CLOWN?1:0)) == -1) {
+		else if (type2 < 0 || type2 > MAX_LEVEL) {
+			ShowWarning("pc_bonus3 (SP_ADD_SKILL_ON_SPIRIT): Skill level is out of range.\n", type3);
+			break;
+		}
+		else if ((idx=pc_mapid2linkidx(pc_jobid2mapid(type3), (type3==JOB_CLOWN||type3==JOB_BARD)?1:0)) == -1) {
 			ShowWarning("pc_bonus3 (SP_ADD_SKILL_ON_SPIRIT): Cannot add skill for job %d.\n", type3);
 			break;
 		}
-		// TODO: validate skill level
+
 		if (sd->state.lr_flag != 2) {
 			sd->spiritskills[idx].skillid = type2;
 			sd->spiritskills[idx].lv = val;
