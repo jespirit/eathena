@@ -9920,6 +9920,36 @@ ACMD_FUNC(brewpartyreq)
 }
 
 /*==========================================
+ * Toggle new defense decay formula.
+ *------------------------------------------*/
+ACMD_FUNC(toggledefdecay)
+{
+	static int def_count = 0;
+	static int def_num = 0;
+	nullpo_retr(-1,sd);
+
+	battle_config.vit_penalty_def_decay = battle_config.vit_penalty_def_decay ? 0 : 1;
+
+	if (battle_config.vit_penalty_def_decay) {
+		def_count = battle_config.vit_penalty_count;
+		def_num = battle_config.vit_penalty_num;
+
+		battle_config.vit_penalty_count = battle_config.vit_penalty_decay_count;
+		battle_config.vit_penalty_num = battle_config.vit_penalty_decay_num;
+
+		clif_displaymessage(fd, "The defense decay formula is active.");
+	}
+	else {
+		battle_config.vit_penalty_count = def_count;
+		battle_config.vit_penalty_num = def_num;
+
+		clif_displaymessage(fd, "The defense decay formula has been deactivated.");
+	}
+
+	return 0;
+}
+
+/*==========================================
  * atcommand_info[] structure definition
  *------------------------------------------*/
 
@@ -10239,6 +10269,7 @@ AtCommandInfo atcommand_info[] = {
 	{ "getranked",         60,60,     atcommand_getranked },
 	{ "getweapon",         60,60,     atcommand_getweapon },
 	{ "brewpartyreq",      60,60,     atcommand_brewpartyreq },
+	{ "toggledefdecay",    99,99,     atcommand_toggledefdecay},
 };
 
 

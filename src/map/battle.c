@@ -4141,6 +4141,11 @@ static const struct _battle_data {
 	{ "asura_strike_delay",                 &battle_config.asura_strike_delay,              15000,  0,      INT_MAX,        },
 	{ "asura_strike_delay_pvm",             &battle_config.asura_strike_delay_pvm,          10000,  0,      INT_MAX,        },
 	{ "item_ignore_restriction",            &battle_config.item_ignore_restriction,         0,      0,      1,              },
+	{ "vit_penalty_def_decay",              &battle_config.vit_penalty_def_decay,           0,      0,      1,              },
+	{ "vit_penalty_decay_count",            &battle_config.vit_penalty_decay_count,         1,      1,      INT_MAX,        },
+	{ "vit_penalty_decay_num",              &battle_config.vit_penalty_decay_num,           3,      0,      INT_MAX,        },
+	{ "vit_penalty_boss_count",             &battle_config.vit_penalty_boss_count,          2,      0,      INT_MAX,        },
+	{ "vit_penalty_mvp_count",              &battle_config.vit_penalty_mvp_count,           3,      0,      INT_MAX,        },
 };
 
 
@@ -4200,6 +4205,12 @@ void battle_adjust_conf()
 		battle_config.day_duration = 60000;
 	if (battle_config.night_duration && battle_config.night_duration < 60000) // added by [Yor]
 		battle_config.night_duration = 60000;
+
+	// DEF Decay
+	if (battle_config.vit_penalty_def_decay) {
+		battle_config.vit_penalty_count = battle_config.vit_penalty_decay_count;
+		battle_config.vit_penalty_num = battle_config.vit_penalty_decay_num;
+	}
 	
 #ifndef CELL_NOSTACK
 	if (battle_config.cell_stack_limit != 1)

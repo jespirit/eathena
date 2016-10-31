@@ -507,6 +507,11 @@ extern struct Battle_Config
 	int asura_strike_delay;
 	int asura_strike_delay_pvm;
 	int item_ignore_restriction;
+	int vit_penalty_def_decay;
+	int vit_penalty_decay_count;
+	int vit_penalty_decay_num;
+	int vit_penalty_boss_count;
+	int vit_penalty_mvp_count;
 } battle_config;
 
 void do_init_battle(void);

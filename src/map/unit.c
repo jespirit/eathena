@@ -1762,17 +1762,32 @@ static int unit_counttargeted_sub(struct block_list* bl, va_list ap)
 {
 	int id = va_arg(ap, int);
 	int target_lv = va_arg(ap, int); // extra condition
+	int target_count;
+	struct mob_data* md;
 	struct unit_data* ud;
 
 	if(bl->id == id)
 		return 0;
 
 	ud = unit_bl2ud(bl);
+	md = (bl->type == BL_MOB) ? (TBL_MOB*)bl : NULL;
 
-	if (ud && ud->target == id && ud->attacktimer != INVALID_TIMER && ud->attacktarget_lv >= target_lv)
-		return 1;
+	target_count = 1;
 
-	return 0;	
+	if (ud && ud->target == id && ud->attacktimer != INVALID_TIMER && ud->attacktarget_lv >= target_lv) {
+		if (battle_config.vit_penalty_def_decay) {
+			if (md) {
+				if (status_get_mode(bl)&MD_BOSS)
+					target_count = battle_config.vit_penalty_boss_count;
+				if (md->db->mexp > 0)
+					target_count = battle_config.vit_penalty_mvp_count;
+			}
+		}
+
+		return target_count;
+	}
+
+	return 0;
 }
 
 /*==========================================
