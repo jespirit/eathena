@@ -1590,7 +1590,7 @@ REPLACE INTO `item_db` VALUES (2640,'Kafra_Ring','Kafra Ring',5,40000,NULL,200,N
 REPLACE INTO `item_db` VALUES (2641,'Fashionable_Sack','Fashion Hip Sack',5,20,NULL,700,NULL,0,NULL,0,0x00040420,7,2,136,NULL,50,0,0,'bonus bStr,2;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (2642,'Serin\'s_Gold_Ring','Serin\'s Gold Ring',5,20,NULL,0,NULL,0,NULL,0,0xFFFFFFFF,7,2,136,NULL,0,0,0,NULL,NULL,NULL);
 REPLACE INTO `item_db` VALUES (2643,'Serin\'s_Gold_Ring_','Serin\'s Gold Ring',5,45000,NULL,100,NULL,0,NULL,0,0xFFFFFFFF,7,2,136,NULL,0,0,0,NULL,NULL,NULL);
-REPLACE INTO `item_db` VALUES (2644,'The_Sign_','The Sign',5,2,NULL,0,NULL,0,NULL,0,0xFFFFFFFF,7,2,136,NULL,0,0,0,'bonus2 bAddRace,RC_NonBoss,5; bonus2 bAddRace,RC_Boss,5; bonus bMatkRate,5;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (2644,'The_Sign_','The Sign',5,2,NULL,0,NULL,0,NULL,0,0xFFFFFFFF,7,2,136,NULL,0,0,0,'bonus2 bAddRace,RC_NonBoss,5; bonus2 bAddRace,RC_Boss,5; bonus2 bMagicAddRace,RC_NonBoss,5; bonus2 bMagicAddRace,RC_Boss,5;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (2645,'Moonlight_Ring','Moonlight Ring',5,40000,NULL,200,NULL,0,NULL,0,0x02021040,7,2,136,NULL,60,0,0,'bonus bMdef,2;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (2646,'Bunch_Of_Carnation','Bunch of Carnations',5,2,NULL,100,NULL,0,NULL,0,0xFFFFFFFF,7,2,136,NULL,0,0,0,'bonus bAllStats,3;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (2647,'Nile_Rose','Nile Rose',5,2,NULL,100,NULL,0,NULL,1,0xFFFFFFFF,7,2,136,NULL,0,0,0,'bonus bMaxHP,10;',NULL,NULL);
@@ -2764,7 +2764,7 @@ REPLACE INTO `item_db` VALUES (5356,'Pumpkin_Hat_H','Festival Pumpkin Hat',5,20,
 REPLACE INTO `item_db` VALUES (5357,'Wings_Of_Victory','Wings Of Victory',5,20,NULL,200,NULL,10,NULL,0,0xFFFFFFFF,7,2,768,NULL,0,0,365,'bonus bMdef,10; bonus bUnbreakableHelm,0;',NULL,NULL);
 # REPLACE INTO `item_db` VALUES (5358,'Pecopeco_Wing_Ears','Peco Ears',5,20,NULL,100,NULL,1,NULL,0,0xFFFFFFFF,7,2,512,NULL,70,0,366,'bonus bAgi,1; bonus bMdef,2;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (5359,'J_Captain_Hat','Ship Captain Hat',5,20,NULL,300,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,60,1,367,'bonus bDex,1; bonus bLongAtkRate,7; bonus bMaxHP,100;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (5360,'Whikebain_Ears','Whikebine\'s Black Cat Ears',5,20,NULL,200,NULL,2,NULL,0,0xFFFFFFFF,7,2,256,NULL,45,1,368,'bonus bFlee,10; bonus bCritical,3; bonus2 bCriticalAddRace,RC_Boss,10; bonus2 bCriticalAddRace,RC_NonBoss,10; bonus bDefRate,-50; bonus bDef2Rate,-50;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (5360,'Whikebain_Ears','Whikebine\'s Black Cat Ears',5,20,NULL,200,NULL,2,NULL,0,0xFFFFFFFF,7,2,256,NULL,45,1,368,'bonus bFlee,10; bonus bCritical,3; bonus bCritAtkRate,10;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (5361,'Gang_Scarf','Gangster Scarf',5,20,NULL,100,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,60,0,369,'bonus bBaseAtk,5; if(BaseJob == Job_Rogue) skill \"RG_GANGSTER\",1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (5362,'Ninja_Scroll','Ninja\'s Scroll',5,20,NULL,200,NULL,0,NULL,0,0xFFFFFFFF,7,2,1,NULL,60,0,370,'bonus bMatkRate,1;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (5363,'Helm_Of_Abyss','Helm Of Abyss',5,20,NULL,1000,NULL,2,NULL,1,0x000654E2,7,2,256,NULL,70,1,371,'bonus2 bSubRace,RC_DemiHuman,-10; bonus2 bSubRace,RC_Boss,10;',NULL,NULL);
@@ -2885,7 +2885,7 @@ REPLACE INTO `item_db` VALUES (5476,'Hairband_Of_Grandpeco','Grand Peco Hairband
 # REPLACE INTO `item_db` VALUES (5478,'Classic_Hat','Classic Hat',5,20,NULL,500,NULL,3,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,475,'bonus bStr,2; bonus bMaxHP,300;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (5479,'Shaman\'s_Hair_Ornament','Shaman\'s Coif',5,20,NULL,300,NULL,1,NULL,0,0xFFFFFFFF,7,2,256,NULL,30,1,476,'bonus bMdef,3; bonus bMaxHP,50; bonus2 bSubEle,Ele_Neutral,5; if(isequipped(2777,2778)) { bonus bMaxHP,300; bonus bMatkRate,5; bonus2 bSubEle,Ele_Neutral,5; }',NULL,NULL);
 REPLACE INTO `item_db` VALUES (5480,'Bizofnil_Wing_Deco','Feather Of Bizofnil',5,20,NULL,1000,NULL,3,NULL,0,0xFFFFFFFF,7,2,256,NULL,30,1,477,'bonus bAllStats,2; bonus3 bAutoSpell,\"PR_IMPOSITIO\",3,3;',NULL,NULL);
-REPLACE INTO `item_db` VALUES (5481,'Hermose_Cap','Hermose Cap',5,20,NULL,1000,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,1,1,478,'bonus bAspdRate,10; bonus bBaseAtk,-20; bonus bMatkRate,-10;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (5481,'Hermose_Cap','Hermose Cap',5,20,NULL,1000,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,1,1,478,'bonus bAspdRate,10; bonus bAtkRate,-10; bonus bMatkRate,-20;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (5482,'Dark_Knight_Mask','Dark Knight Mask A',5,NULL,NULL,3000,NULL,5,NULL,0,0xFFFFFFFF,7,2,769,NULL,80,1,479,'bonus bStr,3; if(isequipped(2779,2780)) { bonus bMatkRate,10; bonus bInt,5; bonus2 bSubRace,RC_Angel,10; }',NULL,NULL);
 REPLACE INTO `item_db` VALUES (5483,'Odin_Mask','Odin Mask',5,20,NULL,100,NULL,1,NULL,0,0xFFFFFFFF,7,2,513,NULL,50,0,480,'bonus bHit,-10; bonus2 bAddRace,RC_Demihuman,6;',NULL,NULL);
 # REPLACE INTO `item_db` VALUES (5484,'Taiwan_Flag_Hat','Holidays Hat',5,20,NULL,500,NULL,4,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,0,482,'bonus bAllStats,5; bonus2 bResEff,Eff_Stun,500;',NULL,NULL);
@@ -2968,7 +2968,7 @@ REPLACE INTO `item_db` VALUES (5560,'Bullock_Helm_J','Bullock Helm',5,20,NULL,30
 REPLACE INTO `item_db` VALUES (5561,'Rabbit_Magic_Hat_J','Magic Rabbit Hat',5,0,NULL,800,NULL,1,NULL,0,0xFFFFFFFF,7,2,256,NULL,0,1,497,'bonus bInt,1; bonus bMaxSP,50; bonus4 bAutoSpellWhenHit,\"MG_FIREBOLT\",3,10,3; bonus4 bAutoSpellWhenHit,\"MG_COLDBOLT\",3,10,3; bonus4 bAutoSpellWhenHit,\"MG_LIGHTNINGBOLT\",3,10,3; bonus3 bAutoSpellWhenHit,\"AL_HEAL\",1,10;',NULL,NULL);
 # REPLACE INTO `item_db` VALUES (5562,'Good_Wedding_Veil_J','Luxurious Wedding Veil',5,0,NULL,500,NULL,0,NULL,1,0xFFFFFFFF,7,2,768,NULL,45,0,489,'bonus bCastRate,-3; bonus bDelayRate,-3; bonus bMdef,10;',NULL,NULL);
 # REPLACE INTO `item_db` VALUES (5563,'Dolor_Hat','Dolor Hat',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,0,0,547,NULL,NULL,NULL);
-# REPLACE INTO `item_db` VALUES (5564,'Crown_Of_Deceit','Crown of Deceit',5,20,NULL,300,NULL,3,NULL,1,0xFFFFFFFF,7,2,768,NULL,85,1,544,'bonus bInt,4; bonus bMdef,4; bonus bCastRate,-10;',NULL,NULL);
+REPLACE INTO `item_db` VALUES (5564,'Crown_Of_Deceit','Crown of Deceit',5,20,NULL,300,NULL,3,NULL,1,0xFFFFFFFF,7,2,768,NULL,85,1,544,'bonus bInt,4; bonus bMdef,4; bonus bCastRate,-10;',NULL,NULL);
 # REPLACE INTO `item_db` VALUES (5565,'Dragon_Arhat_Mask','Dragon Arhat Mask',5,0,NULL,0,NULL,5,NULL,0,0xFFFFFFFF,7,2,513,NULL,0,0,545,'bonus2 bAddRace,RC_DemiHuman,10;',NULL,NULL);
 # REPLACE INTO `item_db` VALUES (5566,'Tiger_Arhat_Mask','Tiger Arhat Mask',5,0,NULL,0,NULL,1,NULL,0,0xFFFFFFFF,7,2,513,NULL,0,0,546,'bonus bStr,1; bonus2 bAddRace,RC_DemiHuman,2;',NULL,NULL);
 REPLACE INTO `item_db` VALUES (5567,'Bright_Fury','Rage Of Luster',5,20,NULL,300,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,1,1,548,'bonus bStr,1; bonus2 bAddRace,RC_NonBoss,2; bonus2 bAddRace,RC_Boss,2; bonus bAspdRate,2;',NULL,NULL);
