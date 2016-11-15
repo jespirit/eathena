@@ -7979,7 +7979,7 @@ BUILDIN_FUNC(monster)
 		}
 	}
 
-	mob_once_spawn(sd,m,x,y,str,class_,amount,hp_per,minmax,event);
+	mob_once_spawn(sd,m,x,y,str,class_,amount,hp_per,minmax,0,event);
 	return 0;
 }
 /*==========================================

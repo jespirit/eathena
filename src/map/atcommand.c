@@ -2412,6 +2412,7 @@ ACMD_FUNC(monster)
 	int i, k, m, range;
 	int per = 100;
 	int minmax = 0;
+	int killtime = 0;
 	short mx, my;
 	nullpo_retr(-1, sd);
 
@@ -2496,7 +2497,7 @@ ACMD_FUNC(monster)
 	range = (int)sqrt((float)number) +2; // calculation of an odd number (+ 4 area around)
 	for (i = 0; i < number; i++) {
 		map_search_freecell(&sd->bl, 0, &mx,  &my, range, range, 0);
-		k = mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, per, minmax, "");
+		k = mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, per, minmax, 0, "");
 		count += (k != 0) ? 1 : 0;
 	}
 
@@ -2581,7 +2582,7 @@ ACMD_FUNC(monstersmall)
 			my = sd->bl.y + (rand() % 11 - 5);
 		else
 			my = y;
-		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, 100, 0, "2") != 0) ? 1 : 0;
+		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, 100, 0, 0, "2") != 0) ? 1 : 0;
 	}
 
 	if (count != 0)
@@ -2657,7 +2658,7 @@ ACMD_FUNC(monsterbig)
 			my = sd->bl.y + (rand() % 11 - 5);
 		else
 			my = y;
-		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, 100, 0, "4") != 0) ? 1 : 0;
+		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, 100, 0, 0, "4") != 0) ? 1 : 0;
 	}
 
 	if (count != 0)
@@ -9949,6 +9950,121 @@ ACMD_FUNC(toggledefdecay)
 	return 0;
 }
 
+ACMD_FUNC(timedmonster)
+{
+	struct party_data* p;
+	char name[NAME_LENGTH];
+	char monster[NAME_LENGTH];
+	char atcmd_output[256];
+	int mob_id;
+	int number = 0;
+	int count;
+	int i, k, m, range;
+	int per = 100;
+	int minmax = 0;
+	short mx, my;
+	nullpo_retr(-1, sd);
+
+	memset(name, '\0', sizeof(name));
+	memset(monster, '\0', sizeof(monster));
+	memset(atcmd_output, '\0', sizeof(atcmd_output));
+
+	m = sd->bl.m;
+
+	if (!message || !*message) {
+		clif_displaymessage(fd, msg_txt(80)); // Give the display name or monster name/id please.
+		return -1;
+	}
+
+	// Player must be on a map that allows @monster command and is instanced.
+	if ((!map[m].flag.allowmonster ||
+		!(sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id)) &&
+		pc_isGM(sd) < battle_config.gm_bypass_monster_spawn_lv) { // GMs can bypass map flag or instance restrictions.
+			clif_displaymessage(fd, "You are not allowed to spawn a monster on this map");
+			return -1;
+	}
+
+	if (sscanf(message, "\"%23[^\"]\" %23s %d %d %d", name, monster, &number, &per, &minmax) > 1 ||
+		sscanf(message, "%23s \"%23[^\"]\" %d %d %d", monster, name, &number, &per, &minmax) > 1) {
+		//All data can be left as it is.
+	} else if ((count=sscanf(message, "%23s %d %d %d %23s", monster, &number, &per, &minmax, name)) > 1) {
+		//Here, it is possible name was not given and we are using monster for it.
+		if (count < 4) //Blank mob's name.
+			name[0] = '\0';
+	} else if (sscanf(message, "%23s %23s %d %d %d", name, monster, &number, &per, &minmax) > 1) {
+		//All data can be left as it is.
+	} else if (sscanf(message, "%23s", monster) > 0) {
+		//As before, name may be already filled.
+		name[0] = '\0';
+	} else {
+		clif_displaymessage(fd, msg_txt(80)); // Give a display name and monster name/id please.
+		return -1;
+	}
+
+	if (per < 1) {
+		clif_displaymessage(fd, "Monster HP percentage must be greater than/equal to 1%");
+		return -1;
+	} else if (!(minmax == 0 || minmax == 1 || minmax == 2 || minmax == 4)) {
+		clif_displaymessage(fd, "Monster minmax value must be any of 0, 1, 2, or 4");
+		return -1;
+	}
+
+	if ((mob_id = mobdb_searchname(monster)) == 0) // check name first (to avoid possible name begining by a number)
+		mob_id = mobdb_checkid(atoi(monster));
+
+	if (mob_id == 0) {
+		clif_displaymessage(fd, msg_txt(40)); // Invalid monster ID or name.
+		return -1;
+	}
+
+	if (mob_id == MOBID_EMPERIUM) {
+		clif_displaymessage(fd, msg_txt(83)); // Monster 'Emperium' cannot be spawned.
+		return -1;
+	}
+
+	if (number <= 0)
+		number = 1;
+
+	if (pc_isGM(sd) < battle_config.gm_bypass_monster_spawn_limit &&
+		map_foreachinmap(mob_count_sub_no_slave, m, BL_MOB, "") + number > battle_config.atc_monster_spawn_limit) {
+		sprintf(atcmd_output, "You have exceeded the monster limit of %d", battle_config.atc_monster_spawn_limit);
+		clif_displaymessage(fd, atcmd_output);
+		return -1;
+	}
+
+	if( !name[0] )
+		strcpy(name, "--ja--");
+
+	// If value of atcommand_spawn_quantity_limit directive is greater than or equal to 1 and quantity of monsters is greater than value of the directive
+	if (battle_config.atc_spawn_quantity_limit && number > battle_config.atc_spawn_quantity_limit)
+		number = battle_config.atc_spawn_quantity_limit;
+
+	if (battle_config.etc_log)
+		ShowInfo("%s monster='%s' name='%s' id=%d count=%d (%d,%d)\n", command, monster, name, mob_id, number, sd->bl.x, sd->bl.y);
+
+	count = 0;
+	range = (int)sqrt((float)number) +2; // calculation of an odd number (+ 4 area around)
+	for (i = 0; i < number; i++) {
+		map_search_freecell(&sd->bl, 0, &mx,  &my, range, range, 0);
+		k = mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, per, minmax, 1, "");
+		count += (k != 0) ? 1 : 0;
+	}
+
+	if (count != 0)
+		if (number == count)
+			clif_displaymessage(fd, msg_txt(39)); // All monster summoned!
+		else {
+			sprintf(atcmd_output, msg_txt(240), count); // %d monster(s) summoned!
+			clif_displaymessage(fd, atcmd_output);
+		}
+	else {
+		clif_displaymessage(fd, msg_txt(40)); // Invalid monster ID or name.
+		return -1;
+	}
+
+	return 0;
+}
+
 /*==========================================
  * atcommand_info[] structure definition
  *------------------------------------------*/
@@ -10270,6 +10386,7 @@ AtCommandInfo atcommand_info[] = {
 	{ "getweapon",         60,60,     atcommand_getweapon },
 	{ "brewpartyreq",      60,60,     atcommand_brewpartyreq },
 	{ "toggledefdecay",    99,99,     atcommand_toggledefdecay},
+	{ "timedmonster",      50,50,     atcommand_timedmonster},
 };
 
 

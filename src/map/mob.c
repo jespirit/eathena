@@ -84,6 +84,7 @@ const int mob_splendide[5] = { 1991, 1992, 1993, 1994, 1995 };
 static int mob_makedummymobdb(int);
 static int mob_spawn_guardian_sub(int tid, unsigned int tick, int id, intptr_t data);
 int mob_skillid2skillidx(int class_,int skillid);
+int mob_display_killtime(struct mob_data* md, unsigned int tick);
 
 /*==========================================
  * Mob is searched with a name.
@@ -406,7 +407,7 @@ struct mob_data *mob_once_spawn_sub(struct block_list *bl, int m, short x, short
 /*==========================================
  * Spawn a single mob on the specified coordinates.
  *------------------------------------------*/
-int mob_once_spawn(struct map_session_data* sd, int m, short x, short y, const char* mobname, int class_, int amount, int hp_per, int minmax, const char* event)
+int mob_once_spawn(struct map_session_data* sd, int m, short x, short y, const char* mobname, int class_, int amount, int hp_per, int minmax, int killtime, const char* event)
 {
 	struct mob_data* md = NULL;
 	int count, lv;
@@ -452,6 +453,7 @@ int mob_once_spawn(struct map_session_data* sd, int m, short x, short y, const c
 
 		mob_spawn(md);
 		md->state.minmax = minmax;  // Apply minmax state
+		md->show_killtime = killtime;
 
 		if (class_ < 0 && battle_config.dead_branch_active)
 			//Behold Aegis's masterful decisions yet again...
@@ -509,7 +511,7 @@ int mob_once_spawn_area(struct map_session_data* sd,int m,int x0,int y0,int x1,i
 		lx = x;
 		ly = y;
 
-		id = mob_once_spawn(sd,m,x,y,mobname,class_,1,100,0,event);
+		id = mob_once_spawn(sd,m,x,y,mobname,class_,1,100,0,0,event);
 	}
 
 	return id; // id of last spawned mob
@@ -901,6 +903,8 @@ int mob_spawn (struct mob_data *md)
 	md->next_walktime = tick+rand()%5000+1000;
 	md->last_linktime = tick;
 	md->last_pcneartime = 0;
+	md->show_killtime = 0;
+	md->kill_ticks = 0;
 
 	for (i = 0, c = tick-MOB_MAX_DELAY; i < MAX_MOBSKILL; i++)
 		md->skilldelay[i] = c;
@@ -2468,11 +2472,15 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		clif_clearunit_delayed(&md->bl, tick+3000);
 	}
 
+	if (md->kill_ticks && md->show_killtime)
+		mob_display_killtime(md, tick);
+
 	if(!md->spawn) //Tell status_damage to remove it from memory.
 		return 5; // Note: Actually, it's 4. Oh well...
 
 	if( !rebirth )
 		mob_setdelayspawn(md); //Set respawning.
+
 	return 3; //Remove from map.
 }
 
@@ -3360,6 +3368,39 @@ int mob_clone_delete(struct mob_data *md)
 		md->vd = NULL;
 		return 1;
 	}
+	return 0;
+}
+
+int mob_display_killtime(struct mob_data* md, unsigned int tick)
+{
+	int diff, stime, mstime, rem;
+	char buf[255+1];
+
+	if (md->kill_ticks && md->show_killtime) {
+		diff = tick - md->kill_ticks;
+		stime = diff/1000;
+		mstime = diff%1000;
+		rem = mstime%10;
+
+		// Round down or up the ones place to 0, 5, or 10.
+		if (rem == 1 || rem == 2)
+			mstime -= rem;
+		else if (rem == 3 || rem == 4 || rem == 6 || rem == 7)
+			mstime = mstime / 10 * 10 + 5;
+		else if (rem == 8 || rem == 9)
+			mstime += 10 - rem;
+		// check for 998 or 999ms
+		if (mstime == 1000) {
+			mstime = 0;
+			stime++;
+		}
+
+		snprintf(buf, sizeof(buf), "You killed %s in %ds %03dms", md->name, stime, mstime);
+
+		// Broadcast to all users on the same map in yellow font (0x20).
+		clif_broadcast((struct block_list*)md, buf, strlen(buf), 0x20, ALL_SAMEMAP);
+	}
+
 	return 0;
 }
 

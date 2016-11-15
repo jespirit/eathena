@@ -3030,6 +3030,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 struct Damage battle_calc_attack(int attack_type,struct block_list *bl,struct block_list *target,int skill_num,int skill_lv,int count)
 {
 	struct Damage d;
+	struct mob_data* md;
 	switch(attack_type) {
 	case BF_WEAPON: d = battle_calc_weapon_attack(bl,target,skill_num,skill_lv,count); break;
 	case BF_MAGIC:  d = battle_calc_magic_attack(bl,target,skill_num,skill_lv,count);  break;
@@ -3048,6 +3049,13 @@ struct Damage battle_calc_attack(int attack_type,struct block_list *bl,struct bl
 	}
 	else // Some skills like Weaponry Research will cause damage even if attack is dodged
 		d.dmg_lv = ATK_DEF;
+
+	// Start kill timer here regardless if the attack was dodged/lucky-dodged.
+	md = BL_CAST(BL_MOB, target);
+	if (md) {
+		if (md->kill_ticks == 0)
+			md->kill_ticks = gettick();
+	}
 	return d;
 }
 
