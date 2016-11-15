@@ -512,6 +512,7 @@ extern struct Battle_Config
 	int vit_penalty_decay_num;
 	int vit_penalty_boss_count;
 	int vit_penalty_mvp_count;
+	int bragi_damage_reduction;
 } battle_config;
 
 void do_init_battle(void);

@@ -6913,11 +6913,11 @@ struct skill_unit_group* skill_unitsetting (struct block_list *src, short skilli
 		break;
 	case BA_POEMBRAGI:
 		val1 = 3*skilllv+status->dex/10; // Casting time reduction
+		val2 = 3*skilllv+status->int_/5; // After-cast delay reduction
 		//There is only 30% reduction at level 10 for PvM
 		if (map_flag_vs(sd->bl.m) && skilllv == 10)
 			val2 = 50 + status->int_/5;
-		else
-			val2 = 3*skilllv+status->int_/5; // After-cast delay reduction
+			
 		if(sd){
 			val1 += 2*pc_checkskill(sd,BA_MUSICALLESSON);
 			val2 += 2*pc_checkskill(sd,BA_MUSICALLESSON);

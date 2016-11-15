@@ -10066,6 +10066,23 @@ ACMD_FUNC(timedmonster)
 }
 
 /*==========================================
+ * Toggle Poem of Bragi damage reduction.
+ *------------------------------------------*/
+ACMD_FUNC(bragireduction)
+{
+	nullpo_retr(-1,sd);
+
+	battle_config.bragi_damage_reduction = battle_config.bragi_damage_reduction ? 0 : 1;
+
+	if (battle_config.bragi_damage_reduction)
+		clif_displaymessage(fd, "Poem of Bragi damage reduction is on.");
+	else
+		clif_displaymessage(fd, "Poem of Bragi damage reduction is off.");
+
+	return 0;
+}
+
+/*==========================================
  * atcommand_info[] structure definition
  *------------------------------------------*/
 
@@ -10387,6 +10404,7 @@ AtCommandInfo atcommand_info[] = {
 	{ "brewpartyreq",      60,60,     atcommand_brewpartyreq },
 	{ "toggledefdecay",    99,99,     atcommand_toggledefdecay},
 	{ "timedmonster",      50,50,     atcommand_timedmonster},
+	{ "bragireduction",    50,50,     atcommand_bragireduction},
 };
 
 
