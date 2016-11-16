@@ -3053,9 +3053,15 @@ struct Damage battle_calc_attack(int attack_type,struct block_list *bl,struct bl
 
 	// Start kill timer here regardless if the attack was dodged/lucky-dodged.
 	md = BL_CAST(BL_MOB, target);
-	if (md) {
-		if (md->kill_ticks == 0)
+	if (md && md->show_killtime) {
+		if (md->kill_ticks == 0) {
 			md->kill_ticks = gettick();
+
+			if (md->dps_timer == INVALID_TIMER) {
+				md->dps_timer = add_timer_interval(md->kill_ticks+battle_config.mob_dps_timer_interval,
+					mob_dpsinterval, md->bl.id, 0, battle_config.mob_dps_timer_interval);
+			}
+		}
 	}
 	return d;
 }
@@ -4156,6 +4162,7 @@ static const struct _battle_data {
 	{ "vit_penalty_boss_count",             &battle_config.vit_penalty_boss_count,          2,      0,      INT_MAX,        },
 	{ "vit_penalty_mvp_count",              &battle_config.vit_penalty_mvp_count,           3,      0,      INT_MAX,        },
 	{ "bragi_damage_reduction",             &battle_config.bragi_damage_reduction,          1,      0,      1,              },
+	{ "mob_dps_timer_interval",             &battle_config.mob_dps_timer_interval,              10000,  0,      INT_MAX,        },
 };
 
 

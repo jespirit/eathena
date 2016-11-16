@@ -232,6 +232,7 @@ struct mob_data* mob_spawn_dataset(struct spawn_data *data)
 		md->lootitem = (struct item *)aCalloc(LOOTITEM_SIZE,sizeof(struct item));
 	md->spawn_timer = INVALID_TIMER;
 	md->deletetimer = INVALID_TIMER;
+	md->dps_timer = INVALID_TIMER;
 	md->skillidx = -1;
 	status_set_viewdata(&md->bl, md->class_);
 	status_change_init(&md->bl);
@@ -798,6 +799,73 @@ int mob_delayspawn(int tid, unsigned int tick, int id, intptr_t data)
 	return 0;
 }
 
+int mob_showdps(struct mob_data* md, unsigned int tick, int mobdead)
+{
+	int i, m, rem;
+	unsigned mstime, dps;
+	char buf[255+1];
+
+	mstime = tick - md->kill_ticks;
+	m = md->bl.m;
+	rem = mstime % 10;
+
+	// Round down or up the ones place to 0, 5, or 10.
+	if (rem == 1 || rem == 2)
+		mstime -= rem;
+	else if (rem == 3 || rem == 4 || rem == 6 || rem == 7)
+		mstime = mstime / 10 * 10 + 5;
+	else if (rem == 8 || rem == 9)
+		mstime += 10 - rem;
+
+	if (mstime == 0)
+		return 0; // Avoid division by zero.
+
+	for(i = 0; i < DAMAGELOG_SIZE && md->dmglog[i].id; i++)
+	{
+		struct map_session_data* tsd = map_charid2sd(md->dmglog[i].id);
+
+		if(tsd == NULL)
+			continue; // skip empty entries
+		if(tsd->bl.m != m)
+			continue; // skip players not on this map
+		if (md->dmglog[i].dmg == 0)
+			break; // No damage yet
+
+		// Check for overflows.
+		if (UINT_MAX / md->dmglog[i].dmg < 1000)
+			dps = UINT_MAX / mstime;
+		else
+			dps = md->dmglog[i].dmg * 1000 / mstime;
+
+		snprintf(buf, sizeof(buf), "[%s] Damage per Second: %d", md->name, dps);
+
+		clif_notify_playerchat(tsd, buf);
+	}
+
+	return 0;
+}
+
+/*==========================================
+ * mob dps with delay (timer function)
+ *------------------------------------------*/
+int mob_dpsinterval(int tid, unsigned int tick, int id, intptr_t data)
+{
+	struct block_list* bl = map_id2bl(id);
+	struct mob_data* md = BL_CAST(BL_MOB, bl);
+
+	if( md )
+	{
+		if( md->dps_timer != tid )
+		{
+			ShowError("mob_delayspawn: Timer mismatch: %d != %d\n", tid, md->dps_timer);
+			return 0;
+		}
+
+		mob_showdps(md, tick, 0);
+	}
+	return 0;
+}
+
 /*==========================================
  * spawn timing calculation
  *------------------------------------------*/
@@ -893,6 +961,10 @@ int mob_spawn (struct mob_data *md)
 	{
 		delete_timer(md->spawn_timer, mob_delayspawn);
 		md->spawn_timer = INVALID_TIMER;
+	}
+	if (md->dps_timer != INVALID_TIMER) {
+		delete_timer(md->dps_timer, mob_dpsinterval);
+		md->dps_timer = INVALID_TIMER;
 	}
 
 //	md->master_id = 0;
@@ -2472,8 +2544,19 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		clif_clearunit_delayed(&md->bl, tick+3000);
 	}
 
-	if (md->kill_ticks && md->show_killtime)
-		mob_display_killtime(md, tick);
+	if (md->kill_ticks) {
+
+		if (md->show_killtime)
+			mob_display_killtime(md, tick);
+
+		if (md->dps_timer != INVALID_TIMER) {
+			delete_timer(md->dps_timer, mob_dpsinterval);
+			md->dps_timer = INVALID_TIMER;
+		}
+
+		// Show DPS on death.
+		mob_showdps(md, tick, 1);
+	}
 
 	if(!md->spawn) //Tell status_damage to remove it from memory.
 		return 5; // Note: Actually, it's 4. Oh well...
@@ -3376,30 +3459,28 @@ int mob_display_killtime(struct mob_data* md, unsigned int tick)
 	int diff, stime, mstime, rem;
 	char buf[255+1];
 
-	if (md->kill_ticks && md->show_killtime) {
-		diff = tick - md->kill_ticks;
-		stime = diff/1000;
-		mstime = diff%1000;
-		rem = mstime%10;
+	diff = tick - md->kill_ticks;
+	stime = diff/1000;
+	mstime = diff%1000;
+	rem = mstime%10;
 
-		// Round down or up the ones place to 0, 5, or 10.
-		if (rem == 1 || rem == 2)
-			mstime -= rem;
-		else if (rem == 3 || rem == 4 || rem == 6 || rem == 7)
-			mstime = mstime / 10 * 10 + 5;
-		else if (rem == 8 || rem == 9)
-			mstime += 10 - rem;
-		// check for 998 or 999ms
-		if (mstime == 1000) {
-			mstime = 0;
-			stime++;
-		}
-
-		snprintf(buf, sizeof(buf), "You killed %s in %ds %03dms", md->name, stime, mstime);
-
-		// Broadcast to all users on the same map in yellow font (0x20).
-		clif_broadcast((struct block_list*)md, buf, strlen(buf), 0x20, ALL_SAMEMAP);
+	// Round down or up the ones place to 0, 5, or 10.
+	if (rem == 1 || rem == 2)
+		mstime -= rem;
+	else if (rem == 3 || rem == 4 || rem == 6 || rem == 7)
+		mstime = mstime / 10 * 10 + 5;
+	else if (rem == 8 || rem == 9)
+		mstime += 10 - rem;
+	// check for 998 or 999ms
+	if (mstime == 1000) {
+		mstime = 0;
+		stime++;
 	}
+
+	snprintf(buf, sizeof(buf), "You killed %s in %ds %03dms", md->name, stime, mstime);
+
+	// Broadcast to all users on the same map in yellow font (0x20).
+	clif_broadcast((struct block_list*)md, buf, strlen(buf), 0x20, ALL_SAMEMAP);
 
 	return 0;
 }

@@ -513,6 +513,7 @@ extern struct Battle_Config
 	int vit_penalty_boss_count;
 	int vit_penalty_mvp_count;
 	int bragi_damage_reduction;
+	int mob_dps_timer_interval;
 } battle_config;
 
 void do_init_battle(void);
