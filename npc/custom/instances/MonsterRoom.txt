@@ -70,8 +70,8 @@ prontera,165,188,3	script	Monster Room Manager::mobmgr	734,{
 				disablenpc instance_npcname("nyd_2f_green_warp3", instance_id());
 			}
 			
-			mes "You may now enter the monster room.";
-			close;
+			warpparty "2@nyd",156,330,.@party;
+			end;
 		}
 		else {
 			mes "Only the party leader can create an instance.";
@@ -95,7 +95,7 @@ prontera,165,188,3	script	Monster Room Manager::mobmgr	734,{
 		}
 		
 		warp "2@nyd",156,330;
-		close;
+		end;
 	case 3:
 		close;
 	}
