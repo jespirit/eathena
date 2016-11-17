@@ -9521,7 +9521,7 @@ ACMD_FUNC(gospelbuffs)
 	int low, high, start;
 	int bad, good, active[13];
 	char *p, *p2;
-	char* msg = NULL;
+	char msg[100];
 	StringBuf buf;
 	char *gospel_info[13] = {
 		"Heal 1~9999 HP", "End all negative status", "Immunity to all status",
@@ -9540,13 +9540,12 @@ ACMD_FUNC(gospelbuffs)
 	}
 
 	memset(active, 0, sizeof(active));
-	// get active list
+	// Get active list
 	for (i=0; i<sd->gospel_count; i++) {
 		active[sd->gospelbuffs[i]] = 1;
 	}
 
-	if (!message || !*message) {//display active/inactive buffs
-		//clif_displaymessage(fd, "Please enter the new rates (usage: @changerates 500)");
+	if (!message || !*message) { // Display active/inactive buffs
 		for (i=0; i<13; i++) {
 			StringBuf_Clear(&buf);
 			StringBuf_Printf(&buf, "[%d]: %s", i+1, gospel_info[i]);
@@ -9557,14 +9556,7 @@ ACMD_FUNC(gospelbuffs)
 		return 0;
 	}
 
-	slen = strlen(message);
-	msg = (char*)malloc(slen+1);
-	if (msg == NULL) {
-		clif_displaymessage(fd, "malloc: Out of memory");
-		return -1;
-	}
-	strncpy(msg, message, slen);
-	msg[slen] = '\0';
+	safestrncpy(msg, message, sizeof(msg));
 
 	p = msg;
 	bad = good = 0;
@@ -9648,8 +9640,6 @@ ACMD_FUNC(gospelbuffs)
 	count = sd->gospel_count;
 	sd->gospel_count = n;
 
-	if (msg)
-		free(msg);
 	StringBuf_Destroy(&buf);
 
 	if (count != n)
