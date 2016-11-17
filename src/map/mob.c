@@ -802,6 +802,7 @@ int mob_delayspawn(int tid, unsigned int tick, int id, intptr_t data)
 int mob_showdps(struct mob_data* md, unsigned int tick, int mobdead)
 {
 	int i, m, rem;
+	int damage;
 	unsigned mstime, dps;
 	char buf[255+1];
 
@@ -823,22 +824,22 @@ int mob_showdps(struct mob_data* md, unsigned int tick, int mobdead)
 	for(i = 0; i < DAMAGELOG_SIZE && md->dmglog[i].id; i++)
 	{
 		struct map_session_data* tsd = map_charid2sd(md->dmglog[i].id);
+		damage = md->dmglog[i].dmg;
 
 		if(tsd == NULL)
 			continue; // skip empty entries
 		if(tsd->bl.m != m)
 			continue; // skip players not on this map
-		if (md->dmglog[i].dmg == 0)
+		if (!damage)
 			break; // No damage yet
 
 		// Check for overflows.
-		if (UINT_MAX / md->dmglog[i].dmg < 1000)
+		if (UINT_MAX / damage < 1000)
 			dps = UINT_MAX / mstime;
 		else
-			dps = md->dmglog[i].dmg * 1000 / mstime;
+			dps = damage * 1000 / mstime;
 
 		snprintf(buf, sizeof(buf), "[%s] Damage per Second: %d", md->name, dps);
-
 		clif_notify_playerchat(tsd, buf);
 	}
 
