@@ -10082,6 +10082,36 @@ ACMD_FUNC(bragireduction)
 	return 0;
 }
 
+ACMD_FUNC(invincible)
+{
+	struct status_change* sc;
+	int set_invinc;
+
+	nullpo_retr(-1,sd);
+
+	sc = &sd->sc;
+
+	if (sc) { // Status change
+		if (!sc->data[SC_INVINCIBLE])
+			set_invinc = 1;
+		else
+			set_invinc = 0;
+	}
+	else // No existing status changes
+		set_invinc = 1;
+
+	if (set_invinc) {
+		sc_start(&sd->bl, SC_INVINCIBLE, 100, 1, skill_get_time(NPC_INVINCIBLE, 1));
+		clif_displaymessage(fd, "You turned on invincibility.");
+	}
+	else {
+		status_change_end(&sd->bl, SC_INVINCIBLE, INVALID_TIMER);
+		clif_displaymessage(fd, "You turned off invincibility.");
+	}
+
+	return 0;
+}
+
 /*==========================================
  * atcommand_info[] structure definition
  *------------------------------------------*/
@@ -10405,6 +10435,7 @@ AtCommandInfo atcommand_info[] = {
 	{ "toggledefdecay",    99,99,     atcommand_toggledefdecay},
 	{ "timedmonster",      50,50,     atcommand_timedmonster},
 	{ "bragireduction",    99,99,     atcommand_bragireduction},
+	{ "invincible",        99,99,     atcommand_invincible},
 };
 
 
