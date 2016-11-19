@@ -3025,13 +3025,40 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 
 	return md;
 }
+
+void battle_start_dps_timers(struct block_list* bl)
+{
+	struct mob_data* md;
+	struct map_session_data* sd;
+	unsigned int tick = gettick();
+
+	// Start kill timer here regardless if the attack was dodged/lucky-dodged.
+	md = BL_CAST(BL_MOB, bl);
+	sd = BL_CAST(BL_PC, bl);
+	if (md && md->show_killtime) {
+		if (md->kill_ticks == 0) {
+			md->kill_ticks = tick;
+
+			if (md->dps_timer == INVALID_TIMER) {
+				md->dps_timer = add_timer_interval(md->kill_ticks+battle_config.mob_dps_timer_interval,
+					mob_dpsinterval, md->bl.id, 0, battle_config.mob_dps_timer_interval);
+			}
+		}
+	}
+	else if (sd) {
+		if (sd->kill_ticks == 0)
+			sd->kill_ticks = tick;
+	}
+
+	return;
+}
+
 /*==========================================
  * ダ??[ジ計算一括?��?用
  *------------------------------------------*/
 struct Damage battle_calc_attack(int attack_type,struct block_list *bl,struct block_list *target,int skill_num,int skill_lv,int count)
 {
 	struct Damage d;
-	struct mob_data* md;
 	switch(attack_type) {
 	case BF_WEAPON: d = battle_calc_weapon_attack(bl,target,skill_num,skill_lv,count); break;
 	case BF_MAGIC:  d = battle_calc_magic_attack(bl,target,skill_num,skill_lv,count);  break;
@@ -3051,18 +3078,8 @@ struct Damage battle_calc_attack(int attack_type,struct block_list *bl,struct bl
 	else // Some skills like Weaponry Research will cause damage even if attack is dodged
 		d.dmg_lv = ATK_DEF;
 
-	// Start kill timer here regardless if the attack was dodged/lucky-dodged.
-	md = BL_CAST(BL_MOB, target);
-	if (md && md->show_killtime) {
-		if (md->kill_ticks == 0) {
-			md->kill_ticks = gettick();
+	battle_start_dps_timers(target);
 
-			if (md->dps_timer == INVALID_TIMER) {
-				md->dps_timer = add_timer_interval(md->kill_ticks+battle_config.mob_dps_timer_interval,
-					mob_dpsinterval, md->bl.id, 0, battle_config.mob_dps_timer_interval);
-			}
-		}
-	}
 	return d;
 }
 
@@ -4162,7 +4179,8 @@ static const struct _battle_data {
 	{ "vit_penalty_boss_count",             &battle_config.vit_penalty_boss_count,          2,      0,      INT_MAX,        },
 	{ "vit_penalty_mvp_count",              &battle_config.vit_penalty_mvp_count,           3,      0,      INT_MAX,        },
 	{ "bragi_damage_reduction",             &battle_config.bragi_damage_reduction,          1,      0,      1,              },
-	{ "mob_dps_timer_interval",             &battle_config.mob_dps_timer_interval,              10000,  0,      INT_MAX,        },
+	{ "mob_dps_timer_interval",             &battle_config.mob_dps_timer_interval,          10000,  0,      INT_MAX,        },
+	{ "enable_pc_dmglog",                   &battle_config.enable_pc_dmglog,                0,      0,      1,              },
 };
 
 

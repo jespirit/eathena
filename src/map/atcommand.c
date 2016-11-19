@@ -2497,7 +2497,7 @@ ACMD_FUNC(monster)
 	range = (int)sqrt((float)number) +2; // calculation of an odd number (+ 4 area around)
 	for (i = 0; i < number; i++) {
 		map_search_freecell(&sd->bl, 0, &mx,  &my, range, range, 0);
-		k = mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, per, minmax, 0, "");
+		k = mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, per, minmax, 0, 1, "");
 		count += (k != 0) ? 1 : 0;
 	}
 
@@ -2582,7 +2582,7 @@ ACMD_FUNC(monstersmall)
 			my = sd->bl.y + (rand() % 11 - 5);
 		else
 			my = y;
-		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, 100, 0, 0, "2") != 0) ? 1 : 0;
+		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, 100, 0, 0, 1, "2") != 0) ? 1 : 0;
 	}
 
 	if (count != 0)
@@ -2658,7 +2658,7 @@ ACMD_FUNC(monsterbig)
 			my = sd->bl.y + (rand() % 11 - 5);
 		else
 			my = y;
-		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, 100, 0, 0, "4") != 0) ? 1 : 0;
+		count += (mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, 100, 0, 0, 1, "4") != 0) ? 1 : 0;
 	}
 
 	if (count != 0)
@@ -9517,8 +9517,7 @@ ACMD_FUNC(changerates)
 ACMD_FUNC(gospelbuffs)
 {
 	int i, n;
-	int count, slen;
-	int low, high, start;
+	int count, low, high, start;
 	int bad, good, active[13];
 	char *p, *p2;
 	char msg[100];
@@ -9952,6 +9951,7 @@ ACMD_FUNC(timedmonster)
 	int i, k, m, range;
 	int per = 100;
 	int minmax = 0;
+	int useskill = 1;
 	short mx, my;
 	nullpo_retr(-1, sd);
 
@@ -9974,14 +9974,14 @@ ACMD_FUNC(timedmonster)
 			return -1;
 	}
 
-	if (sscanf(message, "\"%23[^\"]\" %23s %d %d %d", name, monster, &number, &per, &minmax) > 1 ||
-		sscanf(message, "%23s \"%23[^\"]\" %d %d %d", monster, name, &number, &per, &minmax) > 1) {
+	if (sscanf(message, "\"%23[^\"]\" %23s %d %d %d %d", name, monster, &number, &per, &minmax, &useskill) > 1 ||
+		sscanf(message, "%23s \"%23[^\"]\" %d %d %d %d", monster, name, &number, &per, &minmax, &useskill) > 1) {
 		//All data can be left as it is.
-	} else if ((count=sscanf(message, "%23s %d %d %d %23s", monster, &number, &per, &minmax, name)) > 1) {
+	} else if ((count=sscanf(message, "%23s %d %d %d %d %23s", monster, &number, &per, &minmax, &useskill, name)) > 1) {
 		//Here, it is possible name was not given and we are using monster for it.
-		if (count < 4) //Blank mob's name.
+		if (count < 6) //Blank mob's name.
 			name[0] = '\0';
-	} else if (sscanf(message, "%23s %23s %d %d %d", name, monster, &number, &per, &minmax) > 1) {
+	} else if (sscanf(message, "%23s %23s %d %d %d %d", name, monster, &number, &per, &minmax, &useskill) > 1) {
 		//All data can be left as it is.
 	} else if (sscanf(message, "%23s", monster) > 0) {
 		//As before, name may be already filled.
@@ -9998,6 +9998,8 @@ ACMD_FUNC(timedmonster)
 		clif_displaymessage(fd, "Monster minmax value must be any of 0, 1, 2, or 4");
 		return -1;
 	}
+
+	useskill = !!useskill; // 0 or 1
 
 	if ((mob_id = mobdb_searchname(monster)) == 0) // check name first (to avoid possible name begining by a number)
 		mob_id = mobdb_checkid(atoi(monster));
@@ -10036,7 +10038,7 @@ ACMD_FUNC(timedmonster)
 	range = (int)sqrt((float)number) +2; // calculation of an odd number (+ 4 area around)
 	for (i = 0; i < number; i++) {
 		map_search_freecell(&sd->bl, 0, &mx,  &my, range, range, 0);
-		k = mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, per, minmax, 1, "");
+		k = mob_once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, per, minmax, 1, useskill, "");
 		count += (k != 0) ? 1 : 0;
 	}
 
@@ -10098,6 +10100,49 @@ ACMD_FUNC(invincible)
 		status_change_end(&sd->bl, SC_INVINCIBLE, INVALID_TIMER);
 		clif_displaymessage(fd, "You turned off invincibility.");
 	}
+
+	return 0;
+}
+
+ACMD_FUNC(startdpslog)
+{
+	int show, log;
+	char* trimmed;
+	char logtitle[100];
+	// FIXME: message can only hold 99 characters
+
+	nullpo_retr(-1, sd);
+
+	if (!message || !*message || (
+		sscanf(message, "\"%99[^\"]\" %d %d", logtitle, &show, &log) < 3 &&
+		sscanf(message, "%99s %d %d", logtitle, &show, &log) < 3
+	)) {
+		clif_displaymessage(fd, "Usage: @startdpslog \"Log Title\" <ShowDPS=0/1> <LogDPS=0/1>.");
+		return -1;
+	}
+
+	trimmed = trim(logtitle);
+
+	safestrncpy(sd->logdps_title, trimmed, sizeof(sd->logdps_title));
+	sd->showdps = show;
+	sd->logdps = log;
+
+	if (show || log)
+		clif_displaymessage(fd, "You have enabled DPS logging.");
+	else
+		clif_displaymessage(fd, "You have disabled DPS logging.");
+
+	return 0;
+}
+
+ACMD_FUNC(resetdmglog)
+{
+	nullpo_retr(-1, sd);
+
+	// Clear damage logs
+	memset(sd->dmglog, 0, sizeof(sd->dmglog));
+	sd->tdmg = 0;
+	sd->kill_ticks = 0;
 
 	return 0;
 }
@@ -10426,6 +10471,8 @@ AtCommandInfo atcommand_info[] = {
 	{ "timedmonster",      50,50,     atcommand_timedmonster},
 	{ "bragireduction",    99,99,     atcommand_bragireduction},
 	{ "invincible",        99,99,     atcommand_invincible},
+	{ "startdpslog",       40,40,     atcommand_startdpslog},
+	{ "resetdmglog",       40,40,     atcommand_resetdmglog},
 };
 
 

@@ -4387,6 +4387,11 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		bg_send_dot_remove(sd);
 		if (sd->regen.state.gc)
 			sd->regen.state.gc = 0;
+
+		// Clear damage logs
+		memset(sd->dmglog, 0, sizeof(sd->dmglog));
+		sd->tdmg = 0;
+		sd->kill_ticks = 0;
 	}
 
 	if( m < 0 )
@@ -5897,11 +5902,168 @@ static int pc_respawn_timer(int tid, unsigned int tick, int id, intptr_t data)
 	return 0;
 }
 
+int pc_showdps(struct map_session_data* sd, unsigned int tick)
+{
+	int i, m, rem;
+	int damage;
+	unsigned mstime, dps;
+	char buf[255+1];
+
+	mstime = tick - sd->kill_ticks;
+	rem = mstime % 10;
+	m = sd->bl.m;
+
+	// Round down or up the ones place to 0, 5, or 10.
+	if (rem == 1 || rem == 2)
+		mstime -= rem;
+	else if (rem == 3 || rem == 4 || rem == 6 || rem == 7)
+		mstime = mstime / 10 * 10 + 5;
+	else if (rem == 8 || rem == 9)
+		mstime += 10 - rem;
+
+	if (mstime == 0)
+		return -1; // Avoid division by zero.
+
+	for(i = 0; i < DAMAGELOG_SIZE && sd->dmglog[i].id; i++)
+	{
+		struct map_session_data* tsd = map_charid2sd(sd->dmglog[i].id);
+		damage = sd->dmglog[i].dmg;
+
+		if(tsd == NULL)
+			continue; // skip empty entries
+		if(tsd->bl.m != m)
+			continue; // skip players not on this map
+		if (!damage)
+			continue; // No damage yet
+
+		// Convert to per second. Also check for overflows.
+		if (UINT_MAX / damage < 1000)
+			dps = UINT_MAX / mstime;
+		else
+			dps = damage * 1000 / mstime;
+
+		if (sd->showdps) {
+			snprintf(buf, sizeof(buf), "[%s] Damage per Second: %d", sd->status.name, dps);
+			clif_notify_playerchat(tsd, buf);
+		}
+
+		if (sd->logdps) // Log DPS
+			log_dps(tsd, &sd->bl, damage, mstime);
+	}
+
+	return 0;
+}
+
+void pc_log_damage(struct map_session_data* sd, struct block_list* src, int damage)
+{
+	int char_id = 0, flag = MDLF_NORMAL;
+
+	if( damage < 0 )
+		return; //Do nothing for absorbed damage.
+	if( !damage && !(src->type&BL_CHAR) )
+		return; //Do not log non-damaging effects from non-enemies.
+	if( src->id == sd->bl.id )
+		return; //Do not log self-damage.
+
+	switch( src->type )
+	{
+		case BL_PC:
+		{
+			struct map_session_data *sd = (TBL_PC*)src;
+			char_id = sd->status.char_id;
+			if( damage )
+				sd->attacked_id = src->id;
+			break;
+		}
+		case BL_HOM:
+		{
+			struct homun_data *hd = (TBL_HOM*)src;
+			flag = MDLF_HOMUN;
+			if( hd->master )
+				char_id = hd->master->status.char_id;
+			if( damage )
+				sd->attacked_id = src->id;
+			break;
+		}
+		case BL_MER:
+		{
+			struct mercenary_data *mer = (TBL_MER*)src;
+			if( mer->master )
+				char_id = mer->master->status.char_id;
+			if( damage )
+				sd->attacked_id = src->id;
+			break;
+		}
+		case BL_PET:
+		{
+			struct pet_data *pd = (TBL_PET*)src;
+			flag = MDLF_PET;
+			if( pd->msd )
+			{
+				char_id = pd->msd->status.char_id;
+				if( damage ) //Let mobs retaliate against the pet's master [Skotlex]
+					sd->attacked_id = pd->msd->bl.id;
+			}
+			break;
+		}
+		case BL_MOB:
+		{
+			struct mob_data* md2 = (TBL_MOB*)src;
+			if( md2->special_state.ai && md2->master_id )
+			{
+				struct map_session_data* msd = map_id2sd(md2->master_id);
+				if( msd )
+					char_id = msd->status.char_id;
+			}
+			if( !damage )
+				break;
+			//Let players decide whether to retaliate versus the master or the mob. [Skotlex]
+			if( md2->master_id && battle_config.retaliate_to_master )
+				sd->attacked_id = md2->master_id;
+			else
+				sd->attacked_id = src->id;
+			break;
+		}
+		default: //For all unhandled types.
+			sd->attacked_id = src->id;
+	}
+	
+	if( char_id )
+	{ //Log damage...
+		int i,minpos;
+		unsigned int mindmg;
+		for(i=0,minpos=DAMAGELOG_SIZE-1,mindmg=UINT_MAX;i<DAMAGELOG_SIZE;i++){
+			if(sd->dmglog[i].id==char_id &&
+				sd->dmglog[i].flag==flag)
+				break;
+			if(sd->dmglog[i].id==0) {	//Store data in first empty slot.
+				sd->dmglog[i].id  = char_id;
+				sd->dmglog[i].flag= flag;
+				break;
+			}
+			if(sd->dmglog[i].dmg<mindmg && i)
+			{	//Never overwrite first hit slot (he gets double exp bonus)
+				minpos=i;
+				mindmg=sd->dmglog[i].dmg;
+			}
+		}
+		if(i<DAMAGELOG_SIZE)
+			sd->dmglog[i].dmg+=damage;
+		else {
+			sd->dmglog[minpos].id  = char_id;
+			sd->dmglog[minpos].flag= flag;
+			sd->dmglog[minpos].dmg = damage;
+		}
+	}
+	return;
+}
+
 /*==========================================
  * Invoked when a player has received damage
  *------------------------------------------*/
 void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int hp, unsigned int sp)
 {
+	int damage = hp;
 	if (sp) pc_onstatuschanged(sd,SP_SP);
 	if (hp) pc_onstatuschanged(sd,SP_HP);
 	else return;
@@ -5920,6 +6082,21 @@ void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int h
 
 	if( sd->status.pet_id > 0 && sd->pd && battle_config.pet_damage_support )
 		pet_target_check(sd,src,1);
+
+	// Log DPS damage here
+	if (battle_config.enable_pc_dmglog && damage > 0)
+	{	//Store total damage...
+		if (UINT_MAX - (unsigned int)damage > sd->tdmg)
+			sd->tdmg+=damage;
+		else if (sd->tdmg == UINT_MAX)
+			damage = 0; //Stop recording damage once the cap has been reached.
+		else { //Cap damage log...
+			damage = (int)(UINT_MAX - sd->tdmg);
+			sd->tdmg = UINT_MAX;
+		}
+		//Log damage
+		if (src) pc_log_damage(sd, src, damage);
+	}
 
 	sd->canlog_tick = gettick();
 }
@@ -6224,6 +6401,14 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 		}
 	}
 
+	// Show and/or log DPS
+	if (battle_config.enable_pc_dmglog && (sd->showdps || sd->logdps))
+		pc_showdps(sd, tick);
+
+	// Clear damage logs
+	memset(sd->dmglog, 0, sizeof(sd->dmglog));
+	sd->tdmg = 0;
+	sd->kill_ticks = 0;
 
 	//Reset "can log out" tick.
 	if( battle_config.prevent_logout )

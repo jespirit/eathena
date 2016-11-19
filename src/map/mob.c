@@ -408,7 +408,7 @@ struct mob_data *mob_once_spawn_sub(struct block_list *bl, int m, short x, short
 /*==========================================
  * Spawn a single mob on the specified coordinates.
  *------------------------------------------*/
-int mob_once_spawn(struct map_session_data* sd, int m, short x, short y, const char* mobname, int class_, int amount, int hp_per, int minmax, int killtime, const char* event)
+int mob_once_spawn(struct map_session_data* sd, int m, short x, short y, const char* mobname, int class_, int amount, int hp_per, int minmax, int killtime, int useskill, const char* event)
 {
 	struct mob_data* md = NULL;
 	int count, lv;
@@ -454,6 +454,7 @@ int mob_once_spawn(struct map_session_data* sd, int m, short x, short y, const c
 
 		mob_spawn(md);
 		md->state.minmax = minmax;  // Apply minmax state
+		md->state.useskill = useskill;
 		md->show_killtime = killtime;
 
 		if (class_ < 0 && battle_config.dead_branch_active)
@@ -512,7 +513,7 @@ int mob_once_spawn_area(struct map_session_data* sd,int m,int x0,int y0,int x1,i
 		lx = x;
 		ly = y;
 
-		id = mob_once_spawn(sd,m,x,y,mobname,class_,1,100,0,0,event);
+		id = mob_once_spawn(sd,m,x,y,mobname,class_,1,100,0,0,1,event);
 	}
 
 	return id; // id of last spawned mob
@@ -831,7 +832,7 @@ int mob_showdps(struct mob_data* md, unsigned int tick, int mobdead)
 		if(tsd->bl.m != m)
 			continue; // skip players not on this map
 		if (!damage)
-			break; // No damage yet
+			continue; // No damage yet
 
 		// Check for overflows.
 		if (UINT_MAX / damage < 1000)
@@ -841,6 +842,10 @@ int mob_showdps(struct mob_data* md, unsigned int tick, int mobdead)
 
 		snprintf(buf, sizeof(buf), "[%s] Damage per Second: %d", md->name, dps);
 		clif_notify_playerchat(tsd, buf);
+
+		if (mobdead && tsd->logdps) { // Log DPS
+			log_dps(tsd, &md->bl, damage, mstime);
+		}
 	}
 
 	return 0;
@@ -978,6 +983,7 @@ int mob_spawn (struct mob_data *md)
 	md->last_pcneartime = 0;
 	md->show_killtime = 0;
 	md->kill_ticks = 0;
+	md->state.useskill = 1;
 
 	for (i = 0, c = tick-MOB_MAX_DELAY; i < MAX_MOBSKILL; i++)
 		md->skilldelay[i] = c;
@@ -2537,13 +2543,6 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 	}
 
 	mob_deleteslave(md);
-	
-	map_freeblock_unlock();
-
-	if(pcdb_checkid(md->vd->class_))
-	{	//Player mobs are not removed automatically by the client.
-		clif_clearunit_delayed(&md->bl, tick+3000);
-	}
 
 	if (md->kill_ticks) {
 
@@ -2557,6 +2556,13 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 		// Show DPS on death.
 		mob_showdps(md, tick, 1);
+	}
+	
+	map_freeblock_unlock();
+
+	if(pcdb_checkid(md->vd->class_))
+	{	//Player mobs are not removed automatically by the client.
+		clif_clearunit_delayed(&md->bl, tick+3000);
 	}
 
 	if(!md->spawn) //Tell status_damage to remove it from memory.
@@ -3016,6 +3022,9 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
 	nullpo_ret(ms = md->db->skill);
 
 	if (!battle_config.mob_skill_rate || md->ud.skilltimer != INVALID_TIMER || !md->db->maxskill)
+		return 0;
+
+	if (!md->state.useskill)
 		return 0;
 
 	if (event == -1 && DIFF_TICK(md->ud.canact_tick, tick) > 0)

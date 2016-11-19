@@ -436,6 +436,105 @@ void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_accid, 
 	}
 }
 
+/// log damage per second info
+void log_dps(struct map_session_data* src, struct block_list* target, unsigned int damage, unsigned int mstime)
+{
+	struct map_session_data* tsd = NULL;
+	struct mob_data* md = NULL;
+	int id, class_, maxhp;
+	int use_pc_table = 0; // Or use mob table.
+	const char* mapname;
+
+	nullpo_retv(src);
+	nullpo_retv(target);
+
+	if( !log_config.dps )
+		return;
+
+	if (!src->logdps_title[0])
+		return;
+
+	mapname = mapindex_id2name(map[target->m].index);
+
+	if (target->type == BL_PC) {
+		tsd = BL_CAST(BL_PC, target);
+		id = tsd->status.char_id;
+		class_ = tsd->status.class_;
+		maxhp = tsd->status.max_hp;
+		use_pc_table = 1;
+	}
+	else if (target->type == BL_MOB) {
+		md = BL_CAST(BL_MOB, target);
+		id = md->class_;
+		maxhp = md->status.max_hp;
+	}
+	else { // Shouldn't happen
+		ShowError("DPS Log: Invalid target type %d", target->type);
+		return;
+	}
+
+#ifndef TXT_ONLY
+	if( log_config.sql_logs )
+	{
+	if (use_pc_table) {
+		SqlStmt* stmt;
+		stmt = SqlStmt_Malloc(logmysql_handle);
+		if( SQL_SUCCESS != SqlStmt_Prepare(stmt,
+			"INSERT DELAYED INTO `%s` (`title`, `src_id`, `src_class`, `target_id`, `target_class`, `damage`, `killtime`, `max_hp`, `map`, `time`) VALUES (?, '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', NOW())",
+			log_config.log_pc_dps, src->status.char_id, src->status.class_, id, class_, damage, mstime, maxhp, mapname )
+		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 0, SQLDT_STRING, (char*)src->logdps_title, safestrnlen(src->logdps_title, sizeof(src->logdps_title)))
+		||  SQL_SUCCESS != SqlStmt_Execute(stmt) )
+		{
+			SqlStmt_ShowDebug(stmt);
+			SqlStmt_Free(stmt);
+			return;
+		}
+		SqlStmt_Free(stmt);
+
+	}
+	else {
+		SqlStmt* stmt;
+		stmt = SqlStmt_Malloc(logmysql_handle);
+		if( SQL_SUCCESS != SqlStmt_Prepare(stmt,
+			"INSERT DELAYED INTO `%s` (`title`, `src_id`, `src_class`, `mob_id`, `damage`, `killtime`, `max_hp`, `map`, `time`) VALUES (?, '%d', '%d', '%d', '%d', '%d', '%d', '%s', NOW())",
+			log_config.log_mob_dps, src->status.char_id, src->status.class_, id, damage, mstime, maxhp, mapname )
+		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 0, SQLDT_STRING, (char*)src->logdps_title, safestrnlen(src->logdps_title, sizeof(src->logdps_title)))
+		||  SQL_SUCCESS != SqlStmt_Execute(stmt) )
+		{
+			SqlStmt_ShowDebug(stmt);
+			SqlStmt_Free(stmt);
+			return;
+		}
+		SqlStmt_Free(stmt);
+	}// use_pc_table
+	}
+	else
+#endif
+	{
+		char timestring[255];
+		time_t curtime;
+		FILE* logfp;
+
+		if (use_pc_table) {
+			if( ( logfp = fopen(log_config.log_pc_dps, "a") ) == NULL )
+				return;
+			time(&curtime);
+			strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
+			fprintf(logfp, "%s - %s,%d,%d,%d,%d,%d,%d,%d,%s\n",
+				timestring, src->logdps_title, src->status.char_id, src->status.class_, id, class_, damage, mstime, maxhp, mapname);
+			fclose(logfp);
+		}
+		else {
+			if( ( logfp = fopen(log_config.log_mob_dps, "a") ) == NULL )
+				return;
+			time(&curtime);
+			strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
+			fprintf(logfp, "%s - %s,%d,%d,%d,%d,%d,%d,%s\n",
+				timestring, src->logdps_title, src->status.char_id, src->status.class_, id, damage, mstime, maxhp, mapname);
+			fclose(logfp);
+		}
+	}
+}
 
 void log_set_defaults(void)
 {
@@ -506,6 +605,8 @@ int log_config_read(const char* cfgName)
 				log_config.npc = config_switch(w2);
 			else if( strcmpi(w1, "log_chat") == 0 )
 				log_config.chat = config_switch(w2);
+			else if( strcmpi(w1, "log_dps") == 0 )
+				log_config.dps = config_switch(w2);
 			else if( strcmpi(w1, "log_mvpdrop") == 0 )
 				log_config.mvpdrop = config_switch(w2);
 			else if( strcmpi(w1, "log_chat_woe_disable") == 0 )
@@ -524,6 +625,10 @@ int log_config_read(const char* cfgName)
 				safestrncpy(log_config.log_npc, w2, sizeof(log_config.log_npc));
 			else if( strcmpi(w1, "log_chat_db") == 0 )
 				safestrncpy(log_config.log_chat, w2, sizeof(log_config.log_chat));
+			else if( strcmpi(w1, "log_pc_dps_db") == 0 )
+				safestrncpy(log_config.log_pc_dps, w2, sizeof(log_config.log_pc_dps));
+			else if( strcmpi(w1, "log_mob_dps_db") == 0 )
+				safestrncpy(log_config.log_mob_dps, w2, sizeof(log_config.log_mob_dps));
 			//support the import command, just like any other config
 			else if( strcmpi(w1,"import") == 0 )
 				log_config_read(w2);

@@ -424,6 +424,19 @@ struct map_session_data {
 		bool changed; // if true, should sync with charserver on next mailbox request
 	} mail;
 
+	// DPS log [jespirit]
+	struct {
+		int id; // char_id
+		unsigned int dmg;
+		unsigned int flag : 2; //0: Normal. 1: Homunc exp. 2: Pet exp
+	} dmglog[DAMAGELOG_SIZE];
+	unsigned int tdmg; //Stores total damage given to the player, for DPS logging.
+	unsigned int kill_ticks; // Time of first attacked.
+	unsigned int logdps; // Enable DPS logging.
+	unsigned int showdps;
+	int attacked_id;
+	char logdps_title[100];
+
 	//Quest log system [Kevin] [Inkfish]
 	int num_quests;
 	int avail_quests;
@@ -690,6 +703,7 @@ int pc_skillatk_bonus(struct map_session_data *sd, int skill_num);
 int pc_skillheal_bonus(struct map_session_data *sd, int skill_num);
 int pc_skillheal2_bonus(struct map_session_data *sd, int skill_num);
 
+void pc_log_damage(struct map_session_data *md, struct block_list *src, int damage);
 void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int hp, unsigned int sp);
 int pc_dead(struct map_session_data *sd,struct block_list *src);
 void pc_revive(struct map_session_data *sd,unsigned int hp, unsigned int sp);

@@ -58,6 +58,8 @@ void log_npc(struct map_session_data* sd, const char *message);
 void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char* map, int x, int y, const char* dst_charname, const char* message);
 void log_atcommand(struct map_session_data* sd, int cmdlvl, const char* message);
 
+void log_dps(struct map_session_data* src, struct block_list* target, unsigned int damage, unsigned int mstime);
+
 /// old, but useful logs
 void log_branch(struct map_session_data* sd);
 void log_mvpdrop(struct map_session_data* sd, int monster_id, int* log_mvp);
@@ -71,8 +73,8 @@ extern struct Log_Config
 	bool sql_logs;
 	bool log_chat_woe_disable;
 	int rare_items_log,refine_items_log,price_items_log,amount_items_log; //for filter
-	int branch, mvpdrop, zeny, gm, npc, chat;
-	char log_branch[64], log_pick[64], log_zeny[64], log_mvpdrop[64], log_gm[64], log_npc[64], log_chat[64];
+	int branch, mvpdrop, zeny, gm, npc, chat, dps;
+	char log_branch[64], log_pick[64], log_zeny[64], log_mvpdrop[64], log_gm[64], log_npc[64], log_chat[64], log_pc_dps[64], log_mob_dps[64];
 }
 log_config;
 
