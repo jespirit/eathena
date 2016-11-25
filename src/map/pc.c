@@ -5927,27 +5927,23 @@ int pc_dpschar2sql(struct map_session_data* sd)
     atk2 = bstatus->rhw.atk2 + bstatus->lhw.atk2;
 
 	// Delay
-	{
-		if (sc && sc->count && sc->data[SC_POEMBRAGI]) {
-			bragi = 1;
-			per = 100 - sc->data[SC_POEMBRAGI]->val3;
-			dm *= 100;
-		}
-		// bragi works normally in PvP situations
-		if (sd->delayrate != 100 && !(bragi && !map_flag_vs(sd->bl.m))) {
-			per = per * sd->delayrate;
-			dm *= 100;
-		}
-
-		if (dm != 1)
-			delay_per = (double)per / dm;
+	if (sc && sc->count && sc->data[SC_POEMBRAGI]) {
+		bragi = 1;
+		per = 100 - sc->data[SC_POEMBRAGI]->val3;
+		dm *= 100;
 	}
+	// bragi works normally in PvP situations
+	if (sd->delayrate != 100 && !(bragi && !map_flag_vs(sd->bl.m))) {
+		per = per * sd->delayrate;
+		dm *= 100;
+	}
+
+	if (dm != 1)
+		delay_per = (double)per / dm;
 
 	// Damage Percentage from Bragi
-	{
-		if (sc && sc->count && sc->data[SC_POEMBRAGI])
-			dmg_per = (double)(200 - sc->data[SC_POEMBRAGI]->val3) / 200;
-	}
+	if (sc && sc->count && sc->data[SC_POEMBRAGI])
+		dmg_per = (double)(200 - sc->data[SC_POEMBRAGI]->val3) / 200;
 
 	// Cast Time
 	do {
