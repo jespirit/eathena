@@ -434,6 +434,7 @@ struct map_session_data {
 	unsigned int kill_ticks; // Time of first attacked.
 	unsigned int logdps; // Enable DPS logging.
 	unsigned int showdps;
+	int dps_charid;
 	int attacked_id;
 	char logdps_title[100];
 
@@ -703,6 +704,7 @@ int pc_skillatk_bonus(struct map_session_data *sd, int skill_num);
 int pc_skillheal_bonus(struct map_session_data *sd, int skill_num);
 int pc_skillheal2_bonus(struct map_session_data *sd, int skill_num);
 
+int pc_dpschar2sql(struct map_session_data* sd);
 void pc_log_damage(struct map_session_data *md, struct block_list *src, int damage);
 void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int hp, unsigned int sp);
 int pc_dead(struct map_session_data *sd,struct block_list *src);

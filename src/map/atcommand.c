@@ -10106,31 +10106,57 @@ ACMD_FUNC(invincible)
 
 ACMD_FUNC(startdpslog)
 {
-	int show, log;
+	int show, log, count, title;
 	char* trimmed;
 	char logtitle[100];
 	// FIXME: message can only hold 99 characters
 
 	nullpo_retr(-1, sd);
 
+	show = log = 0;
+	title = 0;
+
 	if (!message || !*message || (
-		sscanf(message, "\"%99[^\"]\" %d %d", logtitle, &show, &log) < 3 &&
-		sscanf(message, "%99s %d %d", logtitle, &show, &log) < 3
+		(count=sscanf(message, "\"%99[^\"]\" %d %d %d", logtitle, &show, &log)) < 1 &&
+		(count=sscanf(message, "%99s %d %d %d", logtitle, &show, &log)) < 1
 	)) {
-		clif_displaymessage(fd, "Usage: @startdpslog \"Log Title\" <ShowDPS=0/1> <LogDPS=0/1>.");
+		clif_displaymessage(fd, "Usage: @startdpslog \"Log Title\" ShowDPS=(0/1) LogDPS=(0/1).");
 		return -1;
 	}
 
 	trimmed = trim(logtitle);
 
-	safestrncpy(sd->logdps_title, trimmed, sizeof(sd->logdps_title));
-	sd->showdps = show;
-	sd->logdps = log;
+	// New title or title change.
+	title = strcmpi(sd->logdps_title, logtitle);
+
+	if (title)
+		safestrncpy(sd->logdps_title, trimmed, sizeof(sd->logdps_title));
+
+	if (count > 1)
+		sd->showdps = show;
+	if (count > 2)
+		sd->logdps = log;
+
+	// Log character data as-is at the moment of this call.
+	if (log) {
+		if (0 != pc_dpschar2sql(sd)) {
+			ShowWarning("@startdpslog: Failed to log character data of charid=%d", sd->status.char_id);
+			return -1;
+		}
+	}
 
 	if (show || log)
 		clif_displaymessage(fd, "You have enabled DPS logging.");
-	else
-		clif_displaymessage(fd, "You have disabled DPS logging.");
+	else {
+		if (count < 3) {
+			if (title)
+				clif_displaymessage(fd, "You have changed the DPS logging title.");
+			if (count == 2)
+				clif_displaymessage(fd, "You have turned off DPS broadcast.");
+		}
+		else
+			clif_displaymessage(fd, "You have disabled DPS logging.");
+	}
 
 	return 0;
 }

@@ -5902,6 +5902,163 @@ static int pc_respawn_timer(int tid, unsigned int tick, int id, intptr_t data)
 	return 0;
 }
 
+int pc_dpschar2sql(struct map_session_data* sd)
+{
+    int i, j, x;
+    int pc_id;
+    unsigned short atk, atk2;
+    int next, bragi = 0, errors = 0;
+	int per = 1, dm = 1;
+	double delay_per = 100.0, dmg_per = 100.0, casttime = 100.0;
+    struct mmo_charstatus* p;
+    struct item* items;
+	struct status_data* bstatus;
+	struct status_change* sc;
+	StringBuf buf;
+
+    nullpo_retr(1,sd);
+    
+    p = &sd->status;
+	bstatus = &sd->battle_status;
+    items = sd->status.inventory;
+	sc = &sd->sc;
+    
+    atk = bstatus->batk + bstatus->rhw.atk + bstatus->lhw.atk;
+    atk2 = bstatus->rhw.atk2 + bstatus->lhw.atk2;
+
+	// Delay
+	{
+		if (sc && sc->count && sc->data[SC_POEMBRAGI]) {
+			bragi = 1;
+			per = 100 - sc->data[SC_POEMBRAGI]->val3;
+			dm *= 100;
+		}
+		// bragi works normally in PvP situations
+		if (sd->delayrate != 100 && !(bragi && !map_flag_vs(sd->bl.m))) {
+			per = per * sd->delayrate;
+			dm *= 100;
+		}
+
+		if (dm != 1)
+			delay_per = (double)per / dm;
+	}
+
+	// Damage Percentage from Bragi
+	{
+		if (sc && sc->count && sc->data[SC_POEMBRAGI])
+			dmg_per = (double)(200 - sc->data[SC_POEMBRAGI]->val3) / 200;
+	}
+
+	// Cast Time
+	do {
+		int scale = battle_config.castrate_dex_scale - bstatus->dex;
+		per = dm = 1;
+		if (scale > 0) { // not instant cast
+			per = scale;
+			dm = battle_config.castrate_dex_scale;
+		}
+		else {
+			casttime = 0; // instant cast
+			break;
+		}
+
+		if (sd->castrate != 100) {
+			per = per * sd->castrate;
+			dm *= 100;
+		}
+
+		if (sc && sc->count && sc->data[SC_POEMBRAGI]) {
+			per = per * (100 - sc->data[SC_POEMBRAGI]->val2);
+			dm *= 100;
+		}
+
+		casttime = (double)per / dm;
+	} while(0);
+
+#ifndef TXT_ONLY
+	if( log_config.sql_logs )
+	{
+	SqlStmt* stmt;
+    stmt = SqlStmt_Malloc(logmysql_handle);
+    //Save status
+    if( SQL_SUCCESS != SqlStmt_Prepare(stmt,
+        "INSERT INTO `%s` (`char_id`, `name`, `class`,`base_level`,`job_level`,"
+        "`max_hp`,`hp`,`max_sp`,`sp`,"
+        "`str`,`agi`,`vit`,`int`,`dex`,`luk`,"
+        "`speed`,`hit`,`flee`,`flee2`,`amotion`,`delay`,`dmg_per`,`casttime`,"
+        "`atk`,`atk2`,`def`,`def2`,`mdef`,`mdef2`,"
+        "`cri`,`matk_min`,`matk_max`,`atk_ele`,`atk_range`,`fame`)"
+        " VALUES('%u', ?, '%d', '%d', '%d',"
+        " '%u', '%u', '%u', '%u',"
+        " '%d', '%d', '%d', '%d', '%d', '%d',"
+        " '%d', '%d', '%d', '%d', '%d', '%.2f', '%.2f', '%.2f',"
+        " '%d', '%d', '%d', '%d', '%d', '%d',"
+        " '%d', '%d', '%d', '%d', '%d', '%u')",
+        log_config.log_dps_char, p->char_id, p->base_level, p->job_level, p->class_,
+        bstatus->max_hp, bstatus->hp, bstatus->max_sp, bstatus->sp,
+        p->str, p->agi, p->vit, p->int_, p->dex, p->luk,
+        bstatus->speed, bstatus->hit, bstatus->flee, bstatus->flee2, bstatus->amotion, delay_per, dmg_per, casttime,
+        atk, atk2, bstatus->def, bstatus->def2, bstatus->mdef, bstatus->mdef2,
+        bstatus->cri, bstatus->matk_min, bstatus->matk_max, bstatus->rhw.ele, bstatus->rhw.range, p->fame)
+    ||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 0, SQLDT_STRING, (char*)p->name, safestrnlen(p->name, NAME_LENGTH))
+    ||  SQL_SUCCESS != SqlStmt_Execute(stmt) )
+    {
+        SqlStmt_ShowDebug(stmt);
+        SqlStmt_Free(stmt);
+        return ++errors;
+    }
+
+	SqlStmt_Free(stmt);
+
+    // Retrieve the newly auto-generated pc id.
+	pc_id = (int)Sql_LastInsertId(logmysql_handle);
+    // Save for future reference.
+    sd->dps_charid = pc_id;
+    
+    StringBuf_Init(&buf);
+    //StringBuf_Clear(&buf);
+    StringBuf_Printf(&buf, "INSERT DELAYED INTO `%s`(`pc_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`", log_config.log_dps_equip);
+    for( x = 0; x < MAX_SLOTS; ++x )
+        StringBuf_Printf(&buf, ", `card%d`", x);
+    StringBuf_AppendStr(&buf, ") VALUES ");
+    
+    // Insert equipment the character currently has on.
+    next = 0;
+    for (j = 0; j < EQI_MAX; j++) {
+		if ((i = sd->equip_index[j]) < 0)
+			continue;
+		if(j == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == i)
+			continue;
+		if(j == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == i)
+			continue;
+		if(j == EQI_HEAD_TOP && (sd->equip_index[EQI_HEAD_MID] == i || sd->equip_index[EQI_HEAD_LOW] == i))
+			continue;
+        
+        if (next)
+            StringBuf_AppendStr(&buf, ",");
+        else
+            next = 1;
+        
+        StringBuf_Printf(&buf, "('%u', '%d', '%d', '%d', '%d', '%d', '%d'",
+			pc_id, items[i].nameid, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute);
+		for( x = 0; x < MAX_SLOTS; ++x )
+			StringBuf_Printf(&buf, ", '%d'", items[i].card[x]);
+		StringBuf_AppendStr(&buf, ")");
+    }
+    
+    if (SQL_ERROR == Sql_QueryStr(logmysql_handle, StringBuf_Value(&buf)))
+	{
+		Sql_ShowDebug(logmysql_handle);
+		errors++;
+	}
+
+	StringBuf_Destroy(&buf);
+	} // if( log_config.sql_logs )
+#endif
+	
+    return errors;
+}
+
 int pc_showdps(struct map_session_data* sd, unsigned int tick)
 {
 	int i, m, rem;
@@ -5947,7 +6104,8 @@ int pc_showdps(struct map_session_data* sd, unsigned int tick)
 			clif_notify_playerchat(tsd, buf);
 		}
 
-		if (sd->logdps) // Log DPS
+		// Log DPS if PC is already listed in the dps_char table
+		if (tsd->logdps && sd->dps_charid > 0)
 			log_dps(tsd, &sd->bl, damage, mstime);
 	}
 
@@ -6367,6 +6525,16 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 			}
 		}
 	}
+
+	// Show and/or log DPS
+	if (battle_config.enable_pc_dmglog && (sd->showdps || sd->logdps))
+		pc_showdps(sd, tick);
+
+	// Clear damage logs
+	memset(sd->dmglog, 0, sizeof(sd->dmglog));
+	sd->tdmg = 0;
+	sd->kill_ticks = 0;
+
 	// pvp
 	// disable certain pvp functions on pk_mode [Valaris]
 	if( map[sd->bl.m].flag.pvp && !battle_config.pk_mode && !map[sd->bl.m].flag.pvp_nocalcrank )
@@ -6400,15 +6568,6 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 			return 1|8;
 		}
 	}
-
-	// Show and/or log DPS
-	if (battle_config.enable_pc_dmglog && (sd->showdps || sd->logdps))
-		pc_showdps(sd, tick);
-
-	// Clear damage logs
-	memset(sd->dmglog, 0, sizeof(sd->dmglog));
-	sd->tdmg = 0;
-	sd->kill_ticks = 0;
 
 	//Reset "can log out" tick.
 	if( battle_config.prevent_logout )

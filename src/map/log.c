@@ -441,7 +441,7 @@ void log_dps(struct map_session_data* src, struct block_list* target, unsigned i
 {
 	struct map_session_data* tsd = NULL;
 	struct mob_data* md = NULL;
-	int id, class_, maxhp;
+	int id, maxhp;
 	int use_pc_table = 0; // Or use mob table.
 	const char* mapname;
 
@@ -452,14 +452,13 @@ void log_dps(struct map_session_data* src, struct block_list* target, unsigned i
 		return;
 
 	if (!src->logdps_title[0])
-		return;
+		return; // Title can't be empty.
 
 	mapname = mapindex_id2name(map[target->m].index);
 
 	if (target->type == BL_PC) {
 		tsd = BL_CAST(BL_PC, target);
-		id = tsd->status.char_id;
-		class_ = tsd->status.class_;
+		id = tsd->dps_charid;
 		maxhp = tsd->status.max_hp;
 		use_pc_table = 1;
 	}
@@ -480,8 +479,8 @@ void log_dps(struct map_session_data* src, struct block_list* target, unsigned i
 		SqlStmt* stmt;
 		stmt = SqlStmt_Malloc(logmysql_handle);
 		if( SQL_SUCCESS != SqlStmt_Prepare(stmt,
-			"INSERT DELAYED INTO `%s` (`title`, `src_id`, `src_class`, `target_id`, `target_class`, `damage`, `killtime`, `max_hp`, `map`, `time`) VALUES (?, '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', NOW())",
-			log_config.log_pc_dps, src->status.char_id, src->status.class_, id, class_, damage, mstime, maxhp, mapname )
+			"INSERT DELAYED INTO `%s` (`title`, `pc_id`, `target_id`, `damage`, `killtime`, `map`, `time`) VALUES (?, '%d', '%d', '%d', '%d', '%s', NOW())",
+			log_config.log_pc_dps, src->dps_charid, id, damage, mstime, mapname )
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 0, SQLDT_STRING, (char*)src->logdps_title, safestrnlen(src->logdps_title, sizeof(src->logdps_title)))
 		||  SQL_SUCCESS != SqlStmt_Execute(stmt) )
 		{
@@ -496,8 +495,8 @@ void log_dps(struct map_session_data* src, struct block_list* target, unsigned i
 		SqlStmt* stmt;
 		stmt = SqlStmt_Malloc(logmysql_handle);
 		if( SQL_SUCCESS != SqlStmt_Prepare(stmt,
-			"INSERT DELAYED INTO `%s` (`title`, `src_id`, `src_class`, `mob_id`, `damage`, `killtime`, `max_hp`, `map`, `time`) VALUES (?, '%d', '%d', '%d', '%d', '%d', '%d', '%s', NOW())",
-			log_config.log_mob_dps, src->status.char_id, src->status.class_, id, damage, mstime, maxhp, mapname )
+			"INSERT DELAYED INTO `%s` (`title`, `pc_id`, `mob_id`, `damage`, `killtime`, `max_hp`, `map`, `time`) VALUES (?, '%d', '%d', '%d', '%d', '%d', '%s', NOW())",
+			log_config.log_mob_dps, src->dps_charid, id, damage, mstime, maxhp, mapname )
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 0, SQLDT_STRING, (char*)src->logdps_title, safestrnlen(src->logdps_title, sizeof(src->logdps_title)))
 		||  SQL_SUCCESS != SqlStmt_Execute(stmt) )
 		{
@@ -520,8 +519,8 @@ void log_dps(struct map_session_data* src, struct block_list* target, unsigned i
 				return;
 			time(&curtime);
 			strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
-			fprintf(logfp, "%s - %s,%d,%d,%d,%d,%d,%d,%d,%s\n",
-				timestring, src->logdps_title, src->status.char_id, src->status.class_, id, class_, damage, mstime, maxhp, mapname);
+			fprintf(logfp, "%s - %s,%d,%d,%d,%d,%s\n",
+				timestring, src->logdps_title, src->dps_charid, id, damage, mstime, mapname);
 			fclose(logfp);
 		}
 		else {
@@ -529,8 +528,8 @@ void log_dps(struct map_session_data* src, struct block_list* target, unsigned i
 				return;
 			time(&curtime);
 			strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
-			fprintf(logfp, "%s - %s,%d,%d,%d,%d,%d,%d,%s\n",
-				timestring, src->logdps_title, src->status.char_id, src->status.class_, id, damage, mstime, maxhp, mapname);
+			fprintf(logfp, "%s - %s,%d,%d,%d,%d,%d,%s\n",
+				timestring, src->logdps_title, src->dps_charid, id, damage, mstime, maxhp, mapname);
 			fclose(logfp);
 		}
 	}
@@ -629,6 +628,10 @@ int log_config_read(const char* cfgName)
 				safestrncpy(log_config.log_pc_dps, w2, sizeof(log_config.log_pc_dps));
 			else if( strcmpi(w1, "log_mob_dps_db") == 0 )
 				safestrncpy(log_config.log_mob_dps, w2, sizeof(log_config.log_mob_dps));
+			else if( strcmpi(w1, "log_dps_char_db") == 0 )
+				safestrncpy(log_config.log_dps_char, w2, sizeof(log_config.log_dps_char));
+			else if( strcmpi(w1, "log_dps_equip_db") == 0 )
+				safestrncpy(log_config.log_dps_equip, w2, sizeof(log_config.log_dps_equip));
 			//support the import command, just like any other config
 			else if( strcmpi(w1,"import") == 0 )
 				log_config_read(w2);
