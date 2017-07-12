@@ -5990,9 +5990,9 @@ int pc_dpschar2sql(struct map_session_data* sd)
         " '%d', '%d', '%d', '%d', '%d', '%.2f', '%.2f', '%.2f',"
         " '%d', '%d', '%d', '%d', '%d', '%d',"
         " '%d', '%d', '%d', '%d', '%d', '%u')",
-        log_config.log_dps_char, p->char_id, p->base_level, p->job_level, p->class_,
+        log_config.log_dps_char, p->char_id, p->class_, p->base_level, p->job_level,
         bstatus->max_hp, bstatus->hp, bstatus->max_sp, bstatus->sp,
-        p->str, p->agi, p->vit, p->int_, p->dex, p->luk,
+        bstatus->str, bstatus->agi, bstatus->vit, bstatus->int_, bstatus->dex, bstatus->luk,
         bstatus->speed, bstatus->hit, bstatus->flee, bstatus->flee2, bstatus->amotion, delay_per, dmg_per, casttime,
         atk, atk2, bstatus->def, bstatus->def2, bstatus->mdef, bstatus->mdef2,
         bstatus->cri, bstatus->matk_min, bstatus->matk_max, bstatus->rhw.ele, bstatus->rhw.range, p->fame)
