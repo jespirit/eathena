@@ -1,0 +1,9 @@
+USE eathena
+source d:/users/jeff/projects/ro/eathena/sql-files/item_db.sql
+source d:/users/jeff/projects/ro/eathena/sql-files/item_db2.sql
+source d:/users/jeff/projects/ro/eathena/sql-files/logs.sql
+source d:/users/jeff/projects/ro/eathena/sql-files/main.sql
+source d:/users/jeff/projects/ro/eathena/sql-files/mob_db.sql
+source d:/users/jeff/projects/ro/eathena/sql-files/mob_db2.sql
+source d:/users/jeff/projects/ro/eathena/sql-files/sqibonus.sql
+source d:/users/jeff/projects/ro/eathena/sql-files/register.sql
