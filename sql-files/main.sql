@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `hotkey` (
 
 CREATE TABLE IF NOT EXISTS `global_reg_value` (
   `char_id` int(11) unsigned NOT NULL default '0',
-  `str` varchar(255) NOT NULL default '',
+  `str` varchar(32) NOT NULL default '',
   `value` varchar(255) NOT NULL default '0',
   `type` tinyint(1) NOT NULL default '3',
   `account_id` int(11) unsigned NOT NULL default '0',
@@ -388,7 +388,7 @@ CREATE TABLE IF NOT EXISTS `ipbanlist` (
   `btime` datetime NOT NULL default '0000-00-00 00:00:00',
   `rtime` datetime NOT NULL default '0000-00-00 00:00:00',
   `reason` varchar(255) NOT NULL default '',
-  KEY (`list`)
+  KEY (`list`(100))
 ) ENGINE=MyISAM;
 
 --
