@@ -7,7 +7,7 @@
 #Table: picklog
 CREATE TABLE `picklog` (
   `id` int(11) NOT NULL auto_increment,
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `time` datetime NOT NULL default '1970-01-01 00:00:01',
   `char_id` int(11) NOT NULL default '0',
   `type` enum('M','P','L','T','V','S','N','C','A','R','G','E','B','I','D') NOT NULL default 'P',
   `nameid` int(11) NOT NULL default '0',
@@ -27,7 +27,7 @@ CREATE TABLE `picklog` (
 #Table: zenylog
 CREATE TABLE `zenylog` (
   `id` int(11) NOT NULL auto_increment,
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `time` datetime NOT NULL default '1970-01-01 00:00:01',
   `char_id` int(11) NOT NULL default '0',
   `src_id` int(11) NOT NULL default '0',
   `type` enum('M','T','V','S','N','A','E','B','I','D') NOT NULL default 'S',
@@ -41,7 +41,7 @@ CREATE TABLE `zenylog` (
 #Table: branchlog
 CREATE TABLE `branchlog` (
   `branch_id` mediumint(9) unsigned NOT NULL auto_increment,
-  `branch_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `branch_date` datetime NOT NULL default '1970-01-01 00:00:01',
   `account_id` int(11) NOT NULL default '0',
   `char_id` int(11) NOT NULL default '0',
   `char_name` varchar(25) NOT NULL default '',
@@ -55,7 +55,7 @@ CREATE TABLE `branchlog` (
 #Table: mvplog
 CREATE TABLE `mvplog` (
   `mvp_id` mediumint(9) unsigned NOT NULL auto_increment,
-  `mvp_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `mvp_date` datetime NOT NULL default '1970-01-01 00:00:01',
   `kill_char_id` int(11) NOT NULL default '0',
   `monster_id` smallint(6) NOT NULL default '0',
   `prize` int(11) NOT NULL default '0',
@@ -68,7 +68,7 @@ CREATE TABLE `mvplog` (
 #Table: atcommandlog
 CREATE TABLE `atcommandlog` (
   `atcommand_id` mediumint(9) unsigned NOT NULL auto_increment,
-  `atcommand_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `atcommand_date` datetime NOT NULL default '1970-01-01 00:00:01',
   `account_id` int(11) unsigned NOT NULL default '0',
   `char_id` int(11) unsigned NOT NULL default '0',
   `char_name` varchar(25) NOT NULL default '',
@@ -83,7 +83,7 @@ CREATE TABLE `atcommandlog` (
 #Table: npclog
 CREATE TABLE `npclog` (
   `npc_id` mediumint(9) unsigned NOT NULL auto_increment,
-  `npc_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `npc_date` datetime NOT NULL default '1970-01-01 00:00:01',
   `account_id` int(11) unsigned NOT NULL default '0',
   `char_id` int(11) unsigned NOT NULL default '0',
   `char_name` varchar(25) NOT NULL default '',
@@ -99,7 +99,7 @@ CREATE TABLE `npclog` (
 #Table: chatlog
 CREATE TABLE `chatlog` (
   `id` bigint(20) NOT NULL auto_increment,
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `time` datetime NOT NULL default '1970-01-01 00:00:01',
   `type` enum('O','W','P','G','M') NOT NULL default 'O',
   `type_id` int(11) NOT NULL default '0',
   `src_charid` int(11) NOT NULL default '0',
@@ -117,7 +117,7 @@ CREATE TABLE `chatlog` (
 #Database: log
 #Table: loginlog
 CREATE TABLE `loginlog` (
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `time` datetime NOT NULL default '1970-01-01 00:00:01',
   `ip` varchar(15) NOT NULL default '',
   `user` varchar(23) NOT NULL default '',
   `rcode` tinyint(4) NOT NULL default '0',

@@ -12,8 +12,8 @@ CREATE TABLE `account` (
   `unban_time` int(11) unsigned NOT NULL default '0',
   `expiration_time` int(11) unsigned NOT NULL default '0',
   `logincount` mediumint(9) unsigned NOT NULL default '0',
-  `lastlogin` datetime NOT NULL default '0000-00-00 00:00:00',
-  `birthdate` DATE NOT NULL DEFAULT '0000-00-00',
+  `lastlogin` datetime NOT NULL default '1970-01-01 00:00:01',
+  `birthdate` DATE NOT NULL DEFAULT '1970-01-01',
   `last_ip` varchar(100) NOT NULL default '',
   PRIMARY KEY (`account_num`),
   UNIQUE KEY `account_name` (`account_name`)
@@ -24,12 +24,12 @@ INSERT INTO `account` (`account_name`,`account_pass`,`email`,`level`,`birthdate`
 DROP TABLE IF EXISTS `accregister`;
 CREATE TABLE `accregister` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `time` datetime NOT NULL default '1970-01-01 00:00:01',
   `account_name` varchar(23) NOT NULL default '',
   `account_pass` varchar(32) NOT NULL default '',
   `email` varchar(39) NOT NULL default '',
   `level` tinyint(3) NOT NULL default '0',
-  `birthdate` DATE NOT NULL DEFAULT '0000-00-00',
+  `birthdate` DATE NOT NULL DEFAULT '1970-01-01',
   `ip` varchar(100) NOT NULL default '',
   `data` text NOT NULL,
   PRIMARY KEY (`id`)
